@@ -1,0 +1,205 @@
+import { nestedId, optionalNumber, toNumber } from './resourceUtils'
+
+export const bookingStatuses = [
+  'PENDING',
+  'CONFIRMED',
+  'CHECKED_IN',
+  'CHECKED_OUT',
+  'CANCELLED',
+  'NO_SHOW',
+]
+
+function profileFields(includePassword) {
+  return [
+    { name: 'email', label: 'Email', type: 'email', required: true },
+    includePassword && { name: 'password', label: 'Mat khau', type: 'password', required: true },
+    { name: 'name', label: 'Ho ten', required: true },
+    { name: 'phone', label: 'So dien thoai', required: true },
+    { name: 'address', label: 'Dia chi' },
+    { name: 'image', label: 'Anh dai dien URL' },
+  ].filter(Boolean)
+}
+
+export const resources = [
+  {
+    key: 'bookings',
+    label: 'Dat phong',
+    endpoint: '/bookings',
+    description: 'Tao booking, tinh tien theo bang gia va cap nhat trang thai.',
+    fields: [
+      { name: 'customerId', label: 'ID khach hang', type: 'number', required: true },
+      { name: 'employeeId', label: 'ID nhan vien', type: 'number' },
+      { name: 'roomId', label: 'ID phong', type: 'number', required: true },
+      { name: 'checkIn', label: 'Check-in', type: 'datetime-local', required: true },
+      { name: 'checkOut', label: 'Check-out', type: 'datetime-local', required: true },
+      { name: 'guestCount', label: 'So khach', type: 'number', required: true },
+    ],
+    buildPayload: (data) => ({
+      customerId: toNumber(data.customerId),
+      employeeId: optionalNumber(data.employeeId),
+      roomId: toNumber(data.roomId),
+      checkIn: data.checkIn,
+      checkOut: data.checkOut,
+      guestCount: toNumber(data.guestCount),
+    }),
+  },
+  {
+    key: 'customers',
+    label: 'Khach hang',
+    endpoint: '/customers',
+    description: 'Thong tin lien he va tai khoan khach hang.',
+    fields: profileFields(true),
+  },
+  {
+    key: 'employees',
+    label: 'Nhan vien',
+    endpoint: '/employees',
+    description: 'Nhan su van hanh homestay, co lien ket vai tro.',
+    fields: [
+      { name: 'name', label: 'Ho ten', required: true },
+      { name: 'salary', label: 'Luong', type: 'number' },
+      { name: 'email', label: 'Email', type: 'email', required: true },
+      { name: 'password', label: 'Mat khau', type: 'password', required: true },
+      { name: 'phone', label: 'So dien thoai', required: true },
+      { name: 'address', label: 'Dia chi' },
+      { name: 'image', label: 'Anh dai dien URL' },
+      { name: 'roleId', label: 'ID vai tro', type: 'number' },
+    ],
+    buildPayload: (data) => ({
+      name: data.name,
+      salary: optionalNumber(data.salary),
+      email: data.email,
+      password: data.password,
+      phone: data.phone,
+      address: data.address,
+      image: data.image,
+      role: nestedId(data.roleId),
+    }),
+  },
+  {
+    key: 'branches',
+    label: 'Chi nhanh',
+    endpoint: '/branches',
+    description: 'Co so homestay, dia chi, hotline va anh dai dien.',
+    fields: [
+      { name: 'name', label: 'Ten chi nhanh', required: true },
+      { name: 'address', label: 'Dia chi', required: true },
+      { name: 'phone', label: 'So dien thoai', required: true },
+      { name: 'image', label: 'Anh URL' },
+    ],
+  },
+  {
+    key: 'roomTypes',
+    label: 'Loai phong',
+    endpoint: '/roomTypes',
+    description: 'Loai phong, suc chua va mo ta.',
+    fields: [
+      { name: 'name', label: 'Ten loai phong', required: true },
+      { name: 'description', label: 'Mo ta' },
+      { name: 'maxGuest', label: 'So khach toi da', type: 'number', required: true },
+      { name: 'image', label: 'Anh URL' },
+    ],
+    buildPayload: (data) => ({
+      name: data.name,
+      description: data.description,
+      maxGuest: toNumber(data.maxGuest),
+      image: data.image,
+    }),
+  },
+  {
+    key: 'rooms',
+    label: 'Phong',
+    endpoint: '/rooms',
+    description: 'Phong thuc te gan voi chi nhanh va loai phong.',
+    fields: [
+      { name: 'branchId', label: 'ID chi nhanh', type: 'number', required: true },
+      { name: 'roomTypeId', label: 'ID loai phong', type: 'number', required: true },
+      { name: 'number', label: 'So phong', type: 'number', required: true },
+      { name: 'area', label: 'Dien tich', type: 'number', required: true },
+      { name: 'thumbnail', label: 'Anh phong URL' },
+    ],
+    buildPayload: (data) => ({
+      branch: nestedId(data.branchId),
+      roomType: nestedId(data.roomTypeId),
+      number: toNumber(data.number),
+      area: Number(data.area || 0),
+      thumbnail: data.thumbnail,
+    }),
+  },
+  {
+    key: 'roomPricings',
+    label: 'Bang gia',
+    endpoint: '/roomPricings',
+    description: 'Gia ngay thuong, cuoi tuan, ngay le theo loai phong.',
+    fields: [
+      { name: 'roomTypeId', label: 'ID loai phong', type: 'number', required: true },
+      { name: 'baseDuration', label: 'Don vi tinh', placeholder: 'NIGHT', required: true },
+      { name: 'basePrice', label: 'Gia co ban', type: 'number', required: true },
+      { name: 'weekendPrice', label: 'Gia cuoi tuan', type: 'number', required: true },
+      { name: 'holidayPrice', label: 'Gia ngay le', type: 'number', required: true },
+      { name: 'startDate', label: 'Bat dau', type: 'datetime-local', required: true },
+      { name: 'endDate', label: 'Ket thuc', type: 'datetime-local' },
+      { name: 'policy', label: 'Chinh sach' },
+      { name: 'status', label: 'Dang ap dung', type: 'checkbox' },
+    ],
+    buildPayload: (data) => ({
+      roomType: nestedId(data.roomTypeId),
+      baseDuration: data.baseDuration,
+      basePrice: optionalNumber(data.basePrice),
+      weekendPrice: optionalNumber(data.weekendPrice),
+      holidayPrice: optionalNumber(data.holidayPrice),
+      startDate: data.startDate,
+      endDate: data.endDate || null,
+      policy: data.policy,
+      status: Boolean(data.status),
+    }),
+  },
+  {
+    key: 'categories',
+    label: 'Nhom tien ich',
+    endpoint: '/categories',
+    description: 'Nhom phan loai tien ich.',
+    fields: [
+      { name: 'name', label: 'Ten nhom', required: true },
+      { name: 'description', label: 'Mo ta' },
+    ],
+  },
+  {
+    key: 'amenities',
+    label: 'Tien ich',
+    endpoint: '/amenities',
+    description: 'Tien ich gan voi nhom tien ich.',
+    fields: [
+      { name: 'categoryId', label: 'ID nhom tien ich', type: 'number' },
+      { name: 'name', label: 'Ten tien ich', required: true },
+    ],
+    buildPayload: (data) => ({
+      category: nestedId(data.categoryId),
+      name: data.name,
+    }),
+  },
+  {
+    key: 'roles',
+    label: 'Vai tro',
+    endpoint: '/roles',
+    description: 'Vai tro nhan vien.',
+    fields: [
+      { name: 'name', label: 'Ten vai tro', required: true },
+      { name: 'description', label: 'Mo ta' },
+    ],
+  },
+  {
+    key: 'roomPhotos',
+    label: 'Anh phong',
+    endpoint: '/roomPhotos',
+    description: 'Anh bo sung cho phong.',
+    fields: [
+      { name: 'roomId', label: 'ID phong', type: 'number', required: true },
+      { name: 'photo', label: 'Anh URL', required: true },
+    ],
+    buildPayload: (data) => ({
+      room: nestedId(data.roomId),
+      photo: data.photo,
+    }),
+  },
+]
