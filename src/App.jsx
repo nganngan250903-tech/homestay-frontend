@@ -16,16 +16,17 @@ const bookingStatuses = [
 const resources = [
   {
     key: 'bookings',
-    label: 'Dat phong',
+    label: 'Booking',
     endpoint: '/bookings',
-    description: 'Tao booking, tinh tien theo bang gia va cap nhat trang thai.',
+    description: 'Xem va cap nhat trang thai booking.',
+    showCreate: false,
     fields: [
-      { name: 'customerId', label: 'ID khach hang', type: 'number', required: true },
+      { name: 'customerId', label: 'ID khach hang', type: 'number' },
       { name: 'employeeId', label: 'ID nhan vien', type: 'number' },
-      { name: 'roomId', label: 'ID phong', type: 'number', required: true },
-      { name: 'checkIn', label: 'Check-in', type: 'datetime-local', required: true },
-      { name: 'checkOut', label: 'Check-out', type: 'datetime-local', required: true },
-      { name: 'guestCount', label: 'So khach', type: 'number', required: true },
+      { name: 'roomId', label: 'ID phong', type: 'number' },
+      { name: 'checkIn', label: 'Check-in', type: 'datetime-local' },
+      { name: 'checkOut', label: 'Check-out', type: 'datetime-local' },
+      { name: 'guestCount', label: 'So khach', type: 'number' },
     ],
     buildPayload: (data) => ({
       customerId: toNumber(data.customerId),
@@ -175,25 +176,11 @@ const resources = [
     key: 'roles',
     label: 'Vai tro',
     endpoint: '/roles',
-    description: 'Vai tro nhan vien.',
+    description: 'Quan ly vai tro nhan vien.',
     fields: [
       { name: 'name', label: 'Ten vai tro', required: true },
       { name: 'description', label: 'Mo ta' },
     ],
-  },
-  {
-    key: 'roomPhotos',
-    label: 'Anh phong',
-    endpoint: '/roomPhotos',
-    description: 'Anh bo sung cho phong.',
-    fields: [
-      { name: 'roomId', label: 'ID phong', type: 'number', required: true },
-      { name: 'photo', label: 'Anh URL', required: true },
-    ],
-    buildPayload: (data) => ({
-      room: nestedId(data.roomId),
-      photo: data.photo,
-    }),
   },
 ]
 
@@ -235,6 +222,64 @@ function buildDefaultPayload(resource, data) {
   }, {})
 }
 
+function formatCell(value) {
+  if (value === null || value === undefined) return '-'
+  if (typeof value === 'object') return JSON.stringify(value)
+  return String(value)
+}
+
+function renderTable(list) {
+  if (!Array.isArray(list) || list.length === 0) {
+    return <div className="empty-state">Danh sach trong.</div>
+  }
+
+  const columns = Array.from(new Set(list.flatMap((item) => Object.keys(item))))
+
+  return (
+    <div className="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            {columns.map((column) => (
+              <th key={column}>{column}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {list.map((item, index) => (
+            <tr key={index}>
+              {columns.map((column) => (
+                <td key={column}>{formatCell(item[column])}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function renderResult(result) {
+  if (!result) {
+    return (
+      <div className="empty-state">
+        Chua co du lieu. Hay tai danh sach hoac tra cuu mot ban ghi.
+      </div>
+    )
+  }
+
+  const data = result.data ?? result
+  if (Array.isArray(data)) {
+    return renderTable(data)
+  }
+
+  if (data?.content && Array.isArray(data.content)) {
+    return renderTable(data.content)
+  }
+
+  return <pre>{JSON.stringify(data, null, 2)}</pre>
+}
+
 async function request(path, options = {}) {
   const auth = readStoredAuth()
   const token = auth?.token
@@ -272,7 +317,7 @@ function readStoredAuth() {
 
 function App() {
   const [auth, setAuth] = useState(readStoredAuth)
-  const [activeKey, setActiveKey] = useState('bookings')
+  const [activeKey, setActiveKey] = useState(resources[0]?.key || 'bookings')
   const [forms, setForms] = useState(() =>
     Object.fromEntries(resources.map((resource) => [resource.key, defaultForm(resource.fields)])),
   )
@@ -284,10 +329,11 @@ function App() {
   const [statusForm, setStatusForm] = useState({ bookingId: '', status: 'CONFIRMED' })
 
   const activeResource = useMemo(
-    () => resources.find((resource) => resource.key === activeKey),
+    () => resources.find((resource) => resource.key === activeKey) || resources[0],
     [activeKey],
   )
   const activeResult = results[activeKey]
+  const isAdmin = auth?.userType === 'ADMIN' || auth?.role?.toLowerCase().includes('admin')
 
   const saveAuth = (loginData) => {
     localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(loginData))
@@ -376,11 +422,15 @@ function App() {
     }
   }
 
-  const loadEmployees = async () => {
-    const response = await runAction('Da tai danh sach nhan vien', () => request('/employees'))
+  const loadResourceList = async () => {
+    const response = await runAction(`Da tai danh sach ${activeResource.label.toLowerCase()}`, () =>
+      request(activeResource.endpoint),
+    )
     if (response?.data) {
-      setEmployees(response.data)
-      setResults((current) => ({ ...current, employees: response }))
+      setResults((current) => ({ ...current, [activeResource.key]: response }))
+      if (activeResource.key === 'employees') {
+        setEmployees(response.data)
+      }
     }
   }
 
@@ -422,6 +472,22 @@ function App() {
     return <AuthPage onLogin={saveAuth} />
   }
 
+  if (!isAdmin) {
+    return (
+      <main className="app-shell non-admin">
+        <section className="workspace">
+          <div className="panel unauthorized-panel">
+            <h1>Truy cap bi chan</h1>
+            <p>Giao dien nay chi danh cho tai khoan Admin. Vui long dang nhap bang tai khoan Admin de tiep tuc.</p>
+            <button className="primary-btn" onClick={logout} type="button">
+              Dang xuat
+            </button>
+          </div>
+        </section>
+      </main>
+    )
+  }
+
   return (
     <main className="app-shell">
       <aside className="sidebar">
@@ -455,33 +521,33 @@ function App() {
             <p className="subtitle">{activeResource.description}</p>
           </div>
           <div className="connection">
-          <div className="connection-info">
-            <span className="dot"></span>
-            <div>
-              <strong>{auth.user?.name || auth.user?.email}</strong>
-              <small>{auth.userType} / {auth.user?.role}</small>
+            <div className="connection-info">
+              <span className="dot"></span>
+              <div>
+                <strong>{auth.user?.name || auth.user?.email}</strong>
+                <small>{auth.userType} / {auth.user?.role}</small>
+              </div>
             </div>
+            <button className="logout-btn" onClick={logout} type="button">
+              Dang xuat
+            </button>
           </div>
-          <button className="logout-btn" onClick={logout} type="button">
-            Dang xuat
-          </button>
-        </div>
         </header>
 
         {toast && <div className={`toast ${toast.type}`}>{toast.message}</div>}
 
         <section className="stats-grid" aria-label="Tong quan">
           <div className="metric">
-            <span>Endpoint dang chon</span>
-            <strong>{activeResource.endpoint}</strong>
+            <span>Resource hien tai</span>
+            <strong>{activeResource.label}</strong>
           </div>
           <div className="metric">
-            <span>Resource API</span>
+            <span>So resource</span>
             <strong>{resources.length}</strong>
           </div>
           <div className="metric">
-            <span>Nhan vien da tai</span>
-            <strong>{employees.length}</strong>
+            <span>Dang nhap boi</span>
+            <strong>{auth.user?.name || auth.user?.email}</strong>
           </div>
         </section>
 
@@ -489,52 +555,60 @@ function App() {
           <section className="panel">
             <div className="panel-heading">
               <div>
-                <p className="eyebrow">Tao moi</p>
+                <p className="eyebrow">Quản lý</p>
                 <h2>{activeResource.label}</h2>
               </div>
               {loading && <span className="loading">Dang xu ly</span>}
             </div>
 
-            <form className="resource-form" onSubmit={createRecord}>
-              {activeResource.fields.map((field) => (
-                <label className={field.type === 'checkbox' ? 'check-field' : 'field'} key={field.name}>
-                  <span>{field.label}</span>
-                  {field.type === 'checkbox' ? (
-                    <input
-                      checked={Boolean(forms[activeKey][field.name])}
-                      onChange={(event) => setField(activeKey, field.name, event.target.checked)}
-                      type="checkbox"
-                    />
-                  ) : (
-                    <input
-                      onChange={(event) => setField(activeKey, field.name, event.target.value)}
-                      placeholder={field.placeholder || ''}
-                      required={field.required}
-                      type={field.type || 'text'}
-                      value={forms[activeKey][field.name]}
-                    />
-                  )}
-                </label>
-              ))}
-
-              <div className="form-actions">
-                <button className="primary-btn" disabled={loading} type="submit">
-                  Tao du lieu
-                </button>
-                <button
-                  className="ghost-btn"
-                  type="button"
-                  onClick={() =>
-                    setForms((current) => ({
-                      ...current,
-                      [activeKey]: defaultForm(activeResource.fields),
-                    }))
-                  }
-                >
-                  Lam moi form
-                </button>
+            {activeResource.showCreate === false ? (
+              <div className="info-panel">
+                <p>
+                  Booking duoc quan ly thong qua danh sach va cap nhat trang thai. Admin khong tao booking moi tu man hinh nay.
+                </p>
               </div>
-            </form>
+            ) : (
+              <form className="resource-form" onSubmit={createRecord}>
+                {activeResource.fields.map((field) => (
+                  <label className={field.type === 'checkbox' ? 'check-field' : 'field'} key={field.name}>
+                    <span>{field.label}</span>
+                    {field.type === 'checkbox' ? (
+                      <input
+                        checked={Boolean(forms[activeKey][field.name])}
+                        onChange={(event) => setField(activeKey, field.name, event.target.checked)}
+                        type="checkbox"
+                      />
+                    ) : (
+                      <input
+                        onChange={(event) => setField(activeKey, field.name, event.target.value)}
+                        placeholder={field.placeholder || ''}
+                        required={field.required}
+                        type={field.type || 'text'}
+                        value={forms[activeKey][field.name]}
+                      />
+                    )}
+                  </label>
+                ))}
+
+                <div className="form-actions">
+                  <button className="primary-btn" disabled={loading} type="submit">
+                    Tao du lieu
+                  </button>
+                  <button
+                    className="ghost-btn"
+                    type="button"
+                    onClick={() =>
+                      setForms((current) => ({
+                        ...current,
+                        [activeKey]: defaultForm(activeResource.fields),
+                      }))
+                    }
+                  >
+                    Lam moi form
+                  </button>
+                </div>
+              </form>
+            )}
           </section>
 
           <section className="panel">
@@ -558,18 +632,15 @@ function App() {
                 />
               </label>
               <button className="secondary-btn" disabled={loading} onClick={fetchById} type="button">
-                Lay du lieu
+                Lay theo ID
+              </button>
+              <button className="secondary-btn" disabled={loading} onClick={loadResourceList} type="button">
+                Tai danh sach
               </button>
               <button className="danger-btn" disabled={loading} onClick={deleteById} type="button">
                 Xoa
               </button>
             </div>
-
-            {activeKey === 'employees' && (
-              <button className="wide-btn" disabled={loading} onClick={loadEmployees} type="button">
-                Tai danh sach nhan vien
-              </button>
-            )}
 
             {activeKey === 'bookings' && (
               <form className="status-box" onSubmit={updateBookingStatus}>
@@ -618,17 +689,11 @@ function App() {
         <section className="panel result-panel">
           <div className="panel-heading">
             <div>
-              <p className="eyebrow">Ket qua API</p>
-              <h2>Response gan nhat</h2>
+              <p className="eyebrow">Ket qua</p>
+              <h2>Danh sach du lieu</h2>
             </div>
           </div>
-          {activeResult ? (
-            <pre>{JSON.stringify(activeResult, null, 2)}</pre>
-          ) : (
-            <div className="empty-state">
-              Chua co du lieu. Hay tao moi hoac tra cuu mot ban ghi tu backend.
-            </div>
-          )}
+          {renderResult(activeResult)}
         </section>
 
         {employees.length > 0 && (

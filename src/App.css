@@ -1,10 +1,13 @@
 :root {
-  --page-bg: #eef5f3;
-  --border: #d9e2df;
-  --text: #334155;
-  --text-muted: #64748b;
+  --page-bg: #f5f8ff;
+  --surface: #ffffff;
+  --border: #dbeafe;
+  --text: #16325c;
+  --text-muted: #4b628f;
   --text-strong: #0f172a;
-  --shadow: 0 18px 45px rgba(15, 23, 42, 0.06);
+  --primary: #2563eb;
+  --primary-soft: #eff6ff;
+  --shadow: 0 16px 40px rgba(37, 99, 235, 0.12);
 
   color: var(--text);
   background: var(--page-bg);
@@ -37,7 +40,8 @@ body {
   grid-template-columns: 280px minmax(0, 1fr);
   min-height: 100vh;
   background:
-    linear-gradient(180deg, rgba(21, 94, 117, 0.1), transparent 320px),
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 28%),
+    linear-gradient(180deg, rgba(37, 99, 235, 0.08), transparent 380px),
     var(--page-bg);
 }
 
@@ -46,9 +50,8 @@ body {
   top: 0;
   height: 100vh;
   padding: 28px 22px;
-  border-right: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(16px);
+  border-right: 1px solid rgba(37, 99, 235, 0.12);
+  background: rgba(255, 255, 255, 0.96);
   overflow-y: auto;
 }
 
@@ -108,9 +111,9 @@ body {
 }
 
 .nav-item.active {
-  border-color: rgba(15, 118, 110, 0.3);
-  background: #ccfbf1;
-  color: #115e59;
+  border-color: rgba(37, 99, 235, 0.32);
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--primary);
 }
 
 .workspace {
@@ -169,10 +172,10 @@ h3 {
   gap: 12px;
   max-width: 100%;
   min-width: 280px;
-  padding: 12px 14px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: #ffffff;
+  padding: 14px 18px;
+  border: 1px solid rgba(37, 99, 235, 0.14);
+  border-radius: 16px;
+  background: var(--surface);
   color: var(--text-muted);
   font-size: 13px;
 }
@@ -371,15 +374,15 @@ button:hover {
 .primary-btn {
   min-height: 46px;
   color: #ffffff;
-  background: linear-gradient(135deg, #0f766e, #0ea5e9);
+  background: linear-gradient(135deg, var(--primary), #60a5fa);
 }
 
 .secondary-btn,
 .ghost-btn,
 .wide-btn {
   min-height: 46px;
-  border-color: var(--border);
-  background: #ffffff;
+  border-color: rgba(37, 99, 235, 0.16);
+  background: var(--surface);
   color: var(--text-strong);
 }
 
@@ -391,7 +394,7 @@ button:hover {
 
 .danger-btn {
   min-height: 46px;
-  border-color: #fecaca;
+  border-color: #fed7aa;
   background: #fff7ed;
   color: #b91c1c;
 }
@@ -446,12 +449,32 @@ pre {
   display: grid;
   min-height: 120px;
   place-items: center;
-  border: 1px dashed var(--border);
-  border-radius: 14px;
-  background: #f8fafc;
+  border: 1px dashed rgba(37, 99, 235, 0.24);
+  border-radius: 16px;
+  background: rgba(59, 130, 246, 0.07);
   color: var(--text-muted);
   text-align: center;
   padding: 18px;
+}
+
+.unauthorized-panel,
+.info-panel {
+  padding: 36px;
+  border-radius: 24px;
+  background: var(--surface);
+  border: 1px solid rgba(37, 99, 235, 0.14);
+  box-shadow: var(--shadow);
+}
+
+.unauthorized-panel h1 {
+  margin-top: 0;
+  color: var(--primary);
+}
+
+.info-panel p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.7;
 }
 
 .table-wrap {
