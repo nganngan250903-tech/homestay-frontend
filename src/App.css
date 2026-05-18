@@ -21,6 +21,15 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  font-weight: 400;
 }
 
 button,
@@ -55,7 +64,6 @@ button:disabled {
 }
 
 .brand-mark,
-.avatar,
 .nav-icon {
   display: grid;
   place-items: center;
@@ -116,6 +124,10 @@ button:disabled {
   border-radius: 8px;
   background: rgba(255, 253, 247, 0.96);
   box-shadow: var(--shadow);
+}
+
+.home-logout-btn {
+  margin-top: 20px;
 }
 
 .eyebrow {
@@ -299,7 +311,7 @@ button:hover:not(:disabled) {
   padding: 10px 12px;
   border-radius: 8px;
   color: #324155;
-  font-weight: 850;
+  font-weight: 600;
   text-decoration: none;
   background: transparent;
 }
@@ -320,11 +332,20 @@ button:hover:not(:disabled) {
 }
 
 .nav-icon {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   font-size: 13px;
   background: #ffffff;
   border: 1px solid var(--line);
+}
+
+.nav-svg {
+  width: 17px;
+  height: 17px;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
 }
 
 .admin-workspace {
@@ -350,21 +371,22 @@ button:hover:not(:disabled) {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 10px;
+  padding: 7px 12px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface);
 }
 
+.admin-profile strong {
+  color: #203044;
+  font-size: 14px;
+  font-weight: 600;
+}
+
 .admin-profile small {
   color: var(--primary-strong);
   font-size: 12px;
-  font-weight: 900;
-}
-
-.avatar {
-  width: 38px;
-  height: 38px;
+  font-weight: 500;
 }
 
 .admin-content {
@@ -438,9 +460,33 @@ button:hover:not(:disabled) {
 
 .room-toolbar {
   display: grid;
-  grid-template-columns: minmax(240px, 1fr) 220px;
+  grid-template-columns: minmax(160px, 260px) 210px auto;
+  align-items: end;
   gap: 14px;
   margin-bottom: 10px;
+}
+
+.room-toolbar-action {
+  display: flex;
+  align-items: end;
+}
+
+.room-toolbar-action .primary-btn {
+  min-width: 120px;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.panel-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
 }
 
 .api-note {
@@ -461,6 +507,10 @@ button:hover:not(:disabled) {
   width: 100%;
   min-width: 850px;
   border-collapse: collapse;
+}
+
+.room-type-table {
+  min-width: 720px;
 }
 
 th,
@@ -489,6 +539,60 @@ td strong,
   object-fit: cover;
   border-radius: 8px;
   border: 1px solid var(--line);
+}
+
+.image-preview {
+  display: grid;
+  gap: 8px;
+}
+
+.image-preview img {
+  width: min(260px, 100%);
+  max-height: 170px;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.room-photo-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+.room-photo-preview {
+  display: grid;
+  gap: 8px;
+}
+
+.room-photo-preview img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.image-error-box {
+  display: grid;
+  gap: 6px;
+  min-height: 72px;
+  padding: 12px;
+  border: 1px dashed #fecaca;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.image-error-box strong,
+.image-error-box span {
+  display: block;
+}
+
+.image-error-box span {
+  color: #7f1d1d;
+  font-size: 12px;
+  overflow-wrap: anywhere;
 }
 
 .status-pill {
@@ -604,6 +708,61 @@ td strong,
   justify-content: flex-end;
 }
 
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.detail-item {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.detail-item span,
+.detail-item strong {
+  display: block;
+}
+
+.detail-item span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.detail-item strong {
+  margin-top: 6px;
+  color: #172033;
+  overflow-wrap: anywhere;
+}
+
+.detail-image {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.detail-section-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.detail-image img {
+  display: block;
+  width: 100%;
+  max-height: 280px;
+  object-fit: cover;
+}
+
 .mobile-only,
 .sidebar-backdrop {
   display: none;
@@ -676,7 +835,8 @@ td strong,
   }
 
   .room-toolbar,
-  .form-grid {
+  .form-grid,
+  .detail-grid {
     grid-template-columns: 1fr;
   }
 

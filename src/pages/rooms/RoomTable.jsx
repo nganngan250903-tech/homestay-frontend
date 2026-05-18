@@ -6,7 +6,7 @@ function getRoomStatus(room) {
 
 function formatStatus(status) {
   const labels = {
-    AVAILABLE: 'Con trong',
+    AVAILABLE: 'Dang trong',
     OCCUPIED: 'Dang thue',
     NO_STATUS: 'Chua co trang thai',
   }
@@ -14,7 +14,7 @@ function formatStatus(status) {
   return labels[status] || status
 }
 
-function RoomTable({ rooms, loading, onEdit, onDelete }) {
+function RoomTable({ rooms, loading, onDelete, onEdit, onView }) {
   if (!loading && rooms.length === 0) {
     return (
       <EmptyState
@@ -29,13 +29,10 @@ function RoomTable({ rooms, loading, onEdit, onDelete }) {
       <table className="data-table">
         <thead>
           <tr>
-            <th>Phong</th>
+            <th>So phong</th>
             <th>Chi nhanh</th>
             <th>Loai phong</th>
-            <th>Dien tich</th>
             <th>Trang thai</th>
-            <th>Tien nghi</th>
-            <th>Hinh anh</th>
             <th>Thao tac</th>
           </tr>
         </thead>
@@ -44,31 +41,19 @@ function RoomTable({ rooms, loading, onEdit, onDelete }) {
             <tr key={room.id}>
               <td>
                 <strong>#{room.number}</strong>
-                <span className="cell-subtext">ID {room.id}</span>
               </td>
               <td>{room.branch?.name || 'Chua gan'}</td>
               <td>{room.roomType?.name || 'Chua gan'}</td>
-              <td>{room.area ? `${room.area} m2` : 'Chua co'}</td>
               <td>
                 <span className={`status-pill ${getRoomStatus(room).toLowerCase()}`}>
                   {formatStatus(getRoomStatus(room))}
                 </span>
               </td>
               <td>
-                <span className="cell-subtext">
-                  {(room.amenities || []).map((amenity) => amenity.amenityName).join(', ') ||
-                    'Chua gan'}
-                </span>
-              </td>
-              <td>
-                {room.thumbnail ? (
-                  <img className="room-thumb" src={room.thumbnail} alt={`Phong ${room.number}`} />
-                ) : (
-                  <span className="muted-text">Chua co anh</span>
-                )}
-              </td>
-              <td>
                 <div className="table-actions">
+                  <button className="secondary-btn compact-btn" onClick={() => onView(room)} type="button">
+                    Xem
+                  </button>
                   <button className="ghost-btn compact-btn" onClick={() => onEdit(room)} type="button">
                     Sua
                   </button>

@@ -26,6 +26,27 @@ export async function deleteRoom(id) {
   return response.data
 }
 
+export async function getBookingsByRoom(roomId) {
+  const response = await request(`/bookings?roomId=${encodeURIComponent(roomId)}&page=0&size=10`)
+  return response.data?.content || response.data || []
+}
+
+export async function createRoomPhoto(roomId, photo) {
+  const response = await request('/roomPhotos', {
+    method: 'POST',
+    data: {
+      room: { id: roomId },
+      photo,
+    },
+  })
+  return response.data
+}
+
+export async function getRoomPhotos() {
+  const response = await request('/roomPhotos')
+  return response.data || []
+}
+
 export async function getRoomTypes() {
   const response = await request('/roomTypes')
   return response.data || []

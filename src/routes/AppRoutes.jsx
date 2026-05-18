@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import AdminLayout from '../layouts/AdminLayout'
 import DashboardHomePage from '../pages/DashboardHomePage'
+import HomePage from '../pages/HomePage'
 import LoginPage from '../pages/LoginPage'
 import CustomerPage from '../pages/customers/CustomerPage'
 import PlaceholderPage from '../pages/PlaceholderPage'
@@ -9,13 +10,29 @@ import StatisticsPage from '../pages/reports/StatisticsPage'
 import RoomTypePage from '../pages/roomTypes/RoomTypePage'
 import RoomPage from '../pages/rooms/RoomPage'
 
+function getDefaultPath(auth) {
+  if (!auth) {
+    return '/login'
+  }
+
+  return auth.role === 'ADMIN' ? '/admin' : '/home'
+}
+
+function RequireAuth({ auth, children }) {
+  if (!auth) {
+    return <Navigate to="/login" replace />
+  }
+
+  return children
+}
+
 function RequireAdmin({ auth, children }) {
   if (!auth) {
     return <Navigate to="/login" replace />
   }
 
   if (auth.role !== 'ADMIN') {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/home" replace />
   }
 
   return children
@@ -26,7 +43,15 @@ function AppRoutes({ auth, onLogin, onLogout }) {
     <Routes>
       <Route
         path="/login"
-        element={auth ? <Navigate to="/admin" replace /> : <LoginPage onLogin={onLogin} />}
+        element={auth ? <Navigate to={getDefaultPath(auth)} replace /> : <LoginPage onLogin={onLogin} />}
+      />
+      <Route
+        path="/home"
+        element={
+          <RequireAuth auth={auth}>
+            <HomePage auth={auth} onLogout={onLogout} />
+          </RequireAuth>
+        }
       />
       <Route
         path="/admin"
@@ -51,7 +76,7 @@ function AppRoutes({ auth, onLogin, onLogout }) {
         <Route path="roles" element={<ManagementPage resourceKey="roles" />} />
         <Route path="reports" element={<StatisticsPage />} />
       </Route>
-      <Route path="*" element={<Navigate to={auth ? '/admin' : '/login'} replace />} />
+      <Route path="*" element={<Navigate to={getDefaultPath(auth)} replace />} />
     </Routes>
   )
 }

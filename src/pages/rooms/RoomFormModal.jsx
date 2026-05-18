@@ -9,6 +9,27 @@ const emptyForm = {
   thumbnail: '',
   status: 'AVAILABLE',
   amenities: {},
+  roomPhotos: [],
+}
+
+function ImagePreview({ alt, src }) {
+  const [failedSrc, setFailedSrc] = useState('')
+  const failed = failedSrc === src
+
+  if (failed) {
+    return (
+      <div className="image-error-box">
+        <strong>Khong tai duoc anh</strong>
+        <span>{src}</span>
+      </div>
+    )
+  }
+
+  return <img src={src} alt={alt} onError={() => setFailedSrc(src)} />
+}
+
+function getRoomPhotoUrl(roomPhoto) {
+  return roomPhoto.photo || roomPhoto.Photo || ''
 }
 
 function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, room, roomTypes, saving }) {
@@ -27,12 +48,17 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, room, roo
       amenities: Object.fromEntries(
         (room.amenities || []).map((item) => [item.amenityId, String(item.quantity || 1)]),
       ),
+      roomPhotos: [],
     }
   })
+  const existingRoomPhotos = useMemo(
+    () => (room?.roomPhotos || []).map(getRoomPhotoUrl).filter(Boolean),
+    [room],
+  )
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState('')
 
-  const title = mode === 'edit' ? 'Chinh sua phong' : 'Them phong'
+  const title = mode === 'edit' ? 'Chỉnh sửa phòng' : 'Thêm phòng'
   const canSubmit = useMemo(
     () => form.branchId && form.roomTypeId && form.number && form.area,
     [form],
@@ -55,11 +81,12 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, room, roo
         amenityId: Number(amenityId),
         quantity: Number(quantity) || 1,
       })),
+      roomPhotos: form.roomPhotos.map((photo) => photo.url),
     }
     onSubmit(normalized)
   }
 
-  const changeImage = async (event) => {
+  const changeThumbnail = async (event) => {
     const file = event.target.files?.[0]
     if (!file) {
       return
@@ -72,10 +99,46 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, room, roo
       const uploaded = await uploadImage(file, 'rooms')
       updateField('thumbnail', uploaded.url)
     } catch (error) {
-      setUploadError(error.message || 'Khong upload duoc anh')
+      setUploadError(error.message || 'Khong the upload thumbnail. Vui long thu lai.')
     } finally {
       setUploading(false)
     }
+  }
+
+  const changeImage = async (event) => {
+    const files = Array.from(event.target.files || [])
+    if (files.length === 0) {
+      return
+    }
+
+    setUploading(true)
+    setUploadError('')
+
+    try {
+      const uploadedImages = await Promise.all(
+        files.map(async (file) => ({
+          name: file.name,
+          url: (await uploadImage(file, 'room-photos')).url,
+        })),
+      )
+      const photos = uploadedImages.filter((uploaded) => uploaded.url)
+
+      setForm((current) => ({
+        ...current,
+        roomPhotos: [...current.roomPhotos, ...photos],
+      }))
+    } catch (error) {
+      setUploadError(error.message || 'Không thể upload ảnh. Vui lòng thử lại.')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const removeRoomPhoto = (photoUrl) => {
+    setForm((current) => ({
+      ...current,
+      roomPhotos: current.roomPhotos.filter((photo) => photo.url !== photoUrl),
+    }))
   }
 
   const toggleAmenity = (amenityId, checked) => {
@@ -121,13 +184,13 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, room, roo
           </label>
 
           <label className="field">
-            <span>Loai phong</span>
+            <span>Loại phòng</span>
             <select
               onChange={(event) => updateField('roomTypeId', event.target.value)}
               required
               value={form.roomTypeId}
             >
-              <option value="">Chon loai phong</option>
+              <option value="">Chọn loại phòng</option>
               {roomTypes.map((roomType) => (
                 <option key={roomType.id} value={roomType.id}>
                   {roomType.name}
@@ -137,7 +200,7 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, room, roo
           </label>
 
           <label className="field">
-            <span>So phong</span>
+            <span>Số phòng</span>
             <input
               min="1"
               onChange={(event) => updateField('number', event.target.value)}
@@ -148,7 +211,7 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, room, roo
           </label>
 
           <label className="field">
-            <span>Dien tich</span>
+            <span>Diện tích</span>
             <input
               min="1"
               onChange={(event) => updateField('area', event.target.value)}
@@ -160,10 +223,10 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, room, roo
           </label>
 
           <label className="field">
-            <span>Trang thai phong</span>
+            <span>Trạng thái phòng</span>
             <select onChange={(event) => updateField('status', event.target.value)} value={form.status}>
-              <option value="AVAILABLE">Con trong</option>
-              <option value="OCCUPIED">Dang thue</option>
+              <option value="AVAILABLE">Còn trống</option>
+              <option value="OCCUPIED">Đang thuê</option>
             </select>
           </label>
 
@@ -177,16 +240,48 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, room, roo
           </label>
 
           <label className="field form-wide">
-            <span>Upload anh phong</span>
-            <input accept="image/*" disabled={uploading} onChange={changeImage} type="file" />
-            {uploading && <small className="helper-text">Dang upload anh len Cloudinary...</small>}
-            {uploadError && <small className="error-text">{uploadError}</small>}
+            <span>Upload thumbnail</span>
+            <input accept="image/*" disabled={uploading} onChange={changeThumbnail} type="file" />
           </label>
 
           {form.thumbnail && (
             <div className="image-preview form-wide">
-              <img src={form.thumbnail} alt="Anh phong da upload" />
-              <span>URL nay se duoc luu vao Room.thumbnail</span>
+              <ImagePreview src={form.thumbnail} alt="Anh thumbnail phong" />
+            </div>
+          )}
+
+          <label className="field form-wide">
+            <span>Upload ảnh phòng</span>
+            <input accept="image/*" disabled={uploading} multiple onChange={changeImage} type="file" />
+            {uploading && <small className="helper-text">Đang upload ảnh lên Cloudinary...</small>}
+            {uploadError && <small className="error-text">{uploadError}</small>}
+          </label>
+ 
+          {form.roomPhotos.length > 0 && (
+            <div className="field form-wide">
+              <div className="room-photo-preview-grid">
+                {form.roomPhotos.map((photo) => (
+                  <div className="room-photo-preview" key={photo.url}>
+                    <ImagePreview src={photo.url} alt={photo.name || 'Anh phong'} />
+                    <button className="danger-btn compact-btn" onClick={() => removeRoomPhoto(photo.url)} type="button">
+                      Xoa
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {mode === 'edit' && existingRoomPhotos.length > 0 && (
+            <div className="field form-wide">
+              <span>Anh phong hien co</span>
+              <div className="room-photo-preview-grid">
+                {existingRoomPhotos.map((photoUrl) => (
+                  <div className="room-photo-preview" key={photoUrl}>
+                    <ImagePreview src={photoUrl} alt="Anh phong hien co" />
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 

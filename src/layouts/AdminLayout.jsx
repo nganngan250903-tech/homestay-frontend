@@ -3,15 +3,99 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import Brand from '../components/Brand'
 
 const menuItems = [
-  { label: 'Dashboard', path: '/admin', icon: 'D', end: true },
-  { label: 'Dat phong', path: '/admin/bookings', icon: 'B' },
-  { label: 'Thanh toan', path: '/admin/payments', icon: 'P' },
-  { label: 'Phong', path: '/admin/rooms', icon: 'R' },
-  { label: 'Tien nghi', path: '/admin/amenities', icon: 'A' },
-  { label: 'Khach hang', path: '/admin/customers', icon: 'C' },
-  { label: 'Nhan vien', path: '/admin/employees', icon: 'E' },
-  { label: 'Thong ke', path: '/admin/reports', icon: 'S' },
+  { label: 'Dashboard', path: '/admin', icon: 'dashboard', end: true },
+  { label: 'Dat phong', path: '/admin/bookings', icon: 'calendar' },
+  { label: 'Thanh toan', path: '/admin/payments', icon: 'wallet' },
+  { label: 'Phong', path: '/admin/rooms', icon: 'bed' },
+  { label: 'Tien nghi', path: '/admin/amenities', icon: 'sparkles' },
+  { label: 'Khach hang', path: '/admin/customers', icon: 'users' },
+  { label: 'Nhan vien', path: '/admin/employees', icon: 'badge' },
+  { label: 'Thong ke', path: '/admin/reports', icon: 'chart' },
 ]
+
+const iconPaths = {
+  dashboard: (
+    <>
+      <path d="M4 5h6v6H4z" />
+      <path d="M14 5h6v4h-6z" />
+      <path d="M14 13h6v6h-6z" />
+      <path d="M4 15h6v4H4z" />
+    </>
+  ),
+  calendar: (
+    <>
+      <path d="M7 3v4" />
+      <path d="M17 3v4" />
+      <path d="M4 8h16" />
+      <path d="M5 5h14v15H5z" />
+      <path d="M8 12h3" />
+      <path d="M13 12h3" />
+      <path d="M8 16h3" />
+    </>
+  ),
+  wallet: (
+    <>
+      <path d="M4 7h15a2 2 0 0 1 2 2v9H4z" />
+      <path d="M4 7l12-3v3" />
+      <path d="M16 13h5" />
+      <path d="M17.5 13h.1" />
+    </>
+  ),
+  bed: (
+    <>
+      <path d="M4 11V5" />
+      <path d="M20 19v-6a2 2 0 0 0-2-2H4v8" />
+      <path d="M4 15h16" />
+      <path d="M7 8h4v3H7z" />
+    </>
+  ),
+  sparkles: (
+    <>
+      <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z" />
+      <path d="M5 14l.8 2.2L8 17l-2.2.8L5 20l-.8-2.2L2 17l2.2-.8z" />
+      <path d="M18 15l.7 1.8 1.8.7-1.8.7L18 21l-.7-1.8-1.8-.7 1.8-.7z" />
+    </>
+  ),
+  users: (
+    <>
+      <path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
+      <path d="M3 21a6 6 0 0 1 12 0" />
+      <path d="M17 11a3 3 0 1 0-1.8-5.4" />
+      <path d="M17 15a5 5 0 0 1 4 4" />
+    </>
+  ),
+  badge: (
+    <>
+      <path d="M8 3h8l2 4-6 14L6 7z" />
+      <path d="M9 7h6" />
+      <path d="M10 12h4" />
+    </>
+  ),
+  chart: (
+    <>
+      <path d="M4 19V5" />
+      <path d="M4 19h16" />
+      <path d="M8 16v-5" />
+      <path d="M12 16V8" />
+      <path d="M16 16v-9" />
+    </>
+  ),
+  logout: (
+    <>
+      <path d="M10 5H5v14h5" />
+      <path d="M14 8l4 4-4 4" />
+      <path d="M8 12h10" />
+    </>
+  ),
+}
+
+function SidebarIcon({ name }) {
+  return (
+    <svg aria-hidden="true" className="nav-svg" fill="none" viewBox="0 0 24 24">
+      {iconPaths[name]}
+    </svg>
+  )
+}
 
 function AdminLayout({ auth, onLogout }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -47,12 +131,16 @@ function AdminLayout({ auth, onLogout }) {
               onClick={() => setSidebarOpen(false)}
               to={item.path}
             >
-              <span className="nav-icon">{item.icon}</span>
+              <span className="nav-icon">
+                <SidebarIcon name={item.icon} />
+              </span>
               <span>{item.label}</span>
             </NavLink>
           ))}
           <button className="admin-nav-link logout-link" onClick={logout} type="button">
-            <span className="nav-icon">L</span>
+            <span className="nav-icon">
+              <SidebarIcon name="logout" />
+            </span>
             <span>Dang xuat</span>
           </button>
         </nav>
@@ -72,7 +160,6 @@ function AdminLayout({ auth, onLogout }) {
           </button>
           <Brand subtitle="Admin dashboard" />
           <div className="admin-profile">
-            <span className="avatar">A</span>
             <div>
               <strong>{adminName}</strong>
               <small>ADMIN</small>
