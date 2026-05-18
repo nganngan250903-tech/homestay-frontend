@@ -1,0 +1,20 @@
+import { request } from './api'
+
+export async function getCustomers(keyword = '') {
+  const query = keyword ? `?keyword=${encodeURIComponent(keyword)}` : ''
+  const response = await request(`/customers${query}`)
+  return response.data || []
+}
+
+export async function updateCustomerStatus(id, status) {
+  const response = await request(`/customers/${id}/status`, {
+    method: 'PATCH',
+    data: { status },
+  })
+  return response.data
+}
+
+export async function getCustomerBookings(id) {
+  const response = await request(`/customers/${id}/bookings`)
+  return response.data || []
+}

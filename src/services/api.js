@@ -5,9 +5,6 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api'
 
 const apiClient = axios.create({
   baseURL: API_BASE,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 })
 
 apiClient.interceptors.request.use((config) => {
@@ -16,6 +13,10 @@ apiClient.interceptors.request.use((config) => {
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
+  }
+
+  if (!(config.data instanceof FormData)) {
+    config.headers['Content-Type'] = 'application/json'
   }
 
   return config
@@ -39,6 +40,10 @@ export async function request(path, options = {}) {
     return body
   } catch (error) {
     const body = error.response?.data
-    throw new Error(body?.message || error.message || 'Khong the ket noi backend')
+    throw new Error(body?.message || error.message || 'Khong the ket noi backend', {
+      cause: error,
+    })
   }
 }
+
+export { apiClient }

@@ -1,9 +1,9 @@
-function Brand({ subtitle = 'Quan ly van hanh' }) {
+function Brand({ subtitle = 'Admin Management' }) {
   return (
     <div className="brand">
-      <span className="brand-mark">H</span>
+      <img className="brand-logo" src="/logo.jpg" alt="LimDimHomestay" />
       <div>
-        <p>Homestay Manager</p>
+        <p>LimDimHomestay</p>
         <small>{subtitle}</small>
       </div>
     </div>

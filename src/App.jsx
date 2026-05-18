@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import AuthPage from './pages/AuthPage'
-import DashboardPage from './pages/DashboardPage'
+import AppRoutes from './routes/AppRoutes'
 import { clearStoredAuth, readStoredAuth, saveStoredAuth } from './services/authStorage'
 
 function App() {
@@ -17,11 +16,7 @@ function App() {
     setAuth(null)
   }
 
-  if (!auth) {
-    return <AuthPage onLogin={login} />
-  }
-
-  return <DashboardPage auth={auth} onLogout={logout} />
+  return <AppRoutes auth={auth} onLogin={login} onLogout={logout} />
 }
 
 export default App
