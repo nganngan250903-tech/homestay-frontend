@@ -1,3 +1,5 @@
+import AppIcon from '../../components/AppIcon'
+
 function ResourceForm({ form, loading, onReset, onSubmit, onUpdateField, resource }) {
   return (
     <form className="resource-form" onSubmit={onSubmit}>
@@ -23,10 +25,12 @@ function ResourceForm({ form, loading, onReset, onSubmit, onUpdateField, resourc
       ))}
 
       <div className="form-actions">
-        <button className="primary-btn" disabled={loading} type="submit">
+        <button className="save-btn" disabled={loading} type="submit">
+          <AppIcon name="save" />
           Tao du lieu
         </button>
-        <button className="ghost-btn" type="button" onClick={onReset}>
+        <button className="cancel-btn" type="button" onClick={onReset}>
+          <AppIcon name="reset" />
           Lam moi form
         </button>
       </div>

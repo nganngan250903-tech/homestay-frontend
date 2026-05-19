@@ -47,6 +47,27 @@ export async function getRoomPhotos() {
   return response.data || []
 }
 
+export async function getRoomPricings() {
+  const response = await request('/roomPricings')
+  return response.data || []
+}
+
+export async function createRoomPricing(payload) {
+  const response = await request('/roomPricings', {
+    method: 'POST',
+    data: payload,
+  })
+  return response.data
+}
+
+export async function updateRoomPricing(id, payload) {
+  const response = await request(`/roomPricings/${id}`, {
+    method: 'PATCH',
+    data: payload,
+  })
+  return response.data
+}
+
 export async function getRoomTypes() {
   const response = await request('/roomTypes')
   return response.data || []
@@ -60,6 +81,53 @@ export async function getBranches() {
 export async function getAmenities() {
   const response = await request('/amenities')
   return response.data || []
+}
+
+export async function createAmenity(payload) {
+  const response = await request('/amenities', {
+    method: 'POST',
+    data: payload,
+  })
+  return response.data
+}
+
+export async function updateAmenity(id, payload) {
+  const response = await request(`/amenities/${id}`, {
+    method: 'PATCH',
+    data: payload,
+  })
+  return response.data
+}
+
+export async function deleteAmenity(id) {
+  const response = await request(`/amenities/${id}`, { method: 'DELETE' })
+  return response.data
+}
+
+export async function getCategories() {
+  const response = await request('/categories')
+  return response.data || []
+}
+
+export async function createCategory(payload) {
+  const response = await request('/categories', {
+    method: 'POST',
+    data: payload,
+  })
+  return response.data
+}
+
+export async function updateCategory(id, payload) {
+  const response = await request(`/categories/${id}`, {
+    method: 'PATCH',
+    data: payload,
+  })
+  return response.data
+}
+
+export async function deleteCategory(id) {
+  const response = await request(`/categories/${id}`, { method: 'DELETE' })
+  return response.data
 }
 
 export async function createRoomType(payload) {

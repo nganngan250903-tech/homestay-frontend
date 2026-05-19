@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import AppIcon from '../components/AppIcon'
 import Brand from '../components/Brand'
 
 const menuItems = [
@@ -10,7 +11,6 @@ const menuItems = [
   { label: 'Tien nghi', path: '/admin/amenities', icon: 'sparkles' },
   { label: 'Khach hang', path: '/admin/customers', icon: 'users' },
   { label: 'Nhan vien', path: '/admin/employees', icon: 'badge' },
-  { label: 'Thong ke', path: '/admin/reports', icon: 'chart' },
 ]
 
 const iconPaths = {
@@ -71,15 +71,6 @@ const iconPaths = {
       <path d="M10 12h4" />
     </>
   ),
-  chart: (
-    <>
-      <path d="M4 19V5" />
-      <path d="M4 19h16" />
-      <path d="M8 16v-5" />
-      <path d="M12 16V8" />
-      <path d="M16 16v-9" />
-    </>
-  ),
   logout: (
     <>
       <path d="M10 5H5v14h5" />
@@ -118,7 +109,7 @@ function AdminLayout({ auth, onLogout }) {
             type="button"
             aria-label="Dong menu"
           >
-            x
+            <AppIcon name="close" />
           </button>
         </div>
 
@@ -156,7 +147,7 @@ function AdminLayout({ auth, onLogout }) {
             type="button"
             aria-label="Mo menu"
           >
-            =
+            <AppIcon name="menu" />
           </button>
           <Brand subtitle="Admin dashboard" />
           <div className="admin-profile">

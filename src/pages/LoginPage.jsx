@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import AppIcon from '../components/AppIcon'
 import Brand from '../components/Brand'
 import Toast from '../components/Toast'
 import { loginAdmin } from '../services/authService'
@@ -66,7 +67,8 @@ function LoginPage({ onLogin }) {
               value={form.password}
             />
           </label>
-          <button className="primary-btn" disabled={loading} type="submit">
+          <button className="blue-btn" disabled={loading} type="submit">
+            <AppIcon name="login" />
             {loading ? 'Dang dang nhap...' : 'Login'}
           </button>
         </form>

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import AppIcon from '../components/AppIcon'
 import Brand from '../components/Brand'
 import Toast from '../components/Toast'
 import EmployeesTable from '../features/employees/EmployeesTable'
@@ -159,7 +160,7 @@ function DashboardPage({ auth, onLogout }) {
             title={sidebarOpen ? 'Thu gon sidebar' : 'Mo sidebar'}
             type="button"
           >
-            <span>{sidebarOpen ? '<' : '>'}</span>
+            <AppIcon name={sidebarOpen ? 'chevronLeft' : 'chevronRight'} />
           </button>
         </div>
 
@@ -184,6 +185,7 @@ function DashboardPage({ auth, onLogout }) {
           onClick={() => setSidebarOpen((current) => !current)}
           type="button"
         >
+          <AppIcon name={sidebarOpen ? 'close' : 'menu'} />
           {sidebarOpen ? 'Dong menu' : 'Mo menu'}
         </button>
 
@@ -203,7 +205,8 @@ function DashboardPage({ auth, onLogout }) {
                 </small>
               </div>
             </div>
-            <button className="logout-btn" onClick={onLogout} type="button">
+            <button className="cancel-btn logout-btn" onClick={onLogout} type="button">
+              <AppIcon name="logout" />
               Dang xuat
             </button>
           </div>

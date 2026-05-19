@@ -1,3 +1,4 @@
+import AppIcon from '../components/AppIcon'
 import Brand from '../components/Brand'
 
 function HomePage({ auth, onLogout }) {
@@ -16,7 +17,8 @@ function HomePage({ auth, onLogout }) {
         <p className="muted-text">
           Tai khoan dang dang nhap voi quyen {role}. Khu vuc quan tri chi danh cho ADMIN.
         </p>
-        <button className="secondary-btn home-logout-btn" onClick={onLogout} type="button">
+        <button className="cancel-btn home-logout-btn" onClick={onLogout} type="button">
+          <AppIcon name="logout" />
           Dang xuat
         </button>
       </section>

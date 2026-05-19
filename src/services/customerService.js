@@ -6,6 +6,22 @@ export async function getCustomers(keyword = '') {
   return response.data || []
 }
 
+export async function createCustomer(payload) {
+  const response = await request('/customers', {
+    method: 'POST',
+    data: payload,
+  })
+  return response.data
+}
+
+export async function updateCustomer(id, payload) {
+  const response = await request(`/customers/${id}`, {
+    method: 'PATCH',
+    data: payload,
+  })
+  return response.data
+}
+
 export async function updateCustomerStatus(id, status) {
   const response = await request(`/customers/${id}/status`, {
     method: 'PATCH',
@@ -17,4 +33,9 @@ export async function updateCustomerStatus(id, status) {
 export async function getCustomerBookings(id) {
   const response = await request(`/customers/${id}/bookings`)
   return response.data || []
+}
+
+export async function deleteCustomer(id) {
+  const response = await request(`/customers/${id}`, { method: 'DELETE' })
+  return response.data
 }

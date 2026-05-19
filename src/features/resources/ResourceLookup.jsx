@@ -1,3 +1,4 @@
+import AppIcon from '../../components/AppIcon'
 import { bookingStatuses } from './resourceConfig'
 
 function ResourceLookup({
@@ -27,16 +28,19 @@ function ResourceLookup({
           <span>ID</span>
           <input min="1" onChange={onLookupIdChange} type="number" value={lookupId || ''} />
         </label>
-        <button className="secondary-btn" disabled={loading} onClick={onFetchById} type="button">
+        <button className="view-btn" disabled={loading} onClick={onFetchById} type="button">
+          <AppIcon name="eye" />
           Lay du lieu
         </button>
         <button className="danger-btn" disabled={loading} onClick={onDeleteById} type="button">
+          <AppIcon name="trash" />
           Xoa
         </button>
       </div>
 
       {activeKey === 'employees' && (
-        <button className="wide-btn" disabled={loading} onClick={onLoadEmployees} type="button">
+        <button className="blue-btn wide-btn" disabled={loading} onClick={onLoadEmployees} type="button">
+          <AppIcon name="list" />
           Tai danh sach nhan vien
         </button>
       )}
@@ -69,10 +73,12 @@ function ResourceLookup({
             </label>
           </div>
           <div className="form-actions">
-            <button className="primary-btn" disabled={loading} type="submit">
+            <button className="save-btn" disabled={loading} type="submit">
+              <AppIcon name="save" />
               Cap nhat
             </button>
             <button className="danger-btn" disabled={loading} onClick={onCancelBooking} type="button">
+              <AppIcon name="close" />
               Huy booking
             </button>
           </div>

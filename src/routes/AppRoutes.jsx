@@ -3,10 +3,11 @@ import AdminLayout from '../layouts/AdminLayout'
 import DashboardHomePage from '../pages/DashboardHomePage'
 import HomePage from '../pages/HomePage'
 import LoginPage from '../pages/LoginPage'
+import AmenityPage from '../pages/amenities/AmenityPage'
 import CustomerPage from '../pages/customers/CustomerPage'
+import EmployeePage from '../pages/employees/EmployeePage'
 import PlaceholderPage from '../pages/PlaceholderPage'
 import ManagementPage from '../pages/management/ManagementPage'
-import StatisticsPage from '../pages/reports/StatisticsPage'
 import RoomTypePage from '../pages/roomTypes/RoomTypePage'
 import RoomPage from '../pages/rooms/RoomPage'
 
@@ -69,12 +70,11 @@ function AppRoutes({ auth, onLogin, onLogout }) {
         <Route path="room-pricings" element={<ManagementPage resourceKey="roomPricings" />} />
         <Route path="room-photos" element={<ManagementPage resourceKey="roomPhotos" />} />
         <Route path="branches" element={<ManagementPage resourceKey="branches" />} />
-        <Route path="categories" element={<ManagementPage resourceKey="categories" />} />
-        <Route path="amenities" element={<ManagementPage resourceKey="amenities" />} />
+        <Route path="categories" element={<AmenityPage />} />
+        <Route path="amenities" element={<AmenityPage />} />
         <Route path="customers" element={<CustomerPage />} />
-        <Route path="employees" element={<ManagementPage resourceKey="employees" />} />
+        <Route path="employees" element={<EmployeePage />} />
         <Route path="roles" element={<ManagementPage resourceKey="roles" />} />
-        <Route path="reports" element={<StatisticsPage />} />
       </Route>
       <Route path="*" element={<Navigate to={getDefaultPath(auth)} replace />} />
     </Routes>

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import AppIcon from '../components/AppIcon'
 import Brand from '../components/Brand'
 import Toast from '../components/Toast'
 import { request } from '../services/api'
@@ -66,6 +67,7 @@ function AuthPage({ onLogin }) {
               onClick={() => setMode('login')}
               type="button"
             >
+              <AppIcon name="login" />
               Dang nhap
             </button>
             <button
@@ -73,6 +75,7 @@ function AuthPage({ onLogin }) {
               onClick={() => setMode('register')}
               type="button"
             >
+              <AppIcon name="plus" />
               Dang ky customer
             </button>
           </div>
@@ -103,7 +106,8 @@ function AuthPage({ onLogin }) {
                   value={loginForm.password}
                 />
               </label>
-              <button className="primary-btn" disabled={loading} type="submit">
+              <button className="blue-btn" disabled={loading} type="submit">
+                <AppIcon name="login" />
                 {loading ? 'Dang xu ly...' : 'Dang nhap'}
               </button>
             </form>
@@ -151,7 +155,8 @@ function AuthPage({ onLogin }) {
                   value={registerForm.phone}
                 />
               </label>
-              <button className="primary-btn" disabled={loading} type="submit">
+              <button className="save-btn" disabled={loading} type="submit">
+                <AppIcon name="plus" />
                 {loading ? 'Dang xu ly...' : 'Tao tai khoan customer'}
               </button>
             </form>

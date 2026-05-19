@@ -1,4 +1,5 @@
 import EmptyState from '../../components/EmptyState'
+import AppIcon from '../../components/AppIcon'
 
 function getRoomStatus(room) {
   return room.status || room.roomStatus || 'NO_STATUS'
@@ -51,10 +52,12 @@ function RoomTable({ rooms, loading, onDelete, onEdit, onView }) {
               </td>
               <td>
                 <div className="table-actions">
-                  <button className="secondary-btn compact-btn" onClick={() => onView(room)} type="button">
+                  <button className="view-btn compact-btn" onClick={() => onView(room)} type="button">
+                    <AppIcon name="eye" />
                     Xem
                   </button>
-                  <button className="ghost-btn compact-btn" onClick={() => onEdit(room)} type="button">
+                  <button className="edit-btn compact-btn" onClick={() => onEdit(room)} type="button">
+                    <AppIcon name="edit" />
                     Sua
                   </button>
                   <button
@@ -62,6 +65,7 @@ function RoomTable({ rooms, loading, onDelete, onEdit, onView }) {
                     onClick={() => onDelete(room)}
                     type="button"
                   >
+                    <AppIcon name="trash" />
                     Xoa
                   </button>
                 </div>
