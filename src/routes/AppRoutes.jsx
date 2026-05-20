@@ -63,51 +63,56 @@ function AppRoutes({ auth, onLogin, onLogout }) {
       <Route
         path="/home"
         element={
-          <CustomerLayout auth={auth} onLogout={onLogout}>
+          <CustomerLayout auth={auth} onLogin={onLogin} onLogout={onLogout}>
             <HomePage />
           </CustomerLayout>
         }
       />
       <Route
-        path="/home/dat-phong"
+        path="/home/bookingRoom"
         element={
-          <CustomerLayout auth={auth} onLogout={onLogout}>
+          <CustomerLayout auth={auth} onLogin={onLogin} onLogout={onLogout}>
             <BookingPage />
           </CustomerLayout>
         }
       />
       <Route
-        path="/home/tien-nghi"
+        path="/home/amenities"
         element={
-          <CustomerLayout auth={auth} onLogout={onLogout}>
+          <CustomerLayout auth={auth} onLogin={onLogin} onLogout={onLogout}>
             <AmenityInfoPage />
           </CustomerLayout>
         }
       />
       <Route
-        path="/home/dich-vu"
+        path="/home/services"
         element={
-          <CustomerLayout auth={auth} onLogout={onLogout}>
+          <CustomerLayout auth={auth} onLogin={onLogin} onLogout={onLogout}>
             <ServiceInfoPage />
           </CustomerLayout>
         }
       />
       <Route
-        path="/home/uu-dai"
+        path="/home/offers"
         element={
-          <CustomerLayout auth={auth} onLogout={onLogout}>
+          <CustomerLayout auth={auth} onLogin={onLogin} onLogout={onLogout}>
             <OfferInfoPage />
           </CustomerLayout>
         }
       />
       <Route
-        path="/home/quy-tac-faq"
+        path="/home/rulesFaq"
         element={
-          <CustomerLayout auth={auth} onLogout={onLogout}>
+          <CustomerLayout auth={auth} onLogin={onLogin} onLogout={onLogout}>
             <RulesFaqPage />
           </CustomerLayout>
         }
       />
+      <Route path="/home/dat-phong" element={<Navigate to="/home/bookingRoom" replace />} />
+      <Route path="/home/tien-nghi" element={<Navigate to="/home/amenities" replace />} />
+      <Route path="/home/dich-vu" element={<Navigate to="/home/services" replace />} />
+      <Route path="/home/uu-dai" element={<Navigate to="/home/offers" replace />} />
+      <Route path="/home/quy-tac-faq" element={<Navigate to="/home/rulesFaq" replace />} />
       <Route
         path="/admin"
         element={

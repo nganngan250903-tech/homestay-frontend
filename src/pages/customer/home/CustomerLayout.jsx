@@ -6,15 +6,17 @@ import {
   CustomerPasswordModal,
   CustomerProfileModal,
 } from './CustomerAccountModals'
+import CustomerAuthModal from './CustomerAuthModal'
 import CustomerFooter from './CustomerFooter'
 import HomeHeader from './HomeHeader'
 import { emptyCustomerForm } from './homeConstants'
 
-function CustomerLayout({ auth, children, onLogout }) {
+function CustomerLayout({ auth, children, onLogin, onLogout }) {
   const location = useLocation()
   const [customer, setCustomer] = useState(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [accountModal, setAccountModal] = useState('')
+  const [authModal, setAuthModal] = useState('')
   const [bookings, setBookings] = useState([])
   const [bookingLoading, setBookingLoading] = useState(false)
   const authRole = String(auth?.role || auth?.userType || '').toUpperCase()
@@ -62,6 +64,7 @@ function CustomerLayout({ auth, children, onLogout }) {
         currentCustomer={currentCustomer}
         isCustomer={isCustomer}
         menuOpen={menuOpen}
+        onAuthOpen={setAuthModal}
         onHistoryOpen={openHistory}
         onLogout={onLogout}
         onMenuToggle={() => setMenuOpen((current) => !current)}
@@ -83,6 +86,9 @@ function CustomerLayout({ auth, children, onLogout }) {
       )}
       {accountModal === 'history' && (
         <CustomerBookingHistoryModal bookings={bookings} loading={bookingLoading} onClose={() => setAccountModal('')} />
+      )}
+      {authModal && (
+        <CustomerAuthModal initialMode={authModal} onClose={() => setAuthModal('')} onLogin={onLogin} />
       )}
     </main>
   )

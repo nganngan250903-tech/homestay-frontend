@@ -22,13 +22,13 @@ function CustomerFooter() {
           </section>
           <section>
             <h3>Homestay</h3>
-            <Link to="/home/dat-phong">Danh sach cac phong</Link>
-            <Link to="/home/uu-dai">Khuyen mai</Link>
+            <Link to="/home/bookingRoom">Danh sach cac phong</Link>
+            <Link to="/home/offers">Khuyen mai</Link>
           </section>
           <section>
             <h3>Tai khoan</h3>
             <Link to="/home">Tai khoan cua toi</Link>
-            <Link to="/home/dat-phong">Lich su dat phong</Link>
+            <Link to="/home/bookingRoom">Lich su dat phong</Link>
           </section>
           <section>
             <h3>Lien he</h3>
