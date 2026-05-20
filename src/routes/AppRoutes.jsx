@@ -1,31 +1,31 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import AdminLayout from '../layouts/AdminLayout'
-import DashboardHomePage from '../pages/DashboardHomePage'
-import HomePage from '../pages/HomePage'
-import LoginPage from '../pages/LoginPage'
-import AmenityPage from '../pages/amenities/AmenityPage'
-import CustomerPage from '../pages/customers/CustomerPage'
-import EmployeePage from '../pages/employees/EmployeePage'
-import PlaceholderPage from '../pages/PlaceholderPage'
-import ManagementPage from '../pages/management/ManagementPage'
-import ProfilePage from '../pages/profile/ProfilePage'
-import RoomTypePage from '../pages/roomTypes/RoomTypePage'
-import RoomPage from '../pages/rooms/RoomPage'
+import PlaceholderPage from '../pages/admin/PlaceholderPage'
+import AmenityPage from '../pages/admin/amenities/AmenityPage'
+import CustomerPage from '../pages/admin/customers/CustomerPage'
+import DashboardHomePage from '../pages/admin/dashboard/DashboardHomePage'
+import EmployeePage from '../pages/admin/employees/EmployeePage'
+import ManagementPage from '../pages/admin/management/ManagementPage'
+import ProfilePage from '../pages/admin/profile/ProfilePage'
+import RoomTypePage from '../pages/admin/roomTypes/RoomTypePage'
+import RoomPage from '../pages/admin/rooms/RoomPage'
+import LoginPage from '../pages/customer/auth/LoginPage'
+import CustomerLayout from '../pages/customer/home/CustomerLayout'
+import HomePage from '../pages/customer/home/HomePage'
+import {
+  AmenityInfoPage,
+  BookingPage,
+  OfferInfoPage,
+  RulesFaqPage,
+  ServiceInfoPage,
+} from '../pages/customer/home/customerPages/CustomerInfoPages'
 
 function getDefaultPath(auth) {
   if (!auth) {
-    return '/login'
+    return '/home'
   }
 
   return ['ADMIN', 'EMPLOYEE'].includes(auth.role) ? '/admin' : '/home'
-}
-
-function RequireAuth({ auth, children }) {
-  if (!auth) {
-    return <Navigate to="/login" replace />
-  }
-
-  return children
 }
 
 function RequireStaff({ auth, children }) {
@@ -55,6 +55,7 @@ function RequireRole({ auth, roles, children }) {
 function AppRoutes({ auth, onLogin, onLogout }) {
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/home" replace />} />
       <Route
         path="/login"
         element={auth ? <Navigate to={getDefaultPath(auth)} replace /> : <LoginPage onLogin={onLogin} />}
@@ -62,9 +63,49 @@ function AppRoutes({ auth, onLogin, onLogout }) {
       <Route
         path="/home"
         element={
-          <RequireAuth auth={auth}>
-            <HomePage auth={auth} onLogout={onLogout} />
-          </RequireAuth>
+          <CustomerLayout auth={auth} onLogout={onLogout}>
+            <HomePage />
+          </CustomerLayout>
+        }
+      />
+      <Route
+        path="/home/dat-phong"
+        element={
+          <CustomerLayout auth={auth} onLogout={onLogout}>
+            <BookingPage />
+          </CustomerLayout>
+        }
+      />
+      <Route
+        path="/home/tien-nghi"
+        element={
+          <CustomerLayout auth={auth} onLogout={onLogout}>
+            <AmenityInfoPage />
+          </CustomerLayout>
+        }
+      />
+      <Route
+        path="/home/dich-vu"
+        element={
+          <CustomerLayout auth={auth} onLogout={onLogout}>
+            <ServiceInfoPage />
+          </CustomerLayout>
+        }
+      />
+      <Route
+        path="/home/uu-dai"
+        element={
+          <CustomerLayout auth={auth} onLogout={onLogout}>
+            <OfferInfoPage />
+          </CustomerLayout>
+        }
+      />
+      <Route
+        path="/home/quy-tac-faq"
+        element={
+          <CustomerLayout auth={auth} onLogout={onLogout}>
+            <RulesFaqPage />
+          </CustomerLayout>
         }
       />
       <Route

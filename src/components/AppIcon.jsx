@@ -105,6 +105,8 @@ const iconPaths = {
   ),
   chevronLeft: <path d="M15 6l-6 6 6 6" />,
   chevronRight: <path d="M9 6l6 6-6 6" />,
+  chevronUp: <path d="M6 15l6-6 6 6" />,
+  chevronDown: <path d="M6 9l6 6 6-6" />,
   lock: (
     <>
       <path d="M7 11V8a5 5 0 0 1 10 0v3" />
@@ -163,6 +165,21 @@ const iconPaths = {
       <path d="M17 18v2" />
       <path d="M7 15h.1" />
       <path d="M17 15h.1" />
+    </>
+  ),
+  house: (
+    <>
+      <path d="M3 11l9-7 9 7" />
+      <path d="M5 10v10h14V10" />
+      <path d="M9 20v-6h6v6" />
+    </>
+  ),
+  users: (
+    <>
+      <path d="M16 11a4 4 0 1 0-8 0" />
+      <path d="M5 21a7 7 0 0 1 14 0" />
+      <path d="M19 8a3 3 0 0 1 2 5" />
+      <path d="M3 13a3 3 0 0 1 2-5" />
     </>
   ),
   utensils: (

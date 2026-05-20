@@ -16,7 +16,7 @@ function profileFields(includePassword) {
     { name: 'name', label: 'Ho ten', required: true },
     { name: 'phone', label: 'So dien thoai', required: true },
     { name: 'address', label: 'Dia chi' },
-    { name: 'image', label: 'Anh dai dien URL' },
+    { name: 'image', label: 'Anh dai dien' },
   ].filter(Boolean)
 }
 
@@ -62,7 +62,7 @@ export const resources = [
       { name: 'password', label: 'Mat khau', type: 'password', required: true },
       { name: 'phone', label: 'So dien thoai', required: true },
       { name: 'address', label: 'Dia chi' },
-      { name: 'image', label: 'Anh dai dien URL' },
+      { name: 'image', label: 'Anh dai dien' },
       { name: 'roleId', label: 'ID vai tro', type: 'number' },
     ],
     buildPayload: (data) => ({
@@ -85,7 +85,7 @@ export const resources = [
       { name: 'name', label: 'Ten chi nhanh', required: true },
       { name: 'address', label: 'Dia chi', required: true },
       { name: 'phone', label: 'So dien thoai', required: true },
-      { name: 'image', label: 'Anh URL' },
+      { name: 'image', label: 'Anh' },
     ],
   },
   {
@@ -97,7 +97,7 @@ export const resources = [
       { name: 'name', label: 'Ten loai phong', required: true },
       { name: 'description', label: 'Mo ta' },
       { name: 'maxGuest', label: 'So khach toi da', type: 'number', required: true },
-      { name: 'image', label: 'Anh URL' },
+      { name: 'image', label: 'Anh' },
     ],
     buildPayload: (data) => ({
       name: data.name,
@@ -114,14 +114,14 @@ export const resources = [
     fields: [
       { name: 'branchId', label: 'ID chi nhanh', type: 'number', required: true },
       { name: 'roomTypeId', label: 'ID loai phong', type: 'number', required: true },
-      { name: 'number', label: 'So phong', type: 'number', required: true },
+      { name: 'name', label: 'Ten phong', required: true },
       { name: 'area', label: 'Dien tich', type: 'number', required: true },
-      { name: 'thumbnail', label: 'Anh phong URL' },
+      { name: 'thumbnail', label: 'Anh phong' },
     ],
     buildPayload: (data) => ({
-      branch: nestedId(data.branchId),
-      roomType: nestedId(data.roomTypeId),
-      number: toNumber(data.number),
+      branchId: toNumber(data.branchId),
+      roomTypeId: toNumber(data.roomTypeId),
+      name: data.name,
       area: Number(data.area || 0),
       thumbnail: data.thumbnail,
     }),
@@ -195,10 +195,10 @@ export const resources = [
     description: 'Anh bo sung cho phong.',
     fields: [
       { name: 'roomId', label: 'ID phong', type: 'number', required: true },
-      { name: 'photo', label: 'Anh URL', required: true },
+      { name: 'photo', label: 'Anh', required: true },
     ],
     buildPayload: (data) => ({
-      room: nestedId(data.roomId),
+      roomId: toNumber(data.roomId),
       photo: data.photo,
     }),
   },

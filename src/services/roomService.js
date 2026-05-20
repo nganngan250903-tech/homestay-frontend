@@ -35,10 +35,15 @@ export async function createRoomPhoto(roomId, photo) {
   const response = await request('/roomPhotos', {
     method: 'POST',
     data: {
-      room: { id: roomId },
+      roomId,
       photo,
     },
   })
+  return response.data
+}
+
+export async function deleteRoomPhoto(id) {
+  const response = await request(`/roomPhotos/${id}`, { method: 'DELETE' })
   return response.data
 }
 

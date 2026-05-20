@@ -20,3 +20,29 @@ export async function deleteCloudImage(publicId) {
 
   return response.data
 }
+
+export function getCloudinaryPublicId(url) {
+  if (!url || !url.includes('/upload/')) {
+    return ''
+  }
+
+  try {
+    const uploadPath = new URL(url).pathname.split('/upload/')[1]
+    if (!uploadPath) {
+      return ''
+    }
+
+    const parts = uploadPath.split('/')
+    const versionIndex = parts.findIndex((part) => /^v\d+$/.test(part))
+    const publicIdParts = versionIndex >= 0 ? parts.slice(versionIndex + 1) : parts
+    const filename = publicIdParts.pop()
+    if (!filename) {
+      return ''
+    }
+
+    publicIdParts.push(filename.replace(/\.[^/.]+$/, ''))
+    return publicIdParts.join('/')
+  } catch {
+    return ''
+  }
+}

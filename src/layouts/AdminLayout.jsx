@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import AppIcon from '../components/AppIcon'
 import Brand from '../components/Brand'
-import EmployeeAvatar from '../pages/employees/EmployeeAvatar'
+import EmployeeAvatar from '../pages/admin/employees/EmployeeAvatar'
 import { getEmployee } from '../services/employeeService'
 
 const menuItems = [

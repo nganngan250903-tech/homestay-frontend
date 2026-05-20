@@ -6,6 +6,11 @@ export async function getCustomers(keyword = '') {
   return response.data || []
 }
 
+export async function getCustomer(id) {
+  const response = await request(`/customers/${id}`)
+  return response.data
+}
+
 export async function createCustomer(payload) {
   const response = await request('/customers', {
     method: 'POST',

@@ -1,13 +1,14 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import EmptyState from '../../components/EmptyState'
-import AppIcon from '../../components/AppIcon'
-import LoadingSpinner from '../../components/LoadingSpinner'
-import StatCard from '../../components/StatCard'
-import Toast from '../../components/Toast'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import EmptyState from '../../../components/EmptyState'
+import AppIcon from '../../../components/AppIcon'
+import LoadingSpinner from '../../../components/LoadingSpinner'
+import StatCard from '../../../components/StatCard'
+import Toast from '../../../components/Toast'
 import {
   createRoom,
   createRoomPhoto,
   createRoomPricing,
+  deleteRoomPhoto,
   createRoomType,
   deleteRoom,
   deleteRoomType,
@@ -21,12 +22,28 @@ import {
   updateRoom,
   updateRoomPricing,
   updateRoomType,
-} from '../../services/roomService'
+} from '../../../services/roomService'
+import { deleteCloudImage, getCloudinaryPublicId, uploadImage } from '../../../services/uploadService'
 import RoomFormModal from './RoomFormModal'
 import RoomTable from './RoomTable'
 
 const PAGE_SIZE = 6
 const emptyRoomTypeForm = { name: '', description: '', maxGuest: '', image: '' }
+
+async function deleteCloudImageByUrl(url) {
+  const publicId = getCloudinaryPublicId(url)
+  if (!publicId) return
+  await deleteCloudImage(publicId)
+}
+
+async function deleteUploadedImage(publicId) {
+  if (!publicId) return
+  try {
+    await deleteCloudImage(publicId)
+  } catch {
+    // Temporary upload cleanup should not block closing the modal.
+  }
+}
 
 function getRoomStatus(room) {
   return room.status || room.roomStatus || 'NO_STATUS'
@@ -150,7 +167,7 @@ function RoomImages({ room }) {
       {room.thumbnail ? (
         <div className="detail-image form-wide">
           <span className="detail-section-label">Anh thumbnail</span>
-          <DetailImage src={room.thumbnail} alt={`Phong ${room.number}`} />
+          <DetailImage src={room.thumbnail} alt={`Phong ${room.name}`} />
         </div>
       ) : (
         <DetailItem label="Anh thumbnail" value="Chua co" />
@@ -163,7 +180,7 @@ function RoomImages({ room }) {
               const photoUrl = getRoomPhotoUrl(roomPhoto)
               return (
                 <div className="room-photo-preview" key={roomPhoto.id || photoUrl}>
-                  <DetailImage src={photoUrl} alt={`Anh phong ${room.number}`} />
+                  <DetailImage src={photoUrl} alt={`Anh phong ${room.name}`} />
                 </div>
               )
             })}
@@ -288,7 +305,7 @@ function RoomDetailModal({
         <div className="modal-head detail-modal-head">
           <div>
             <p className="eyebrow">{isOccupied ? 'Booking detail' : 'Room detail'}</p>
-            <h2 id="room-detail-title">Thong tin chi tiet phong so {room.number}</h2>
+            <h2 id="room-detail-title">Thong tin chi tiet phong {room.name}</h2>
           </div>
           <StatusBadge status={status} />
           <button className="icon-btn" onClick={onClose} type="button" aria-label="Dong modal">
@@ -316,7 +333,7 @@ function RoomDetailModal({
             </>
           ) : (
             <EmptyState
-              title={`Chua tim thay booking cua phong #${room.number}`}
+              title={`Chua tim thay booking cua phong ${room.name}`}
               description="Backend khong tra ve booking dang gan voi phong nay."
             />
           )
@@ -375,6 +392,32 @@ function RoomDetailModal({
 function RoomTypeModal({ form, mode, onClose, onSubmit, onUpdateField, saving }) {
   const readOnly = mode === 'view'
   const title = mode === 'view' ? 'Chi tiet loai phong' : mode === 'edit' ? 'Sua loai phong' : 'Them loai phong'
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState('')
+  const uploadedImageRef = useRef(null)
+
+  const changeImage = async (event) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    setUploading(true)
+    setUploadError('')
+    try {
+      const uploaded = await uploadImage(file, 'room-types')
+      await deleteUploadedImage(uploadedImageRef.current?.publicId)
+      uploadedImageRef.current = uploaded.publicId ? { publicId: uploaded.publicId, url: uploaded.url } : null
+      onUpdateField('image', uploaded.url)
+    } catch (error) {
+      setUploadError(error.message || 'Khong the upload anh loai phong')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const closeWithoutSaving = () => {
+    deleteUploadedImage(uploadedImageRef.current?.publicId)
+    onClose()
+  }
 
   return (
     <div className="modal-backdrop" role="presentation">
@@ -384,7 +427,7 @@ function RoomTypeModal({ form, mode, onClose, onSubmit, onUpdateField, saving })
             <p className="eyebrow">Room type</p>
             <h2 id="room-type-title">{title}</h2>
           </div>
-          <button className="icon-btn" onClick={onClose} type="button" aria-label="Dong modal">
+          <button className="icon-btn" onClick={closeWithoutSaving} type="button" aria-label="Dong modal">
             <AppIcon name="close" />
           </button>
         </div>
@@ -418,26 +461,26 @@ function RoomTypeModal({ form, mode, onClose, onSubmit, onUpdateField, saving })
               value={form.description}
             />
           </label>
-          <label className="field form-wide">
-            <span>Image URL</span>
-            <input
-              disabled={readOnly}
-              onChange={(event) => onUpdateField('image', event.target.value)}
-              value={form.image}
-            />
-          </label>
+          {!readOnly && (
+            <label className="field form-wide">
+              <span>Anh loai phong</span>
+              <input accept="image/*" disabled={uploading} onChange={changeImage} type="file" />
+              {uploading && <small className="helper-text">Dang upload anh...</small>}
+              {uploadError && <small className="error-text">{uploadError}</small>}
+            </label>
+          )}
           {form.image && (
             <div className="detail-image form-wide">
               <img src={form.image} alt={form.name || 'Loai phong'} />
             </div>
           )}
           <div className="modal-actions form-wide">
-            <button className="cancel-btn" onClick={onClose} type="button">
+            <button className="cancel-btn" onClick={closeWithoutSaving} type="button">
               <AppIcon name="close" />
               {readOnly ? 'Dong' : 'Huy'}
             </button>
             {!readOnly && (
-              <button className="save-btn" disabled={saving} type="submit">
+              <button className="save-btn" disabled={saving || uploading} type="submit">
                 <AppIcon name="save" />
                 {saving ? 'Dang luu...' : 'Luu loai phong'}
               </button>
@@ -449,7 +492,7 @@ function RoomTypeModal({ form, mode, onClose, onSubmit, onUpdateField, saving })
   )
 }
 
-function RoomPage() {
+function RoomPage({ auth }) {
   const [rooms, setRooms] = useState([])
   const [branches, setBranches] = useState([])
   const [roomTypes, setRoomTypes] = useState([])
@@ -461,6 +504,7 @@ function RoomPage() {
   const [savingAmenities, setSavingAmenities] = useState(false)
   const [loadingBooking, setLoadingBooking] = useState(false)
   const [toast, setToast] = useState(null)
+  const isAdmin = auth?.role === 'ADMIN'
   const [searchInput, setSearchInput] = useState('')
   const [statusInput, setStatusInput] = useState('ALL')
   const [filters, setFilters] = useState({ search: '', status: 'ALL' })
@@ -478,7 +522,7 @@ function RoomPage() {
     const keyword = filters.search.trim().toLowerCase()
     return rooms.filter((room) => {
       const searchable = [
-        room.number,
+        room.name,
         room.branch?.name,
         room.roomType?.name,
         room.area,
@@ -516,7 +560,9 @@ function RoomPage() {
       }
       const roomsWithPhotos = roomData.map((room) => ({
         ...room,
-        roomPhotos: photoData.filter((roomPhoto) => roomPhoto.room?.id === room.id),
+        roomPhotos: Array.isArray(room.roomPhotos) && room.roomPhotos.length > 0
+          ? room.roomPhotos
+          : photoData.filter((roomPhoto) => roomPhoto.room?.id === room.id),
       }))
       setRooms(roomsWithPhotos)
       setBranches(branchData)
@@ -590,7 +636,7 @@ function RoomPage() {
   const submitRoom = async (payload) => {
     setSaving(true)
     setToast(null)
-    const { pricing, roomPhotos = [], ...roomPayload } = payload
+    const { deleteCloudPublicIds = [], deleteRoomPhotoIds = [], pricing, roomPhotos = [], ...roomPayload } = payload
 
     try {
       let roomId = modal.room?.id
@@ -602,8 +648,16 @@ function RoomPage() {
         setToast({ type: 'success', message: 'Da them phong moi' })
       }
 
+      if (modal.mode === 'edit' && deleteRoomPhotoIds.length > 0) {
+        await Promise.all(deleteRoomPhotoIds.map((photoId) => deleteRoomPhoto(photoId)))
+      }
+
       if (roomId && roomPhotos.length > 0) {
         await Promise.all(roomPhotos.map((photo) => createRoomPhoto(roomId, photo)))
+      }
+
+      if (deleteCloudPublicIds.length > 0) {
+        await Promise.allSettled(deleteCloudPublicIds.map((publicId) => deleteCloudImage(publicId)))
       }
 
       if (pricing?.enabled) {
@@ -640,7 +694,7 @@ function RoomPage() {
   }
 
   const removeRoom = async (room) => {
-    const confirmed = window.confirm(`Xoa phong #${room.number}?`)
+    const confirmed = window.confirm(`Xoa phong ${room.name}?`)
     if (!confirmed) {
       return
     }
@@ -650,10 +704,30 @@ function RoomPage() {
 
     try {
       await deleteRoom(room.id)
+      const roomImageUrls = [
+        room.thumbnail,
+        ...(room.roomPhotos || []).map(getRoomPhotoUrl),
+      ].filter(Boolean)
+      await Promise.allSettled(roomImageUrls.map(deleteCloudImageByUrl))
       setToast({ type: 'success', message: 'Da xoa phong' })
       await loadData()
     } catch (error) {
       setToast({ type: 'error', message: error.message || 'Khong xoa duoc phong' })
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const toggleRoomStatus = async (room) => {
+    setSaving(true)
+    setToast(null)
+    const nextStatus = getRoomStatus(room) === 'OCCUPIED' ? 'AVAILABLE' : 'OCCUPIED'
+    try {
+      await updateRoom(room.id, { status: nextStatus })
+      setToast({ type: 'success', message: 'Cap nhat du lieu thanh cong' })
+      await loadData()
+    } catch (error) {
+      setToast({ type: 'error', message: error.message || 'Khong cap nhat duoc trang thai phong' })
     } finally {
       setSaving(false)
     }
@@ -671,7 +745,7 @@ function RoomPage() {
     const payload = {
       branchId: room.branch?.id,
       roomTypeId: room.roomType?.id,
-      number: room.number,
+      name: room.name,
       area: room.area,
       thumbnail: room.thumbnail || '',
       status: getRoomStatus(room),
@@ -741,6 +815,9 @@ function RoomPage() {
     try {
       if (roomTypeModal.mode === 'edit') {
         await updateRoomType(roomTypeModal.roomType.id, payload)
+        if (roomTypeModal.roomType.image && roomTypeModal.roomType.image !== payload.image) {
+          await Promise.allSettled([deleteCloudImageByUrl(roomTypeModal.roomType.image)])
+        }
         setToast({ type: 'success', message: 'Da cap nhat loai phong' })
       } else {
         await createRoomType(payload)
@@ -766,6 +843,9 @@ function RoomPage() {
 
     try {
       await deleteRoomType(roomType.id)
+      if (roomType.image) {
+        await Promise.allSettled([deleteCloudImageByUrl(roomType.image)])
+      }
       setToast({ type: 'success', message: 'Da xoa loai phong' })
       await loadData()
     } catch (error) {
@@ -777,14 +857,6 @@ function RoomPage() {
 
   return (
     <section className="page-stack">
-      <div className="page-heading">
-        
-        <button className="blue-btn" onClick={openCreateModal} type="button">
-          <AppIcon name="plus" />
-          Them phong
-        </button>
-      </div>
-
       <Toast message={toast?.message} type={toast?.type} />
 
       <div className="stats-grid">
@@ -796,14 +868,23 @@ function RoomPage() {
       <section className="panel">
         <div className="section-head">
           <div>
-            
+            <p className="eyebrow">DANH SACH PHONG</p>
+            <h2>Danh sach phong</h2>
           </div>
+          {isAdmin && (
+            <div className="table-actions">
+              <button className="blue-btn" onClick={openCreateModal} type="button">
+                <AppIcon name="plus" />
+                Them phong
+              </button>
+            </div>
+          )}
         </div>
 
         <form className="room-toolbar" onSubmit={applySearch}>
           <label className="field">
             <span>Tim kiem phong</span>
-            <input onChange={(event) => setSearchInput(event.target.value)} placeholder="So phong..." value={searchInput} />
+            <input onChange={(event) => setSearchInput(event.target.value)} placeholder="Ten phong..." value={searchInput} />
           </label>
           <label className="field">
             <span>Trang thai</span>
@@ -827,8 +908,9 @@ function RoomPage() {
           <RoomTable
             rooms={pagedRooms}
             loading={loading}
-            onDelete={removeRoom}
-            onEdit={openEditModal}
+            onDelete={isAdmin ? removeRoom : null}
+            onEdit={isAdmin ? openEditModal : null}
+            onStatusChange={toggleRoomStatus}
             onView={openDetailModal}
           />
         )}
@@ -863,12 +945,16 @@ function RoomPage() {
         </div>
       </section>
 
-      <section className="panel">
+      {isAdmin && <section className="panel">
         <div className="section-head">
           <div>
             <p className="eyebrow">QUAN LY LOAI PHONG</p>
             <h2>Danh sach loai phong</h2>
           </div>
+          <button className="blue-btn" onClick={openCreateRoomType} type="button">
+            <AppIcon name="plus" />
+            Them loai phong
+          </button>
         </div>
 
         {loading ? (
@@ -921,14 +1007,7 @@ function RoomPage() {
             </table>
           </div>
         )}
-
-        <div className="panel-footer">
-          <button className="blue-btn" onClick={openCreateRoomType} type="button">
-            <AppIcon name="plus" />
-            Them loai phong
-          </button>
-        </div>
-      </section>
+      </section>}
 
       {modal.open && (
         <RoomFormModal

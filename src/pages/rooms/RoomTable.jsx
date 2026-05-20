@@ -1,5 +1,4 @@
 import EmptyState from '../../components/EmptyState'
-import AppIcon from '../../components/AppIcon'
 
 function getRoomStatus(room) {
   return room.status || room.roomStatus || 'NO_STATUS'
@@ -7,20 +6,20 @@ function getRoomStatus(room) {
 
 function formatStatus(status) {
   const labels = {
-    AVAILABLE: 'Dang trong',
-    OCCUPIED: 'Dang thue',
-    NO_STATUS: 'Chua co trang thai',
+    AVAILABLE: 'Còn trống',
+    OCCUPIED: 'Đang thuê',
+    NO_STATUS: 'Chưa có trạng thái',
   }
 
   return labels[status] || status
 }
 
-function RoomTable({ rooms, loading, onDelete, onEdit, onStatusChange, onView }) {
+function RoomTable({ rooms, loading, onEdit, onDelete }) {
   if (!loading && rooms.length === 0) {
     return (
       <EmptyState
-        title="Khong co phong"
-        description="Khong tim thay phong phu hop voi dieu kien hien tai."
+        title="Không có phòng"
+        description="Không tìm thấy phòng phù hợp với điều kiện hiện tại."
       />
     )
   }
@@ -30,11 +29,14 @@ function RoomTable({ rooms, loading, onDelete, onEdit, onStatusChange, onView })
       <table className="data-table">
         <thead>
           <tr>
-            <th>So phong</th>
-            <th>Chi nhanh</th>
-            <th>Loai phong</th>
-            <th>Trang thai</th>
-            <th>Thao tac</th>
+            <th> Số phòng</th>
+            <th>Chi nhánh</th>
+            <th>Loại phòng</th>
+            <th>Diện tích</th>
+            <th>Trạng thái</th>
+            <th>Tiện nghi</th>
+            <th>Hình ảnh</th>
+            <th>Thao tác</th>
           </tr>
         </thead>
         <tbody>
@@ -42,42 +44,41 @@ function RoomTable({ rooms, loading, onDelete, onEdit, onStatusChange, onView })
             <tr key={room.id}>
               <td>
                 <strong>#{room.number}</strong>
+                <span className="cell-subtext">ID {room.id}</span>
               </td>
               <td>{room.branch?.name || 'Chua gan'}</td>
               <td>{room.roomType?.name || 'Chua gan'}</td>
+              <td>{room.area ? `${room.area} m2` : 'Chua co'}</td>
               <td>
-                <button
-                  className={`status-action-pill ${getRoomStatus(room) === 'OCCUPIED' ? 'locked' : 'active'}`}
-                  disabled={!onStatusChange}
-                  onClick={() => onStatusChange?.(room)}
-                  type="button"
-                >
-                  <AppIcon name={getRoomStatus(room) === 'OCCUPIED' ? 'unlock' : 'lock'} />
+                <span className={`status-pill ${getRoomStatus(room).toLowerCase()}`}>
                   {formatStatus(getRoomStatus(room))}
-                </button>
+                </span>
+              </td>
+              <td>
+                <span className="cell-subtext">
+                  {(room.amenities || []).map((amenity) => amenity.amenityName).join(', ') ||
+                    'Chua gan'}
+                </span>
+              </td>
+              <td>
+                {room.thumbnail ? (
+                  <img className="room-thumb" src={room.thumbnail} alt={`Phong ${room.number}`} />
+                ) : (
+                  <span className="muted-text">Chưa có ảnh</span>
+                )}
               </td>
               <td>
                 <div className="table-actions">
-                  <button className="view-btn compact-btn" onClick={() => onView(room)} type="button">
-                    <AppIcon name="eye" />
-                    Xem
+                  <button className="ghost-btn compact-btn" onClick={() => onEdit(room)} type="button">
+                    Sua
                   </button>
-                  {onEdit && (
-                    <button className="edit-btn compact-btn" onClick={() => onEdit(room)} type="button">
-                      <AppIcon name="edit" />
-                      Sua
-                    </button>
-                  )}
-                  {onDelete && (
-                    <button
-                      className="danger-btn compact-btn"
-                      onClick={() => onDelete(room)}
-                      type="button"
-                    >
-                      <AppIcon name="trash" />
-                      Xoa
-                    </button>
-                  )}
+                  <button
+                    className="danger-btn compact-btn"
+                    onClick={() => onDelete(room)}
+                    type="button"
+                  >
+                    Xoa
+                  </button>
                 </div>
               </td>
             </tr>
