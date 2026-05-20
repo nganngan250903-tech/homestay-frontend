@@ -12,6 +12,8 @@ import RoomPage from '../pages/admin/rooms/RoomPage'
 import LoginPage from '../pages/customer/auth/LoginPage'
 import CustomerLayout from '../pages/customer/home/CustomerLayout'
 import HomePage from '../pages/customer/home/HomePage'
+import PaymentPage from '../pages/customer/payment/PaymentPage'
+import PaymentResultPage from '../pages/customer/payment/PaymentResultPage'
 import {
   AmenityInfoPage,
   BookingPage,
@@ -105,6 +107,22 @@ function AppRoutes({ auth, onLogin, onLogout }) {
         element={
           <CustomerLayout auth={auth} onLogin={onLogin} onLogout={onLogout}>
             <RulesFaqPage />
+          </CustomerLayout>
+        }
+      />
+      <Route
+        path="/home/payment/:bookingId"
+        element={
+          <CustomerLayout auth={auth} onLogin={onLogin} onLogout={onLogout}>
+            <PaymentPage />
+          </CustomerLayout>
+        }
+      />
+      <Route
+        path="/home/payment-result"
+        element={
+          <CustomerLayout auth={auth} onLogin={onLogin} onLogout={onLogout}>
+            <PaymentResultPage />
           </CustomerLayout>
         }
       />

@@ -1,5 +1,8 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import AppIcon from '../../../components/AppIcon'
+import Toast from '../../../components/Toast'
+import { createBooking } from '../../../services/bookingService'
 import { formatRoomPrice } from './homeUtils'
 
 const aboutFeatures = [
@@ -17,13 +20,13 @@ const aboutFeatures = [
   },
   {
     icon: 'bath',
-    title: 'Phòng ngu tiện nghi',
+    title: 'Phòng ngủ tiện nghi',
     description: 'Phòng sạch sẽ, điều hòa, phòng tắm và các vật dụng cần thiết cho kỳ nghỉ ngắn ngày.',
     tone: 'blue',
   },
   {
     icon: 'car',
-    title: 'Di chuyen thuan tien',
+    title: 'Di chuyển thuận tiện',
     description: 'Gần các điểm dịch vụ, dễ tìm đường và phù hợp cho lịch trình linh hoạt.',
     tone: 'mint',
   },
@@ -38,29 +41,102 @@ const homestayGalleryImages = [
   '/page/images (6).jpg',
 ]
 
-function RoomDetailModal({ room, onClose }) {
+function toDateTimeInput(date) {
+  const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+  return offsetDate.toISOString().slice(0, 16)
+}
+
+function createDefaultBookingForm() {
+  const checkIn = new Date()
+  checkIn.setDate(checkIn.getDate() + 1)
+  checkIn.setHours(14, 0, 0, 0)
+
+  const checkOut = new Date(checkIn)
+  checkOut.setDate(checkOut.getDate() + 1)
+  checkOut.setHours(12, 0, 0, 0)
+
+  return {
+    checkIn: toDateTimeInput(checkIn),
+    checkOut: toDateTimeInput(checkOut),
+    guestCount: 1,
+  }
+}
+
+function RoomDetailModal({
+  isCustomer,
+  onBookingCreated,
+  onClose,
+  onRequireCustomerAuth,
+  room,
+  bookingCustomer,
+}) {
+  const navigate = useNavigate()
+  const [bookingForm, setBookingForm] = useState(createDefaultBookingForm)
+  const [saving, setSaving] = useState(false)
+  const [toast, setToast] = useState(null)
+
+  const photos = useMemo(() => {
+    if (!room) return []
+    return [
+      room.thumbnail,
+      room.image,
+      ...(room.roomPhotos || []).map((photo) => photo.photo || photo.Photo),
+    ].filter(Boolean)
+  }, [room])
+
   if (!room) return null
 
   const amenities = room.amenities || []
-  const photos = [
-    room.thumbnail,
-    room.image,
-    ...(room.roomPhotos || []).map((photo) => photo.photo || photo.Photo),
-  ].filter(Boolean)
   const uniquePhotos = [...new Set(photos)]
+
+  const updateBookingField = (field, value) => {
+    setBookingForm((current) => ({ ...current, [field]: value }))
+  }
+
+  const submitBooking = async (event) => {
+    event.preventDefault()
+
+    if (!isCustomer || !bookingCustomer?.id) {
+      setToast({ type: 'error', message: 'Bạn cần đăng nhập tài khoản khách hàng trước khi đặt phòng.' })
+      onRequireCustomerAuth?.()
+      return
+    }
+
+    setSaving(true)
+    setToast(null)
+    try {
+      const booking = await createBooking({
+        customerId: bookingCustomer.id,
+        employeeId: null,
+        roomId: room.id,
+        checkIn: bookingForm.checkIn,
+        checkOut: bookingForm.checkOut,
+        guestCount: Number(bookingForm.guestCount),
+      })
+      onBookingCreated?.(booking)
+      setToast({ type: 'success', message: `Đặt phòng thành công. Đang chuyển sang thanh toán #${booking.id}.` })
+      setBookingForm(createDefaultBookingForm())
+      window.setTimeout(() => navigate(`/home/payment/${booking.id}`), 500)
+    } catch (error) {
+      setToast({ type: 'error', message: error.message || 'Không tạo được booking.' })
+    } finally {
+      setSaving(false)
+    }
+  }
 
   return (
     <div className="modal-backdrop" role="presentation">
       <section className="customer-room-modal" role="dialog" aria-modal="true" aria-labelledby="customer-room-title">
         <div className="customer-auth-head">
           <div>
-            <p className="eyebrow">Chi tiet phòng</p>
+            <p className="eyebrow">Chi tiết phòng</p>
             <h2 id="customer-room-title">{room.name}</h2>
           </div>
           <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng">
             <AppIcon name="close" />
           </button>
         </div>
+        <Toast message={toast?.message} type={toast?.type} />
         <div className="customer-room-detail">
           <img src={room.image} alt={room.name} />
           <div className="customer-room-info">
@@ -75,20 +151,20 @@ function RoomDetailModal({ room, onClose }) {
               <span>Số khách tối đa</span>
               <strong>{room.maxGuest || room.roomType?.maxGuest || 'Chưa có'}</strong>
               <span>Giá tham khảo</span>
-              <strong>{room.price ? `${formatRoomPrice(room.price)}d/gio` : 'Lien he'}</strong>
+              <strong>{room.price ? `${formatRoomPrice(room.price)}đ/đêm` : 'Liên hệ'}</strong>
             </div>
           </div>
         </div>
         {uniquePhotos.length > 1 && (
           <div className="customer-room-photo-strip">
             {uniquePhotos.slice(0, 5).map((photo) => (
-              <img src={photo} alt={`Anh ${room.name}`} key={photo} />
+              <img src={photo} alt={`Ảnh ${room.name}`} key={photo} />
             ))}
           </div>
         )}
         {amenities.length > 0 && (
           <div className="customer-room-amenities">
-            <h3>Tien nghi</h3>
+            <h3>Tiện nghi</h3>
             <div>
               {amenities.map((amenity) => (
                 <span key={amenity.amenityId || amenity.id || amenity.amenityName}>
@@ -99,25 +175,76 @@ function RoomDetailModal({ room, onClose }) {
             </div>
           </div>
         )}
+
+        <form className="customer-booking-form" onSubmit={submitBooking}>
+          <div className="compact-section-head">
+            <div>
+              <p className="eyebrow">Tạo booking</p>
+              <h3>Thông tin đặt phòng</h3>
+            </div>
+          </div>
+          <label className="field">
+            <span>Check-in</span>
+            <input
+              min={toDateTimeInput(new Date())}
+              onChange={(event) => updateBookingField('checkIn', event.target.value)}
+              required
+              type="datetime-local"
+              value={bookingForm.checkIn}
+            />
+          </label>
+          <label className="field">
+            <span>Check-out</span>
+            <input
+              min={bookingForm.checkIn}
+              onChange={(event) => updateBookingField('checkOut', event.target.value)}
+              required
+              type="datetime-local"
+              value={bookingForm.checkOut}
+            />
+          </label>
+          <label className="field">
+            <span>Số khách</span>
+            <input
+              min="1"
+              max={room.maxGuest || room.roomType?.maxGuest || undefined}
+              onChange={(event) => updateBookingField('guestCount', event.target.value)}
+              required
+              type="number"
+              value={bookingForm.guestCount}
+            />
+          </label>
+          <button className="save-btn home-primary-btn" disabled={saving} type="submit">
+            <AppIcon name="calendar" />
+            {saving ? 'Đang tạo booking...' : 'Đặt phòng'}
+          </button>
+        </form>
       </section>
     </div>
   )
 }
 
-export function CustomerRoomSection({ rooms, id = 'phong' }) {
+export function CustomerRoomSection({
+  bookingCustomer,
+  id = 'phong',
+  isCustomer,
+  onBookingCreated,
+  onRequireCustomerAuth,
+  rooms,
+}) {
   const [selectedRoom, setSelectedRoom] = useState(null)
 
   return (
     <>
       <section className="home-room-section" id={id}>
         <div className="home-section-title">
-          <h2>Đặt phòng tai Lim Dim</h2>
-          <p>Chon phòng phu hop va xem chi tiet truoc khi gui yeu cau dat phòng.</p>
+          <h2>Đặt phòng tại Lim Dim</h2>
+          <p>Chọn phòng phù hợp và xem chi tiết trước khi gửi yêu cầu đặt phòng.</p>
         </div>
         {rooms.length === 0 ? (
           <div className="home-room-empty">
-            <strong>Chưa có phòng de hien thi</strong>
-            <span>Danh sach phòng se duoc cap nhat tu he thong quan tri.</span>
+            <strong>Chưa có phòng để hiển thị</strong>
+            <span>Danh sách phòng sẽ được cập nhật từ hệ thống quản trị.</span>
           </div>
         ) : (
           <div className="home-room-grid">
@@ -129,8 +256,8 @@ export function CustomerRoomSection({ rooms, id = 'phong' }) {
                   <p>{room.description}</p>
                   <span>Số khách tối đa {room.maxGuest || room.roomType?.maxGuest || 3} người</span>
                   <div className="home-room-footer">
-                    <strong>{room.price ? `${formatRoomPrice(room.price)}d/gio` : 'Lien he'}</strong>
-                    <button onClick={() => setSelectedRoom(room)} type="button">Xem Chi Tiet</button>
+                    <strong>{room.price ? `${formatRoomPrice(room.price)}đ/đêm` : 'Liên hệ'}</strong>
+                    <button onClick={() => setSelectedRoom(room)} type="button">Xem chi tiết</button>
                   </div>
                 </div>
               </article>
@@ -139,12 +266,19 @@ export function CustomerRoomSection({ rooms, id = 'phong' }) {
         )}
       </section>
 
-      <RoomDetailModal room={selectedRoom} onClose={() => setSelectedRoom(null)} />
+      <RoomDetailModal
+        bookingCustomer={bookingCustomer}
+        isCustomer={isCustomer}
+        onBookingCreated={onBookingCreated}
+        onClose={() => setSelectedRoom(null)}
+        onRequireCustomerAuth={onRequireCustomerAuth}
+        room={selectedRoom}
+      />
     </>
   )
 }
 
-function HomeSections({ rooms }) {
+function HomeSections({ bookingCustomer, isCustomer, onBookingCreated, onRequireCustomerAuth, rooms }) {
   return (
     <>
       <section className="home-hero" id="top">
@@ -154,7 +288,7 @@ function HomeSections({ rooms }) {
       <section className="home-about" id="thong-tin">
         <div className="home-about-grid">
           <div className="home-about-intro">
-            <h2>DEN VOI LIM DIM HOMESTAY</h2>
+            <h2>ĐẾN VỚI LIM DIM HOMESTAY</h2>
             <p>
               Đến với Lim Dim Homestay, bạn sẽ tìm thấy một khoảng nghỉ thật chậm giữa lòng Huế yên bình.
               Với mô hình nhà vườn gần gũi thiên nhiên, Lim Dim mang đến không gian trong lành,
@@ -180,10 +314,10 @@ function HomeSections({ rooms }) {
 
       <section className="home-gallery-section" id="hinh-anh">
         <div className="home-gallery-heading">
-          <h2>HINH ANH CAC PHONG CAN HO</h2>
+          <h2>HÌNH ẢNH CÁC PHÒNG CĂN HỘ</h2>
           <p>
             Những góc phòng, không gian sinh hoạt và khu nghỉ được chăm chút để mang lại cảm giác
-            gan gui, sach se va thoai mai cho moi ky nghi tai Lim Dim Homestay.
+            gần gũi, sạch sẽ và thoải mái cho mỗi kỳ nghỉ tại Lim Dim Homestay.
           </p>
         </div>
         <div className="home-gallery-grid">
@@ -195,7 +329,13 @@ function HomeSections({ rooms }) {
         </div>
       </section>
 
-      <CustomerRoomSection rooms={rooms} />
+      <CustomerRoomSection
+        bookingCustomer={bookingCustomer}
+        isCustomer={isCustomer}
+        onBookingCreated={onBookingCreated}
+        onRequireCustomerAuth={onRequireCustomerAuth}
+        rooms={rooms}
+      />
     </>
   )
 }

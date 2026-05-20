@@ -7,6 +7,10 @@ import { updateCustomer } from '../../../services/customerService'
 import { formatMoney } from '../../admin/customers/customerUtils'
 import { customerFormFrom } from './homeUtils'
 
+function canCancelBooking(booking) {
+  return ['PENDING', 'CONFIRMED'].includes(booking.currentStatus)
+}
+
 export function CustomerProfileModal({ customer, onClose, onSaved }) {
   const [form, setForm] = useState(() => customerFormFrom(customer))
   const [saving, setSaving] = useState(false)
@@ -36,8 +40,8 @@ export function CustomerProfileModal({ customer, onClose, onSaved }) {
       <section className="customer-account-modal" role="dialog" aria-modal="true" aria-labelledby="customer-profile-title">
         <div className="customer-auth-head">
           <div>
-            <p className="eyebrow">Tai khoan</p>
-            <h2 id="customer-profile-title">Chỉnh sửa thong tin</h2>
+            <p className="eyebrow">Tài khoản</p>
+            <h2 id="customer-profile-title">Chỉnh sửa thông tin</h2>
           </div>
           <button className="icon-btn" disabled={saving} onClick={onClose} type="button" aria-label="Đóng">
             <AppIcon name="close" />
@@ -68,7 +72,7 @@ export function CustomerProfileModal({ customer, onClose, onSaved }) {
             </button>
             <button className="save-btn" disabled={saving} type="submit">
               <AppIcon name="save" />
-              {saving ? 'Đang lưu...' : 'Lưu thay doi'}
+              {saving ? 'Đang lưu...' : 'Lưu thay đổi'}
             </button>
           </div>
         </form>
@@ -105,8 +109,8 @@ export function CustomerPasswordModal({ customer, onClose }) {
       <section className="customer-account-modal small" role="dialog" aria-modal="true" aria-labelledby="customer-password-title">
         <div className="customer-auth-head">
           <div>
-            <p className="eyebrow">Bao mat</p>
-            <h2 id="customer-password-title">Doi mat khau</h2>
+            <p className="eyebrow">Bảo mật</p>
+            <h2 id="customer-password-title">Đổi mật khẩu</h2>
           </div>
           <button className="icon-btn" disabled={saving} onClick={onClose} type="button" aria-label="Đóng">
             <AppIcon name="close" />
@@ -115,7 +119,7 @@ export function CustomerPasswordModal({ customer, onClose }) {
         <Toast message={toast?.message} type={toast?.type} />
         <form className="home-account-form single" onSubmit={submit}>
           <label className="field">
-            <span>Mật khẩu moi</span>
+            <span>Mật khẩu mới</span>
             <input
               autoComplete="new-password"
               onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
@@ -125,7 +129,7 @@ export function CustomerPasswordModal({ customer, onClose }) {
             />
           </label>
           <label className="field">
-            <span>Xác nhận mat khau</span>
+            <span>Xác nhận mật khẩu</span>
             <input
               autoComplete="new-password"
               onChange={(event) => setForm((current) => ({ ...current, confirmPassword: event.target.value }))}
@@ -150,7 +154,23 @@ export function CustomerPasswordModal({ customer, onClose }) {
   )
 }
 
-export function CustomerBookingHistoryModal({ bookings, loading, onClose }) {
+export function CustomerBookingHistoryModal({ bookings, loading, onBookingCancelled, onClose }) {
+  const [savingId, setSavingId] = useState(null)
+  const [toast, setToast] = useState(null)
+
+  const cancel = async (booking) => {
+    setSavingId(booking.id)
+    setToast(null)
+    try {
+      await onBookingCancelled(booking.id)
+      setToast({ type: 'success', message: `Đã hủy booking #${booking.id}` })
+    } catch (error) {
+      setToast({ type: 'error', message: error.message || 'Không hủy được booking' })
+    } finally {
+      setSavingId(null)
+    }
+  }
+
   return (
     <div className="modal-backdrop" role="presentation">
       <section className="customer-account-modal wide" role="dialog" aria-modal="true" aria-labelledby="customer-history-title">
@@ -163,10 +183,11 @@ export function CustomerBookingHistoryModal({ bookings, loading, onClose }) {
             <AppIcon name="close" />
           </button>
         </div>
+        <Toast message={toast?.message} type={toast?.type} />
         {loading ? (
           <LoadingSpinner label="Đang tải lịch sử..." />
         ) : bookings.length === 0 ? (
-          <EmptyState title="Chưa có booking" description="Cac booking cua ban se hien thi tai day." />
+          <EmptyState title="Chưa có booking" description="Các booking của bạn sẽ hiển thị tại đây." />
         ) : (
           <div className="table-wrap">
             <table className="data-table">
@@ -174,22 +195,38 @@ export function CustomerBookingHistoryModal({ bookings, loading, onClose }) {
                 <tr>
                   <th>Booking</th>
                   <th>Phòng</th>
-                  <th>Thoi gian</th>
+                  <th>Thời gian</th>
                   <th>Trạng thái</th>
-                  <th>Tong tien</th>
+                  <th>Tổng tiền</th>
+                  <th>Thao tác</th>
                 </tr>
               </thead>
               <tbody>
                 {bookings.map((booking) => (
                   <tr key={booking.id}>
                     <td>#{booking.id}</td>
-                    <td>{booking.roomName || `Room ${booking.roomId}`} - {booking.roomTypeName}</td>
+                    <td>{booking.roomName || `Phòng ${booking.roomId}`} - {booking.roomTypeName}</td>
                     <td>
                       <span className="cell-subtext">{booking.checkIn}</span>
                       <span className="cell-subtext">{booking.checkOut}</span>
                     </td>
                     <td>{booking.currentStatus}</td>
                     <td>{formatMoney(booking.totalAmount)}</td>
+                    <td>
+                      {canCancelBooking(booking) ? (
+                        <button
+                          className="danger-btn compact-btn"
+                          disabled={savingId === booking.id}
+                          onClick={() => cancel(booking)}
+                          type="button"
+                        >
+                          <AppIcon name="close" />
+                          {savingId === booking.id ? 'Đang hủy...' : 'Hủy'}
+                        </button>
+                      ) : (
+                        <span className="cell-subtext">Không khả dụng</span>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>

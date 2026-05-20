@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
+import { cloneElement, isValidElement, useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { getCustomerBookings, getCustomer } from '../../../services/customerService'
+import { cancelBooking } from '../../../services/bookingService'
 import {
   CustomerBookingHistoryModal,
   CustomerPasswordModal,
@@ -56,7 +57,25 @@ function CustomerLayout({ auth, children, onLogin, onLogout }) {
     }
   }
 
+  const handleBookingCreated = (booking) => {
+    setBookings((current) => [booking, ...current.filter((item) => item.id !== booking.id)])
+  }
+
+  const handleBookingCancelled = async (bookingId) => {
+    const updated = await cancelBooking(bookingId)
+    setBookings((current) => current.map((item) => (item.id === updated.id ? updated : item)))
+    return updated
+  }
+
   const currentCustomer = customer || { ...emptyCustomerForm, ...authUser, id: customerId }
+  const content = isValidElement(children)
+    ? cloneElement(children, {
+        bookingCustomer: currentCustomer,
+        isCustomer,
+        onBookingCreated: handleBookingCreated,
+        onRequireCustomerAuth: () => setAuthModal('login'),
+      })
+    : children
 
   return (
     <main className="customer-home">
@@ -71,7 +90,7 @@ function CustomerLayout({ auth, children, onLogin, onLogout }) {
         onOpenModal={openModal}
       />
 
-      <div className="customer-page-content">{children}</div>
+      <div className="customer-page-content">{content}</div>
       <CustomerFooter />
 
       {accountModal === 'profile' && (
@@ -85,7 +104,12 @@ function CustomerLayout({ auth, children, onLogin, onLogout }) {
         <CustomerPasswordModal customer={currentCustomer} onClose={() => setAccountModal('')} />
       )}
       {accountModal === 'history' && (
-        <CustomerBookingHistoryModal bookings={bookings} loading={bookingLoading} onClose={() => setAccountModal('')} />
+        <CustomerBookingHistoryModal
+          bookings={bookings}
+          loading={bookingLoading}
+          onBookingCancelled={handleBookingCancelled}
+          onClose={() => setAccountModal('')}
+        />
       )}
       {authModal && (
         <CustomerAuthModal initialMode={authModal} onClose={() => setAuthModal('')} onLogin={onLogin} />

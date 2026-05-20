@@ -5,22 +5,22 @@ import useCustomerRooms from '../useCustomerRooms'
 const amenityHighlights = [
   {
     icon: 'wifi',
-    title: 'Wifi toc do cao',
-    description: 'Ket noi on dinh cho lam viec, hoc tap va giai tri trong suot ky nghi.',
+    title: 'Wifi tốc độ cao',
+    description: 'Kết nối ổn định cho làm việc, học tập và giải trí trong suốt kỳ nghỉ.',
   },
   {
     icon: 'snowflake',
-    title: 'Dieu hoa rieng',
+    title: 'Điều hòa riêng',
     description: 'Mỗi phòng đều có điều hòa, giúp không gian nghỉ ngơi luôn dễ chịu.',
   },
   {
     icon: 'bath',
-    title: 'Phòng tam sach se',
+    title: 'Phòng tắm sạch sẽ',
     description: 'Vật dụng cơ bản được chuẩn bị gọn gàng, thuận tiện cho khách lưu trú.',
   },
   {
     icon: 'coffee',
-    title: 'Khu sinh hoat chung',
+    title: 'Khu sinh hoạt chung',
     description: 'Không gian chung ấm cúng để uống trà, trò chuyện và thư giãn.',
   },
 ]
@@ -28,25 +28,25 @@ const amenityHighlights = [
 const serviceHighlights = [
   {
     icon: 'calendar',
-    title: 'Ho tro dat phòng',
-    description: 'Tu van phòng phu hop theo số khách, lich trinh va ngan sach cua ban.',
+    title: 'Hỗ trợ đặt phòng',
+    description: 'Tư vấn phòng phù hợp theo số khách, lịch trình và ngân sách của bạn.',
   },
   {
     icon: 'car',
-    title: 'Ho tro di chuyen',
-    description: 'Goi y cach di chuyen den homestay va cac dia diem gan khu luu tru.',
+    title: 'Hỗ trợ di chuyển',
+    description: 'Gợi ý cách di chuyển đến homestay và các địa điểm gần khu lưu trú.',
   },
   {
     icon: 'utensils',
-    title: 'Goi y an uong',
-    description: 'Chia se nhung dia diem an uong gan gui, de trai nghiem huong vi dia phuong.',
+    title: 'Gợi ý ăn uống',
+    description: 'Chia sẻ những địa điểm ăn uống gần gũi, dễ trải nghiệm hương vị địa phương.',
   },
 ]
 
 const offerHighlights = [
   'Ưu đãi cho khách đặt phòng dài ngày.',
   'Giá tốt hơn cho nhóm bạn và gia đình khi đặt nhiều phòng.',
-  'Cap nhat uu dai theo mua va cac dip le trong nam.',
+  'Cập nhật ưu đãi theo mùa và các dịp lễ trong năm.',
 ]
 
 const faqItems = [
@@ -73,7 +73,7 @@ function PageHero({ title, description }) {
   )
 }
 
-export function BookingPage() {
+export function BookingPage(props) {
   const rooms = useCustomerRooms()
 
   return (
@@ -82,7 +82,7 @@ export function BookingPage() {
         title="Đặt phòng"
         description="Chọn phòng phù hợp với lịch trình của bạn và xem chi tiết tiện nghi, giá tham khảo trước khi đặt."
       />
-      <CustomerRoomSection rooms={rooms} id="dat-phong" />
+      <CustomerRoomSection rooms={rooms} id="dat-phong" {...props} />
     </>
   )
 }
@@ -91,7 +91,7 @@ export function AmenityInfoPage() {
   return (
     <>
       <PageHero
-        title="Tien nghi"
+        title="Tiện nghi"
         description="Những tiện ích cần thiết được sắp xếp gọn gàng để kỳ nghỉ ngắn ngày vẫn thoải mái."
       />
       <section className="home-info-section">
@@ -115,8 +115,8 @@ export function ServiceInfoPage() {
   return (
     <>
       <PageHero
-        title="Dich vu"
-        description="Cac dich vu ho tro khách hàng tu luc chon phòng den khi hoan tat ky nghi tai Lim Dim."
+        title="Dịch vụ"
+        description="Các dịch vụ hỗ trợ khách hàng từ lúc chọn phòng đến khi hoàn tất kỳ nghỉ tại Lim Dim."
       />
       <section className="home-info-section soft">
         <div className="home-service-list">
@@ -141,7 +141,7 @@ export function OfferInfoPage() {
   return (
     <>
       <PageHero
-        title="Uu dai"
+        title="Ưu đãi"
         description="Các chương trình ưu đãi được cập nhật theo tình trạng phòng, thời điểm đặt và số lượng khách."
       />
       <section className="home-info-section">
@@ -162,8 +162,8 @@ export function RulesFaqPage() {
   return (
     <>
       <PageHero
-        title="Quy tac & FAQ"
-        description="Mot so thong tin can biet truoc khi dat phòng va luu tru tai homestay."
+        title="Quy tắc & FAQ"
+        description="Một số thông tin cần biết trước khi đặt phòng và lưu trú tại homestay."
       />
       <section className="home-info-section soft">
         <div className="home-faq-list">
