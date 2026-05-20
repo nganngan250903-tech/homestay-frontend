@@ -47,7 +47,7 @@ function ResourceForm({ commitToken, form, loading, onReset, onSubmit, onUpdateF
       tempUploadsRef.current[field.name] = uploaded.publicId ? { publicId: uploaded.publicId, url: uploaded.url } : null
       onUpdateField(field.name, uploaded.url)
     } catch (error) {
-      setUploadError(error.message || 'Khong the upload anh.')
+      setUploadError(error.message || 'Không thể upload ảnh.')
     } finally {
       setUploadingField('')
     }
@@ -82,7 +82,7 @@ function ResourceForm({ commitToken, form, loading, onReset, onSubmit, onUpdateF
                   required={field.required && !form[field.name]}
                   type="file"
                 />
-                {uploadingField === field.name && <small className="helper-text">Dang upload anh...</small>}
+                {uploadingField === field.name && <small className="helper-text">Đang upload ảnh...</small>}
                 {form[field.name] && <small className="helper-text">Da upload anh</small>}
               </>
             ) : (

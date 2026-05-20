@@ -8,7 +8,7 @@ export async function loginStaff(credentials) {
 
   const auth = response.data
   if (!['ADMIN', 'EMPLOYEE'].includes(auth?.role)) {
-    throw new Error('Tai khoan nay khong co quyen truy cap he thong quan ly')
+    throw new Error('Tài khoản này không có quyền truy cập hệ thống quản lý')
   }
 
   return auth

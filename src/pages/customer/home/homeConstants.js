@@ -3,22 +3,22 @@ import heroImage from '../../../assets/hero.png'
 export const fallbackRooms = [
   {
     id: 'double',
-    name: 'Phong Giuong Doi',
-    description: 'Phong duoc thiet ke theo phong cach hien dai, ket hop hai toa goc rieng tu va tien nghi am ap.',
+    name: 'Phòng Giuong Doi',
+    description: 'Phòng duoc thiet ke theo phòng cach hien dai, ket hop hai toa goc rieng tu va tiện nghi am ap.',
     image: heroImage,
     price: 180000,
   },
   {
     id: 'single',
-    name: 'Phong Giuong Don',
-    description: 'Khong gian gon gon cho chuyen di ca nhan, co cua so thoang va day du vat dung can thiet.',
+    name: 'Phòng Giuong Don',
+    description: 'Không gian gọn gọn cho chuyến đi cá nhân, có cửa sổ thoáng và đầy đủ vật dụng cần thiết.',
     image: heroImage,
     price: 100000,
   },
   {
     id: 'dorm',
-    name: 'Phong Dorm',
-    description: 'Lua chon tiet kiem cho nhom ban tre, gan khu sinh hoat chung va cac tien ich co ban.',
+    name: 'Phòng Dorm',
+    description: 'Lựa chọn tiết kiệm cho nhóm bạn trẻ, gần khu sinh hoạt chung và các tiện ích cơ bản.',
     image: heroImage,
     price: 120000,
   },

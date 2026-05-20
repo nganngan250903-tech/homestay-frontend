@@ -42,9 +42,9 @@ function roomMatchesStatus(room, status) {
 
 function formatRoomStatus(status) {
   const labels = {
-    AVAILABLE: 'Dang trong',
-    OCCUPIED: 'Dang thue',
-    NO_STATUS: 'Chua co trang thai',
+    AVAILABLE: 'Đang trống',
+    OCCUPIED: 'Đang thuê',
+    NO_STATUS: 'Chưa có trang thai',
   }
 
   return labels[status] || status
@@ -52,7 +52,7 @@ function formatRoomStatus(status) {
 
 function formatMoney(value) {
   if (value === null || value === undefined || value === '') {
-    return 'Chua co'
+    return 'Chưa có'
   }
 
   return new Intl.NumberFormat('vi-VN', {
@@ -64,7 +64,7 @@ function formatMoney(value) {
 
 function formatDate(value) {
   if (!value) {
-    return 'Chua co'
+    return 'Chưa có'
   }
 
   return new Intl.DateTimeFormat('vi-VN', {
@@ -74,7 +74,7 @@ function formatDate(value) {
 
 function formatDateTime(value) {
   if (!value) {
-    return 'Chua co'
+    return 'Chưa có'
   }
 
   return new Intl.DateTimeFormat('vi-VN', {
@@ -87,7 +87,7 @@ function DetailItem({ label, value }) {
   return (
     <div className="detail-item">
       <span>{label}</span>
-      <strong>{value || 'Chua co'}</strong>
+      <strong>{value || 'Chưa có'}</strong>
     </div>
   )
 }
@@ -111,7 +111,7 @@ function DetailImage({ alt, src }) {
   if (failed) {
     return (
       <div className="image-error-box">
-        <strong>Khong tai duoc anh</strong>
+        <strong>Không tải được ảnh</strong>
         <span>{src}</span>
       </div>
     )
@@ -150,27 +150,27 @@ function RoomImages({ room }) {
       {room.thumbnail ? (
         <div className="detail-image form-wide">
           <span className="detail-section-label">Anh thumbnail</span>
-          <DetailImage src={room.thumbnail} alt={`Phong ${room.number}`} />
+          <DetailImage src={room.thumbnail} alt={`Phòng ${room.number}`} />
         </div>
       ) : (
-        <DetailItem label="Anh thumbnail" value="Chua co" />
+        <DetailItem label="Anh thumbnail" value="Chưa có" />
       )}
       {latestPhotos.length > 0 ? (
         <div className="form-wide">
-          <span className="detail-section-label">Anh phong</span>
+          <span className="detail-section-label">Ảnh phòng</span>
           <div className="room-photo-strip">
             {latestPhotos.map((roomPhoto) => {
               const photoUrl = getRoomPhotoUrl(roomPhoto)
               return (
                 <div className="room-photo-preview" key={roomPhoto.id || photoUrl}>
-                  <DetailImage src={photoUrl} alt={`Anh phong ${room.number}`} />
+                  <DetailImage src={photoUrl} alt={`Ảnh phòng ${room.number}`} />
                 </div>
               )
             })}
           </div>
         </div>
       ) : (
-        <DetailItem label="Anh phong" value="Chua co" />
+        <DetailItem label="Ảnh phòng" value="Chưa có" />
       )}
     </>
   )
@@ -179,15 +179,15 @@ function RoomImages({ room }) {
 function RoomInfoGrid({ pricing, room }) {
   return (
     <div className="detail-list">
-      <DetailItem label="Chi nhanh" value={room.branch?.name} />
-      <DetailItem label="Mo ta" value={room.roomType?.description} />
-      <DetailItem label="Loai phong" value={room.roomType?.name} />
-      <DetailItem label="Dien tich" value={room.area ? `${room.area} m2` : ''} />
-      <DetailItem label="Gia co ban / qua dem" value={formatMoney(pricing?.basePrice)} />
-      <DetailItem label="Gia cuoi tuan" value={formatMoney(pricing?.weekendPrice)} />
-      <DetailItem label="Gia ngay le" value={formatMoney(pricing?.holidayPrice)} />
-      <DetailItem label="Bat dau ap dung" value={formatDate(pricing?.startDate)} />
-      <DetailItem label="Ket thuc" value={formatDate(pricing?.endDate)} />
+      <DetailItem label="Chi nhánh" value={room.branch?.name} />
+      <DetailItem label="Mô tả" value={room.roomType?.description} />
+      <DetailItem label="Loại phòng" value={room.roomType?.name} />
+      <DetailItem label="Diện tích" value={room.area ? `${room.area} m2` : ''} />
+      <DetailItem label="Giá cơ bản / qua dem" value={formatMoney(pricing?.basePrice)} />
+      <DetailItem label="Giá cuối tuần" value={formatMoney(pricing?.weekendPrice)} />
+      <DetailItem label="Giá ngày lễ" value={formatMoney(pricing?.holidayPrice)} />
+      <DetailItem label="Bắt đầu ap dung" value={formatDate(pricing?.startDate)} />
+      <DetailItem label="Kết thúc" value={formatDate(pricing?.endDate)} />
       <RoomImages room={room} />
     </div>
   )
@@ -217,7 +217,7 @@ function AmenityTable({ amenities, editing, form, onToggle, roomAmenities }) {
         }))
 
   if (visibleAmenities.length === 0) {
-    return <EmptyState title="Chua co tien nghi" description="Phong nay chua duoc gan tien nghi." />
+    return <EmptyState title="Chưa có tiện nghi" description="Phòng này chưa được gắn tiện nghi." />
   }
 
   return (
@@ -288,10 +288,10 @@ function RoomDetailModal({
         <div className="modal-head detail-modal-head">
           <div>
             <p className="eyebrow">{isOccupied ? 'Booking detail' : 'Room detail'}</p>
-            <h2 id="room-detail-title">Thong tin chi tiet phong so {room.number}</h2>
+            <h2 id="room-detail-title">Thông tin chi tiet phòng so {room.number}</h2>
           </div>
           <StatusBadge status={status} />
-          <button className="icon-btn" onClick={onClose} type="button" aria-label="Dong modal">
+          <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng modal">
             <AppIcon name="close" />
           </button>
         </div>
@@ -304,20 +304,20 @@ function RoomDetailModal({
               <RoomInfoGrid pricing={pricing} room={room} />
               <div className="detail-list detail-list-spaced">
                 <DetailItem label="Ma booking" value={`#${booking.id}`} />
-                <DetailItem label="Khach hang" value={booking.customerName} />
-                <DetailItem label="Trang thai booking" value={booking.currentStatus} />
+                <DetailItem label="Khách hàng" value={booking.customerName} />
+                <DetailItem label="Trạng thái booking" value={booking.currentStatus} />
                 <DetailItem label="Check-in" value={formatDateTime(booking.checkIn)} />
                 <DetailItem label="Check-out" value={formatDateTime(booking.checkOut)} />
-                <DetailItem label="So khach" value={booking.guestCount} />
+                <DetailItem label="Số khách" value={booking.guestCount} />
                 <DetailItem label="Tong tien" value={formatMoney(booking.totalAmount)} />
                 <DetailItem label="Da thanh toan" value={formatMoney(booking.paidAmount)} />
-                <DetailItem label="Nhan vien" value={booking.employeeId ? `#${booking.employeeId}` : 'Chua gan'} />
+                <DetailItem label="Nhân viên" value={booking.employeeId ? `#${booking.employeeId}` : 'Chưa gắn'} />
               </div>
             </>
           ) : (
             <EmptyState
-              title={`Chua tim thay booking cua phong #${room.number}`}
-              description="Backend khong tra ve booking dang gan voi phong nay."
+              title={`Chưa tìm thấy booking của phòng #${room.number}`}
+              description="Backend không trả về booking đang gắn với phòng này."
             />
           )
         ) : (
@@ -328,23 +328,23 @@ function RoomDetailModal({
           <div className="section-head compact-section-head">
             <div>
               <p className="eyebrow">Tien nghi</p>
-              <h2>Tien nghi trong phong</h2>
+              <h2>Tien nghi trong phòng</h2>
             </div>
             {editingAmenities ? (
               <div className="table-actions">
                 <button className="cancel-btn compact-btn" onClick={() => setEditingAmenities(false)} type="button">
                   <AppIcon name="close" />
-                  Huy
+                  Hủy
                 </button>
                 <button className="save-btn compact-btn" disabled={savingAmenities} onClick={saveAmenities} type="button">
                   <AppIcon name="save" />
-                  {savingAmenities ? 'Dang luu...' : 'Luu'}
+                  {savingAmenities ? 'Đang lưu...' : 'Lưu'}
                 </button>
               </div>
             ) : (
               <button className="blue-btn compact-btn" onClick={() => setEditingAmenities(true)} type="button">
                 <AppIcon name="edit" />
-                Chinh sua tien nghi
+                Chỉnh sửa tiện nghi
               </button>
             )}
           </div>
@@ -360,11 +360,11 @@ function RoomDetailModal({
         <div className="modal-actions detail-actions">
           <button className="cancel-btn" onClick={onClose} type="button">
             <AppIcon name="close" />
-            Dong
+            Đóng
           </button>
           <button className="blue-btn" onClick={onEdit} type="button">
             <AppIcon name="edit" />
-            Chinh sua
+            Chỉnh sửa
           </button>
         </div>
       </section>
@@ -374,7 +374,7 @@ function RoomDetailModal({
 
 function RoomTypeModal({ form, mode, onClose, onSubmit, onUpdateField, saving }) {
   const readOnly = mode === 'view'
-  const title = mode === 'view' ? 'Chi tiet loai phong' : mode === 'edit' ? 'Sua loai phong' : 'Them loai phong'
+  const title = mode === 'view' ? 'Chi tiet loai phòng' : mode === 'edit' ? 'Sửa loai phòng' : 'Thêm loai phòng'
 
   return (
     <div className="modal-backdrop" role="presentation">
@@ -384,14 +384,14 @@ function RoomTypeModal({ form, mode, onClose, onSubmit, onUpdateField, saving })
             <p className="eyebrow">Room type</p>
             <h2 id="room-type-title">{title}</h2>
           </div>
-          <button className="icon-btn" onClick={onClose} type="button" aria-label="Dong modal">
+          <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng modal">
             <AppIcon name="close" />
           </button>
         </div>
 
         <form className="form-grid" onSubmit={onSubmit}>
           <label className="field">
-            <span>Ten loai phong</span>
+            <span>Tên loại phòng</span>
             <input
               disabled={readOnly}
               onChange={(event) => onUpdateField('name', event.target.value)}
@@ -400,7 +400,7 @@ function RoomTypeModal({ form, mode, onClose, onSubmit, onUpdateField, saving })
             />
           </label>
           <label className="field">
-            <span>So khach toi da</span>
+            <span>Số khách tối đa</span>
             <input
               disabled={readOnly}
               min="1"
@@ -411,7 +411,7 @@ function RoomTypeModal({ form, mode, onClose, onSubmit, onUpdateField, saving })
             />
           </label>
           <label className="field form-wide">
-            <span>Mo ta</span>
+            <span>Mô tả</span>
             <input
               disabled={readOnly}
               onChange={(event) => onUpdateField('description', event.target.value)}
@@ -428,18 +428,18 @@ function RoomTypeModal({ form, mode, onClose, onSubmit, onUpdateField, saving })
           </label>
           {form.image && (
             <div className="detail-image form-wide">
-              <img src={form.image} alt={form.name || 'Loai phong'} />
+              <img src={form.image} alt={form.name || 'Loại phòng'} />
             </div>
           )}
           <div className="modal-actions form-wide">
             <button className="cancel-btn" onClick={onClose} type="button">
               <AppIcon name="close" />
-              {readOnly ? 'Dong' : 'Huy'}
+              {readOnly ? 'Đóng' : 'Hủy'}
             </button>
             {!readOnly && (
               <button className="save-btn" disabled={saving} type="submit">
                 <AppIcon name="save" />
-                {saving ? 'Dang luu...' : 'Luu loai phong'}
+                {saving ? 'Đang lưu...' : 'Lưu loai phòng'}
               </button>
             )}
           </div>
@@ -524,7 +524,7 @@ function RoomPage() {
       setAmenities(amenityData)
       setRoomPricings(pricingData)
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong tai duoc danh sach phong' })
+      setToast({ type: 'error', message: error.message || 'Không tải được danh sách phòng' })
     } finally {
       setLoading(false)
     }
@@ -571,7 +571,7 @@ function RoomPage() {
         null
       setDetailModal({ open: true, room, booking: activeBooking })
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong tai duoc chi tiet booking' })
+      setToast({ type: 'error', message: error.message || 'Không tải được chi tiết booking' })
     } finally {
       setLoadingBooking(false)
     }
@@ -596,10 +596,10 @@ function RoomPage() {
       let roomId = modal.room?.id
       if (modal.mode === 'edit') {
         await updateRoom(modal.room.id, roomPayload)
-        setToast({ type: 'success', message: 'Da cap nhat phong' })
+        setToast({ type: 'success', message: 'Da cap nhat phòng' })
       } else {
         roomId = await createRoom(roomPayload)
-        setToast({ type: 'success', message: 'Da them phong moi' })
+        setToast({ type: 'success', message: 'Đã thêm phòng mới' })
       }
 
       if (roomId && roomPhotos.length > 0) {
@@ -633,14 +633,14 @@ function RoomPage() {
       closeModal()
       await loadData()
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong luu duoc phong' })
+      setToast({ type: 'error', message: error.message || 'Không lưu được phòng' })
     } finally {
       setSaving(false)
     }
   }
 
   const removeRoom = async (room) => {
-    const confirmed = window.confirm(`Xoa phong #${room.number}?`)
+    const confirmed = window.confirm(`Xóa phòng #${room.number}?`)
     if (!confirmed) {
       return
     }
@@ -650,10 +650,10 @@ function RoomPage() {
 
     try {
       await deleteRoom(room.id)
-      setToast({ type: 'success', message: 'Da xoa phong' })
+      setToast({ type: 'success', message: 'Đã xóa phòng' })
       await loadData()
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong xoa duoc phong' })
+      setToast({ type: 'error', message: error.message || 'Không xóa được phòng' })
     } finally {
       setSaving(false)
     }
@@ -689,10 +689,10 @@ function RoomPage() {
       })
       const nextRoom = { ...room, amenities: nextAmenities }
       setDetailModal((current) => ({ ...current, room: nextRoom }))
-      setToast({ type: 'success', message: 'Da cap nhat tien nghi phong' })
+      setToast({ type: 'success', message: 'Da cap nhat tiện nghi phòng' })
       await loadData()
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong luu duoc tien nghi phong' })
+      setToast({ type: 'error', message: error.message || 'Không lưu được tiện nghi phòng' })
     } finally {
       setSavingAmenities(false)
     }
@@ -741,22 +741,22 @@ function RoomPage() {
     try {
       if (roomTypeModal.mode === 'edit') {
         await updateRoomType(roomTypeModal.roomType.id, payload)
-        setToast({ type: 'success', message: 'Da cap nhat loai phong' })
+        setToast({ type: 'success', message: 'Da cap nhat loai phòng' })
       } else {
         await createRoomType(payload)
-        setToast({ type: 'success', message: 'Da them loai phong' })
+        setToast({ type: 'success', message: 'Đã thêm loại phòng' })
       }
       closeRoomTypeModal()
       await loadData()
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong luu duoc loai phong' })
+      setToast({ type: 'error', message: error.message || 'Không lưu được loại phòng' })
     } finally {
       setSavingRoomType(false)
     }
   }
 
   const removeRoomType = async (roomType) => {
-    const confirmed = window.confirm(`Xoa loai phong ${roomType.name}?`)
+    const confirmed = window.confirm(`Xóa loai phòng ${roomType.name}?`)
     if (!confirmed) {
       return
     }
@@ -766,10 +766,10 @@ function RoomPage() {
 
     try {
       await deleteRoomType(roomType.id)
-      setToast({ type: 'success', message: 'Da xoa loai phong' })
+      setToast({ type: 'success', message: 'Đã xóa loại phòng' })
       await loadData()
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong xoa duoc loai phong' })
+      setToast({ type: 'error', message: error.message || 'Không xóa được loại phòng' })
     } finally {
       setSavingRoomType(false)
     }
@@ -781,16 +781,16 @@ function RoomPage() {
         
         <button className="blue-btn" onClick={openCreateModal} type="button">
           <AppIcon name="plus" />
-          Them phong
+          Thêm phòng
         </button>
       </div>
 
       <Toast message={toast?.message} type={toast?.type} />
 
       <div className="stats-grid">
-        <StatCard label="So luong phong" value={rooms.length} />
-        <StatCard label="Chi nhanh" value={branches.length} tone="mint" />
-        <StatCard label="Loai phong" value={roomTypes.length} tone="cream" />
+        <StatCard label="So luong phòng" value={rooms.length} />
+        <StatCard label="Chi nhánh" value={branches.length} tone="mint" />
+        <StatCard label="Loại phòng" value={roomTypes.length} tone="cream" />
       </div>
 
       <section className="panel">
@@ -802,21 +802,21 @@ function RoomPage() {
 
         <form className="room-toolbar" onSubmit={applySearch}>
           <label className="field">
-            <span>Tim kiem phong</span>
-            <input onChange={(event) => setSearchInput(event.target.value)} placeholder="So phong..." value={searchInput} />
+            <span>Tìm kiếm phòng</span>
+            <input onChange={(event) => setSearchInput(event.target.value)} placeholder="So phòng..." value={searchInput} />
           </label>
           <label className="field">
-            <span>Trang thai</span>
+            <span>Trạng thái</span>
             <select onChange={(event) => setStatusInput(event.target.value)} value={statusInput}>
               <option value="ALL">Tat ca</option>
-              <option value="AVAILABLE">Dang trong</option>
-              <option value="OCCUPIED">Dang thue</option>
+              <option value="AVAILABLE">Đang trống</option>
+              <option value="OCCUPIED">Đang thuê</option>
             </select>
           </label>
           <div className="room-toolbar-action">
             <button className="blue-btn" type="submit">
               <AppIcon name="search" />
-              Tim kiem
+              Tìm kiếm
             </button>
           </div>
         </form>
@@ -835,7 +835,7 @@ function RoomPage() {
 
         <div className="pagination-bar">
           <span>
-            Hien thi {pagedRooms.length} / {filteredRooms.length} phong
+            Hiển thị {pagedRooms.length} / {filteredRooms.length} phòng
           </span>
           <div className="pagination-actions">
             <button
@@ -867,23 +867,23 @@ function RoomPage() {
         <div className="section-head">
           <div>
             <p className="eyebrow">QUAN LY LOAI PHONG</p>
-            <h2>Danh sach loai phong</h2>
+            <h2>Danh sach loai phòng</h2>
           </div>
         </div>
 
         {loading ? (
           <LoadingSpinner />
         ) : roomTypes.length === 0 ? (
-          <EmptyState title="Chua co loai phong" description="Hay them loai phong dau tien." />
+          <EmptyState title="Chưa có loại phòng" description="Hãy thêm loại phòng đầu tiên." />
         ) : (
           <div className="table-wrap">
             <table className="data-table room-type-table">
               <thead>
                 <tr>
-                  <th>Loai phong</th>
-                  <th>So khach</th>
-                  <th>Mo ta</th>
-                  <th>Thao tac</th>
+                  <th>Loại phòng</th>
+                  <th>Số khách</th>
+                  <th>Mô tả</th>
+                  <th>Thao tác</th>
                 </tr>
               </thead>
               <tbody>
@@ -893,7 +893,7 @@ function RoomPage() {
                       <strong>{roomType.name}</strong>
                     </td>
                     <td>{roomType.maxGuest}</td>
-                    <td>{roomType.description || 'Chua co'}</td>
+                    <td>{roomType.description || 'Chưa có'}</td>
                     <td>
                       <div className="table-actions">
                         <button className="view-btn compact-btn" onClick={() => openViewRoomType(roomType)} type="button">
@@ -902,7 +902,7 @@ function RoomPage() {
                         </button>
                         <button className="edit-btn compact-btn" onClick={() => openEditRoomType(roomType)} type="button">
                           <AppIcon name="edit" />
-                          Sua
+                          Sửa
                         </button>
                         <button
                           className="danger-btn compact-btn"
@@ -911,7 +911,7 @@ function RoomPage() {
                           type="button"
                         >
                           <AppIcon name="trash" />
-                          Xoa
+                          Xóa
                         </button>
                       </div>
                     </td>
@@ -925,7 +925,7 @@ function RoomPage() {
         <div className="panel-footer">
           <button className="blue-btn" onClick={openCreateRoomType} type="button">
             <AppIcon name="plus" />
-            Them loai phong
+            Thêm loai phòng
           </button>
         </div>
       </section>

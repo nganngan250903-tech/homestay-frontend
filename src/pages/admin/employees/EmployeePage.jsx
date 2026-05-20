@@ -101,7 +101,7 @@ function EmployeePage() {
       setEmployees(employeeData)
       setRoles(roleData)
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong tai duoc nhan vien' })
+      setToast({ type: 'error', message: error.message || 'Không tải được nhân viên' })
     } finally {
       setLoading(false)
     }
@@ -125,12 +125,12 @@ function EmployeePage() {
 
   const validateUnique = (form, currentId = null) => {
     const sameEmail = employees.find((employee) => employee.email?.toLowerCase() === form.email.trim().toLowerCase() && employee.id !== currentId)
-    if (sameEmail) return 'Email da ton tai'
+    if (sameEmail) return 'Email đã tồn tại'
 
     const sameUsername = employees.find(
       (employee) => employee.username?.toLowerCase() === form.username.trim().toLowerCase() && employee.id !== currentId,
     )
-    if (sameUsername) return 'Username da ton tai'
+    if (sameUsername) return 'Username đã tồn tại'
 
     return ''
   }
@@ -177,7 +177,7 @@ function EmployeePage() {
 
   const openEditRoleModal = (role) => {
     if (role.name?.toUpperCase() === 'ADMIN') {
-      setToast({ type: 'error', message: 'Khong sua vai tro ADMIN tai day' })
+      setToast({ type: 'error', message: 'Không sửa vai trò ADMIN tại đây' })
       return
     }
     setRoleModal({ open: true, mode: 'edit', role, form: { name: role.name || '', description: role.description || '' } })
@@ -201,7 +201,7 @@ function EmployeePage() {
 
     const selectedRoleId = modal.form.roleId || employeeRoleId
     if (!selectedRoleId) {
-      setToast({ type: 'error', message: 'Chua chon vai tro cho nhan vien' })
+      setToast({ type: 'error', message: 'Chưa chọn vai trò cho nhân viên' })
       setSaving(false)
       return
     }
@@ -214,15 +214,15 @@ function EmployeePage() {
           await Promise.allSettled([deleteCloudImageByUrl(modal.employee.image)])
         }
         await loadData(false)
-        setToast({ type: 'success', message: 'Cap nhat du lieu thanh cong' })
+        setToast({ type: 'success', message: 'Cập nhật dữ liệu thành công' })
       } else {
         await createEmployee(buildCreatePayload(modal.form, selectedRoleId))
         await loadData(false)
-        setToast({ type: 'success', message: 'Da them thanh cong' })
+        setToast({ type: 'success', message: 'Đã thêm thành công' })
       }
       closeModal()
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong luu duoc nhan vien' })
+      setToast({ type: 'error', message: error.message || 'Không lưu được nhân viên' })
     } finally {
       setSaving(false)
     }
@@ -230,7 +230,7 @@ function EmployeePage() {
 
   const requestDeleteRole = (role) => {
     if (role.name?.toUpperCase() === 'ADMIN') {
-      setToast({ type: 'error', message: 'Khong xoa vai tro ADMIN' })
+      setToast({ type: 'error', message: 'Không xóa vai trò ADMIN' })
       return
     }
     setRoleConfirm({ open: true, role })
@@ -243,9 +243,9 @@ function EmployeePage() {
     try {
       await updateEmployee(employee.id, { active: nextActive })
       await loadData(false)
-      setToast({ type: 'success', message: 'Cap nhat du lieu thanh cong' })
+      setToast({ type: 'success', message: 'Cập nhật dữ liệu thành công' })
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong cap nhat trang thai nhan vien' })
+      setToast({ type: 'error', message: error.message || 'Không cập nhật trạng thái nhân viên' })
     } finally {
       setSaving(false)
     }
@@ -258,14 +258,14 @@ function EmployeePage() {
 
     const roleName = roleModal.form.name.trim()
     if (roleName.toUpperCase() === 'ADMIN') {
-      setToast({ type: 'error', message: 'Khong tao hoac sua vai tro ADMIN tai day' })
+      setToast({ type: 'error', message: 'Không tạo hoặc sửa vai trò ADMIN tại đây' })
       setSavingRole(false)
       return
     }
 
     const sameName = roles.find((role) => role.name?.toLowerCase() === roleName.toLowerCase() && role.id !== roleModal.role?.id)
     if (sameName) {
-      setToast({ type: 'error', message: 'Ten vai tro da ton tai' })
+      setToast({ type: 'error', message: 'Tên vai trò đã tồn tại' })
       setSavingRole(false)
       return
     }
@@ -275,15 +275,15 @@ function EmployeePage() {
     try {
       if (roleModal.mode === 'edit') {
         await updateRole(roleModal.role.id, payload)
-        setToast({ type: 'success', message: 'Cap nhat du lieu thanh cong' })
+        setToast({ type: 'success', message: 'Cập nhật dữ liệu thành công' })
       } else {
         await createRole(payload)
-        setToast({ type: 'success', message: 'Da them thanh cong' })
+        setToast({ type: 'success', message: 'Đã thêm thành công' })
       }
       closeRoleModal()
       await loadData(false)
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong luu duoc vai tro' })
+      setToast({ type: 'error', message: error.message || 'Không lưu được vai trò' })
     } finally {
       setSavingRole(false)
     }
@@ -299,10 +299,10 @@ function EmployeePage() {
     try {
       await deleteRole(roleConfirm.role.id)
       await loadData(false)
-      setToast({ type: 'delete', message: 'Da xoa thanh cong' })
+      setToast({ type: 'delete', message: 'Đã xóa thành công' })
       closeRoleConfirm()
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong xoa duoc vai tro' })
+      setToast({ type: 'error', message: error.message || 'Không xóa được vai trò' })
     } finally {
       setSavingRole(false)
     }
@@ -313,9 +313,9 @@ function EmployeePage() {
       <Toast message={toast?.message} type={toast?.type} />
 
       <div className="stats-grid">
-        <StatCard label="Tong nhan vien" value={manageableEmployees.length} />
-        <StatCard label="Dang hoat dong" value={manageableEmployees.filter((item) => item.active !== false).length} tone="mint" />
-        <StatCard label="Da vo hieu hoa" value={manageableEmployees.filter((item) => item.active === false).length} tone="cream" />
+        <StatCard label="Tổng nhân viên" value={manageableEmployees.length} />
+        <StatCard label="Đang hoạt động" value={manageableEmployees.filter((item) => item.active !== false).length} tone="mint" />
+        <StatCard label="Đã vô hiệu hóa" value={manageableEmployees.filter((item) => item.active === false).length} tone="cream" />
       </div>
 
       <EmployeeTable

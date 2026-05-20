@@ -47,8 +47,8 @@ function ManagementPage({ auth, resourceKey }) {
         <div className="page-heading">
           <div>
             <p className="eyebrow">Admin module</p>
-            <h1>Khong tim thay module</h1>
-            <p className="muted-text">Resource key "{resourceKey}" chua duoc khai bao.</p>
+            <h1>Không tìm thấy module</h1>
+            <p className="muted-text">Resource key "{resourceKey}" chưa được khai báo.</p>
           </div>
         </div>
       </section>
@@ -64,7 +64,7 @@ function ManagementPage({ auth, resourceKey }) {
       setResult(response)
       return response
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong the ket noi backend' })
+      setToast({ type: 'error', message: error.message || 'Không thể kết nối backend' })
       return null
     } finally {
       setLoading(false)
@@ -75,7 +75,7 @@ function ManagementPage({ auth, resourceKey }) {
     event.preventDefault()
     const payload = resource.buildPayload ? resource.buildPayload(form) : buildDefaultPayload(resource, form)
 
-    const response = await runAction('Tao du lieu thanh cong', () =>
+    const response = await runAction('Tạo dữ liệu thành công', () =>
       request(resource.endpoint, {
         method: 'POST',
         body: JSON.stringify(payload),
@@ -98,11 +98,11 @@ function ManagementPage({ auth, resourceKey }) {
 
   const deleteById = async () => {
     if (!lookupId) {
-      setToast({ type: 'error', message: 'Nhap ID can xoa' })
+      setToast({ type: 'error', message: 'Nhập ID cần xóa' })
       return
     }
 
-    await runAction('Da xoa du lieu', async () => {
+    await runAction('Đã xóa dữ liệu', async () => {
       const current = await request(`${resource.endpoint}/${lookupId}`)
       const imageUrls = getResourceImageUrls(current.data)
       const response = await request(`${resource.endpoint}/${lookupId}`, { method: 'DELETE' })
@@ -159,8 +159,8 @@ function ManagementPage({ auth, resourceKey }) {
           <strong>{resource.fields.length}</strong>
         </div>
         <div className="stat-card cream">
-          <span>Trang thai</span>
-          <strong>{loading ? 'Dang xu ly' : 'San sang'}</strong>
+          <span>Trạng thái</span>
+          <strong>{loading ? 'Đang xử lý' : 'Sẵn sàng'}</strong>
         </div>
       </div>
 
@@ -196,7 +196,7 @@ function ManagementPage({ auth, resourceKey }) {
         onCancelBooking={cancelBooking}
         onDeleteById={deleteById}
         onFetchById={fetchById}
-        onLoadEmployees={() => runAction('Da tai danh sach nhan vien', () => request('/employees'))}
+        onLoadEmployees={() => runAction('Đã tải danh sách nhân viên', () => request('/employees'))}
         onLookupIdChange={(event) => setLookupId(event.target.value)}
         onStatusChange={(field, value) =>
           setBookingStatus((current) => ({

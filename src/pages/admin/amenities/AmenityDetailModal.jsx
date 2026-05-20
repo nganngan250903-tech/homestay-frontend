@@ -8,24 +8,24 @@ function AmenityDetailModal({ amenity, onClose, onEdit }) {
         <div className="modal-head detail-modal-head">
           <div>
             <p className="eyebrow">Tien nghi</p>
-            <h2 id="amenity-detail-title">Thong tin chi tiet tien nghi</h2>
+            <h2 id="amenity-detail-title">Thông tin chi tiet tiện nghi</h2>
           </div>
-          <button className="icon-btn" onClick={onClose} type="button" aria-label="Dong modal">
+          <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng modal">
             <AppIcon name="close" />
           </button>
         </div>
         <div className="detail-list">
-          <DetailItem label="Ten tien nghi" value={amenity.name} />
-          <DetailItem label="Loai tien nghi" value={amenity.category?.name} />
+          <DetailItem label="Ten tiện nghi" value={amenity.name} />
+          <DetailItem label="Loai tiện nghi" value={amenity.category?.name} />
         </div>
         <div className="modal-actions detail-actions">
           <button className="cancel-btn" onClick={onClose} type="button">
             <AppIcon name="close" />
-            Dong
+            Đóng
           </button>
           <button className="blue-btn" onClick={() => onEdit(amenity)} type="button">
             <AppIcon name="edit" />
-            Chinh sua
+            Chỉnh sửa
           </button>
         </div>
       </section>

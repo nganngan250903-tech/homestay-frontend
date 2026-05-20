@@ -14,7 +14,7 @@ async function deleteUploadedImage(publicId) {
 }
 
 function EmployeeFormModal({ form, mode, onClose, onSubmit, onUpdateField, roles, saving }) {
-  const title = mode === 'edit' ? 'Chinh sua nhan vien' : 'Them nhan vien'
+  const title = mode === 'edit' ? 'Chỉnh sửa nhân viên' : 'Thêm nhân viên'
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState('')
   const uploadedImageRef = useRef(null)
@@ -31,7 +31,7 @@ function EmployeeFormModal({ form, mode, onClose, onSubmit, onUpdateField, roles
       uploadedImageRef.current = uploaded.publicId ? { publicId: uploaded.publicId, url: uploaded.url } : null
       onUpdateField('image', uploaded.url)
     } catch (error) {
-      setUploadError(error.message || 'Khong the upload anh dai dien.')
+      setUploadError(error.message || 'Không thể upload ảnh đại diện.')
     } finally {
       setUploading(false)
     }
@@ -47,10 +47,10 @@ function EmployeeFormModal({ form, mode, onClose, onSubmit, onUpdateField, roles
       <section className="modal-card room-detail-card" role="dialog" aria-modal="true" aria-labelledby="employee-form-title">
         <div className="modal-head detail-modal-head">
           <div>
-            <p className="eyebrow">Nhan vien</p>
+            <p className="eyebrow">Nhân viên</p>
             <h2 id="employee-form-title">{title}</h2>
           </div>
-          <button className="icon-btn" onClick={closeWithoutSaving} type="button" aria-label="Dong modal">
+          <button className="icon-btn" onClick={closeWithoutSaving} type="button" aria-label="Đóng modal">
             <AppIcon name="close" />
           </button>
         </div>
@@ -61,7 +61,7 @@ function EmployeeFormModal({ form, mode, onClose, onSubmit, onUpdateField, roles
           </div>
 
           <label className="field">
-            <span>Ho ten</span>
+            <span>Họ tên</span>
             <input onChange={(event) => onUpdateField('name', event.target.value)} required value={form.name} />
           </label>
           <label className="field">
@@ -74,22 +74,22 @@ function EmployeeFormModal({ form, mode, onClose, onSubmit, onUpdateField, roles
           </label>
           {mode === 'create' && (
             <label className="field">
-              <span>Mat khau tam</span>
+              <span>Mật khẩu tam</span>
               <input onChange={(event) => onUpdateField('password', event.target.value)} required type="password" value={form.password} />
             </label>
           )}
           <label className="field">
-            <span>So dien thoai</span>
+            <span>Số điện thoại</span>
             <input onChange={(event) => onUpdateField('phone', event.target.value)} required value={form.phone} />
           </label>
           <label className="field">
-            <span>Luong</span>
+            <span>Lương</span>
             <input min="0" onChange={(event) => onUpdateField('salary', event.target.value)} type="number" value={form.salary} />
           </label>
           <label className="field form-wide">
-            <span>Vai tro</span>
+            <span>Vai trò</span>
             <select onChange={(event) => onUpdateField('roleId', event.target.value)} required value={form.roleId}>
-              <option value="">Chon vai tro</option>
+              <option value="">Chon vai trò</option>
               {roles.map((role) => (
                 <option key={role.id} value={role.id}>
                   {getRoleLabel(role)}
@@ -98,24 +98,24 @@ function EmployeeFormModal({ form, mode, onClose, onSubmit, onUpdateField, roles
             </select>
           </label>
           <label className="field form-wide">
-            <span>Dia chi</span>
+            <span>Địa chỉ</span>
             <textarea onChange={(event) => onUpdateField('address', event.target.value)} value={form.address} />
           </label>
           <label className="field form-wide">
-            <span>Anh dai dien</span>
+            <span>Ảnh đại diện</span>
             <input accept="image/*" disabled={uploading} onChange={changeImage} type="file" />
-            {uploading && <small className="helper-text">Dang upload anh...</small>}
+            {uploading && <small className="helper-text">Đang upload ảnh...</small>}
             {uploadError && <small className="error-text">{uploadError}</small>}
           </label>
 
           <div className="modal-actions form-wide">
             <button className="cancel-btn" onClick={closeWithoutSaving} type="button">
               <AppIcon name="close" />
-              Huy
+              Hủy
             </button>
             <button className="save-btn" disabled={saving || uploading} type="submit">
               <AppIcon name="save" />
-              {saving ? 'Dang luu...' : 'Luu nhan vien'}
+              {saving ? 'Đang lưu...' : 'Lưu nhân viên'}
             </button>
           </div>
         </form>

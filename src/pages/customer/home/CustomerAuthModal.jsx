@@ -38,14 +38,14 @@ function CustomerAuthModal({ initialMode = 'login', onClose, onLogin }) {
       const role = String(auth?.role || auth?.userType || '').toUpperCase()
 
       if (role !== 'CUSTOMER') {
-        setToast({ type: 'error', message: 'Tai khoan nay khong phai khach hang. Vui long dang nhap o trang quan tri.' })
+        setToast({ type: 'error', message: 'Tài khoản này không phải khách hàng. Vui lòng đăng nhập ở trang quản trị.' })
         return
       }
 
       onLogin(auth)
       closeModal()
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Dang nhap that bai' })
+      setToast({ type: 'error', message: error.message || 'Đăng nhập thất bại' })
     } finally {
       setLoading(false)
     }
@@ -61,7 +61,7 @@ function CustomerAuthModal({ initialMode = 'login', onClose, onLogin }) {
       onLogin(response.data)
       closeModal()
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Dang ky that bai' })
+      setToast({ type: 'error', message: error.message || 'Đăng ký thất bại' })
     } finally {
       setLoading(false)
     }
@@ -73,19 +73,19 @@ function CustomerAuthModal({ initialMode = 'login', onClose, onLogin }) {
         <div className="customer-auth-head">
           <div>
             <p className="eyebrow">Lim Dim Homestay</p>
-            <h2 id="customer-auth-title">{mode === 'login' ? 'Dang nhap khach hang' : 'Dang ky khach hang'}</h2>
+            <h2 id="customer-auth-title">{mode === 'login' ? 'Đăng nhập khách hàng' : 'Đăng ký khách hàng'}</h2>
           </div>
-          <button className="icon-btn" onClick={closeModal} type="button" aria-label="Dong">
+          <button className="icon-btn" onClick={closeModal} type="button" aria-label="Đóng">
             <AppIcon name="close" />
           </button>
         </div>
 
         <div className="home-auth-switch">
           <button className={mode === 'login' ? 'active' : ''} onClick={() => setMode('login')} type="button">
-            Dang nhap
+            Đăng nhập
           </button>
           <button className={mode === 'register' ? 'active' : ''} onClick={() => setMode('register')} type="button">
-            Dang ky
+            Đăng ký
           </button>
         </div>
 
@@ -104,7 +104,7 @@ function CustomerAuthModal({ initialMode = 'login', onClose, onLogin }) {
               />
             </label>
             <label className="field">
-              <span>Mat khau</span>
+              <span>Mật khẩu</span>
               <input
                 autoComplete="current-password"
                 onChange={(event) => updateLoginField('password', event.target.value)}
@@ -115,13 +115,13 @@ function CustomerAuthModal({ initialMode = 'login', onClose, onLogin }) {
             </label>
             <button className="home-primary-btn" disabled={loading} type="submit">
               <AppIcon name="login" />
-              {loading ? 'Dang dang nhap...' : 'Dang nhap'}
+              {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
             </button>
           </form>
         ) : (
           <form className="home-auth-form" onSubmit={submitRegister}>
             <label className="field">
-              <span>Ho ten</span>
+              <span>Họ tên</span>
               <input
                 onChange={(event) => updateRegisterField('name', event.target.value)}
                 required
@@ -139,7 +139,7 @@ function CustomerAuthModal({ initialMode = 'login', onClose, onLogin }) {
               />
             </label>
             <label className="field">
-              <span>So dien thoai</span>
+              <span>Số điện thoại</span>
               <input
                 onChange={(event) => updateRegisterField('phone', event.target.value)}
                 required
@@ -147,7 +147,7 @@ function CustomerAuthModal({ initialMode = 'login', onClose, onLogin }) {
               />
             </label>
             <label className="field">
-              <span>Mat khau</span>
+              <span>Mật khẩu</span>
               <input
                 autoComplete="new-password"
                 onChange={(event) => updateRegisterField('password', event.target.value)}
@@ -158,7 +158,7 @@ function CustomerAuthModal({ initialMode = 'login', onClose, onLogin }) {
             </label>
             <button className="home-primary-btn" disabled={loading} type="submit">
               <AppIcon name="plus" />
-              {loading ? 'Dang tao tai khoan...' : 'Dang ky'}
+              {loading ? 'Đang tạo tài khoản...' : 'Đăng ký'}
             </button>
           </form>
         )}

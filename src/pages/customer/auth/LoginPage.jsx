@@ -32,7 +32,7 @@ function LoginPage({ onLogin }) {
       const response = await request('/auth/login', { method: 'POST', data: loginForm })
       const auth = response.data
       if (!auth?.role && !auth?.userType) {
-        setToast({ type: 'error', message: 'Khong tim thay vai tro tai khoan. Vui long dang ky tai khoan khach hang.' })
+        setToast({ type: 'error', message: 'Không tìm thấy vai trò tài khoản. Vui lòng đăng ký tài khoản khách hàng.' })
         setMode('register')
         return
       }
@@ -41,7 +41,7 @@ function LoginPage({ onLogin }) {
     } catch (error) {
       setToast({
         type: 'error',
-        message: `${error.message || 'Khong tim thay tai khoan phu hop.'} Neu chua co tai khoan, vui long dang ky khach hang.`,
+        message: `${error.message || 'Không tìm thấy tài khoản phù hợp.'} Nếu chưa có tài khoản, vui lòng đăng ký khách hàng.`,
       })
       setMode('register')
       setRegisterForm((current) => ({ ...current, email: loginForm.email }))
@@ -60,7 +60,7 @@ function LoginPage({ onLogin }) {
       onLogin(response.data)
       navigate('/home', { replace: true })
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Dang ky that bai' })
+      setToast({ type: 'error', message: error.message || 'Đăng ký thất bại' })
     } finally {
       setLoading(false)
     }
@@ -75,18 +75,18 @@ function LoginPage({ onLogin }) {
       <section className="login-card">
         <div>
           <p className="eyebrow">LULLABY HOMESTAY</p>
-          <h1>{mode === 'login' ? 'Dang nhap tai khoan' : 'Dang ky khach hang'}</h1>
+          <h1>{mode === 'login' ? 'Đăng nhập tai khoan' : 'Đăng ký khách hàng'}</h1>
           <p className="muted-text">
-            Admin vao khu quan tri, nhan vien vao trang nghiep vu, khach hang vao trang dat phong.
+            Admin vao khu quan tri, nhân viên vao trang nghiep vu, khách hàng vao trang dat phòng.
           </p>
         </div>
 
         <div className="home-auth-switch login-mode-switch">
           <button className={mode === 'login' ? 'active' : ''} onClick={() => setMode('login')} type="button">
-            Dang nhap
+            Đăng nhập
           </button>
           <button className={mode === 'register' ? 'active' : ''} onClick={() => setMode('register')} type="button">
-            Dang ky
+            Đăng ký
           </button>
         </div>
 
@@ -105,7 +105,7 @@ function LoginPage({ onLogin }) {
               />
             </label>
             <label className="field">
-              <span>Mat khau</span>
+              <span>Mật khẩu</span>
               <input
                 autoComplete="current-password"
                 onChange={(event) => setLoginForm((current) => ({ ...current, password: event.target.value }))}
@@ -116,13 +116,13 @@ function LoginPage({ onLogin }) {
             </label>
             <button className="blue-btn" disabled={loading} type="submit">
               <AppIcon name="login" />
-              {loading ? 'Dang dang nhap...' : 'Dang nhap'}
+              {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
             </button>
           </form>
         ) : (
           <form className="form-grid single" onSubmit={submitRegister}>
             <label className="field">
-              <span>Ho ten</span>
+              <span>Họ tên</span>
               <input
                 onChange={(event) => setRegisterForm((current) => ({ ...current, name: event.target.value }))}
                 required
@@ -140,7 +140,7 @@ function LoginPage({ onLogin }) {
               />
             </label>
             <label className="field">
-              <span>So dien thoai</span>
+              <span>Số điện thoại</span>
               <input
                 onChange={(event) => setRegisterForm((current) => ({ ...current, phone: event.target.value }))}
                 required
@@ -148,7 +148,7 @@ function LoginPage({ onLogin }) {
               />
             </label>
             <label className="field">
-              <span>Mat khau</span>
+              <span>Mật khẩu</span>
               <input
                 autoComplete="new-password"
                 onChange={(event) => setRegisterForm((current) => ({ ...current, password: event.target.value }))}
@@ -159,7 +159,7 @@ function LoginPage({ onLogin }) {
             </label>
             <button className="save-btn" disabled={loading} type="submit">
               <AppIcon name="plus" />
-              {loading ? 'Dang tao tai khoan...' : 'Dang ky khach hang'}
+              {loading ? 'Đang tạo tài khoản...' : 'Đăng ký khách hàng'}
             </button>
           </form>
         )}

@@ -8,11 +8,11 @@ function ConfirmDeleteModal({ message, onCancel, onConfirm, saving }) {
         <div className="modal-actions detail-actions">
           <button className="cancel-btn" disabled={saving} onClick={onCancel} type="button">
             <AppIcon name="close" />
-            Dong
+            Đóng
           </button>
           <button className="danger-btn" disabled={saving} onClick={onConfirm} type="button">
             <AppIcon name="trash" />
-            {saving ? 'Dang xoa...' : 'Xoa'}
+            {saving ? 'Đang xóa...' : 'Xóa'}
           </button>
         </div>
       </section>

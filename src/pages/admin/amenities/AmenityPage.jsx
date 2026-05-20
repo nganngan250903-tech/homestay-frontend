@@ -74,7 +74,7 @@ function AmenityPage() {
       setAmenities(amenityData)
       setCategories(categoryData)
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong tai duoc tien nghi' })
+      setToast({ type: 'error', message: error.message || 'Không tải được tiện nghi' })
     } finally {
       setLoading(false)
     }
@@ -139,15 +139,15 @@ function AmenityPage() {
       if (amenityModal.mode === 'edit') {
         await updateAmenity(amenityModal.amenity.id, payload)
         await loadData(false)
-        setToast({ type: 'success', message: 'Cap nhat du lieu thanh cong' })
+        setToast({ type: 'success', message: 'Cập nhật dữ liệu thành công' })
       } else {
         await createAmenity(payload)
         await loadData(false)
-        setToast({ type: 'success', message: 'Da them thanh cong' })
+        setToast({ type: 'success', message: 'Đã thêm thành công' })
       }
       closeAmenityModal()
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong luu duoc tien nghi' })
+      setToast({ type: 'error', message: error.message || 'Không lưu được tiện nghi' })
     } finally {
       setSaving(false)
     }
@@ -162,15 +162,15 @@ function AmenityPage() {
       if (categoryModal.mode === 'edit') {
         await updateCategory(categoryModal.category.id, categoryModal.form)
         await loadData(false)
-        setToast({ type: 'success', message: 'Cap nhat du lieu thanh cong' })
+        setToast({ type: 'success', message: 'Cập nhật dữ liệu thành công' })
       } else {
         await createCategory(categoryModal.form)
         await loadData(false)
-        setToast({ type: 'success', message: 'Da them thanh cong' })
+        setToast({ type: 'success', message: 'Đã thêm thành công' })
       }
       closeCategoryModal()
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong luu duoc loai tien nghi' })
+      setToast({ type: 'error', message: error.message || 'Không lưu được loại tiện nghi' })
     } finally {
       setSaving(false)
     }
@@ -183,9 +183,9 @@ function AmenityPage() {
       await deleteAmenity(amenity.id)
       await loadData(false)
       setConfirmDelete({ open: false, type: '', item: null })
-      setToast({ type: 'delete', message: 'Da xoa thanh cong' })
+      setToast({ type: 'delete', message: 'Đã xóa thành công' })
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong xoa duoc tien nghi' })
+      setToast({ type: 'error', message: error.message || 'Không xóa được tiện nghi' })
     } finally {
       setSaving(false)
     }
@@ -198,9 +198,9 @@ function AmenityPage() {
       await deleteCategory(category.id)
       await loadData(false)
       setConfirmDelete({ open: false, type: '', item: null })
-      setToast({ type: 'delete', message: 'Da xoa thanh cong' })
+      setToast({ type: 'delete', message: 'Đã xóa thành công' })
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong xoa duoc loai tien nghi' })
+      setToast({ type: 'error', message: error.message || 'Không xóa được loại tiện nghi' })
     } finally {
       setSaving(false)
     }
@@ -248,10 +248,10 @@ function AmenityPage() {
       <Toast message={toast?.message} type={toast?.type} />
 
       <div className="stats-grid">
-        <StatCard label="So tien nghi" value={amenities.length} />
-        <StatCard label="Loai tien nghi" value={categories.length} tone="mint" />
+        <StatCard label="So tiện nghi" value={amenities.length} />
+        <StatCard label="Loai tiện nghi" value={categories.length} tone="mint" />
         <StatCard
-          label="Chua phan loai"
+          label="Chưa phân loại"
           value={amenities.filter((amenity) => !amenity.category?.id).length}
           tone="cream"
         />
@@ -332,7 +332,7 @@ function AmenityPage() {
 
       {confirmDelete.open && confirmDelete.item && (
         <ConfirmDeleteModal
-          message={`Ban chac chan muon xoa ${confirmDelete.type === 'amenity' ? 'tien nghi' : 'loai tien nghi'} nay`}
+          message={`Bạn chắc chắn muốn xóa ${confirmDelete.type === 'amenity' ? 'tiện nghi' : 'loai tiện nghi'} nay`}
           onCancel={closeConfirmDelete}
           onConfirm={confirmDeleteItem}
           saving={saving}

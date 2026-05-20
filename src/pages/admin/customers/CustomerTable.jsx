@@ -25,28 +25,28 @@ function CustomerTable({
     <section className="panel">
       <div className="section-head">
         <div>
-          <p className="eyebrow">DANH SACH KHACH HANG</p>
-          <h2>Danh sach khach hang</h2>
+          <p className="eyebrow">DANH SÁCH KHÁCH HÀNG</p>
+          <h2>Danh sách khách hàng</h2>
         </div>
         <button className="blue-btn" onClick={onCreate} type="button">
           <AppIcon name="plus" />
-          Them khach hang
+          Thêm khách hàng
         </button>
       </div>
 
       <form className="room-toolbar" onSubmit={onApplySearch}>
         <label className="field">
-          <span>Tim kiem khach hang</span>
+          <span>Tìm kiếm khách hàng</span>
           <input
             onChange={(event) => onSearchInputChange(event.target.value)}
-            placeholder="Ten, email hoac so dien thoai"
+            placeholder="Tên, email hoặc số điện thoại"
             value={searchInput}
           />
         </label>
         <div className="room-toolbar-action">
           <button className="blue-btn" type="submit">
             <AppIcon name="search" />
-            Tim kiem
+            Tìm kiếm
           </button>
         </div>
       </form>
@@ -54,17 +54,17 @@ function CustomerTable({
       {loading ? (
         <LoadingSpinner />
       ) : customers.length === 0 ? (
-        <EmptyState title="Khong co khach hang" description="Khong tim thay khach hang phu hop." />
+        <EmptyState title="Không có khách hàng" description="Không tìm thấy khách hàng phù hợp." />
       ) : (
         <div className="table-wrap">
           <table className="data-table">
             <thead>
               <tr>
-                <th>Khach hang</th>
+                <th>Khách hàng</th>
                 <th>Email</th>
-                <th>So dien thoai</th>
-                <th>Trang thai</th>
-                <th>Thao tac</th>
+                <th>Số điện thoại</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
               </tr>
             </thead>
             <tbody>
@@ -86,7 +86,7 @@ function CustomerTable({
                       type="button"
                     >
                       <AppIcon name={customer.status === 'LOCKED' ? 'unlock' : 'lock'} />
-                      {customer.status === 'LOCKED' ? 'Dang khoa' : 'Hoat dong'}
+                      {customer.status === 'LOCKED' ? 'Đang khóa' : 'Hoạt động'}
                     </button>
                   </td>
                   <td>
@@ -98,19 +98,19 @@ function CustomerTable({
                       {onEdit && (
                         <button className="edit-btn compact-btn" onClick={() => onEdit(customer)} type="button">
                           <AppIcon name="edit" />
-                          Sua
+                          Sửa
                         </button>
                       )}
                       {onHistory && (
                         <button className="blue-btn compact-btn" onClick={() => onHistory(customer)} type="button">
                           <AppIcon name="history" />
-                          Lich su
+                          Lịch sử
                         </button>
                       )}
                       {onDelete && (
                         <button className="danger-btn compact-btn" disabled={saving} onClick={() => onDelete(customer)} type="button">
                           <AppIcon name="trash" />
-                          Xoa
+                          Xóa
                         </button>
                       )}
                     </div>
@@ -124,7 +124,7 @@ function CustomerTable({
 
       <div className="pagination-bar">
         <span>
-          Hien thi {customers.length} / {total} khach hang
+          Hiển thị {customers.length} / {total} khách hàng
         </span>
         <div className="pagination-actions">
           <button className="cancel-btn compact-btn" disabled={page === 1} onClick={() => setPage((current) => Math.max(1, current - 1))} type="button">

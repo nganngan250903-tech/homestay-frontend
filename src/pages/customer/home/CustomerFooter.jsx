@@ -22,18 +22,18 @@ function CustomerFooter() {
           </section>
           <section>
             <h3>Homestay</h3>
-            <Link to="/home/bookingRoom">Danh sach cac phong</Link>
+            <Link to="/home/bookingRoom">Danh sach cac phòng</Link>
             <Link to="/home/offers">Khuyen mai</Link>
           </section>
           <section>
             <h3>Tai khoan</h3>
             <Link to="/home">Tai khoan cua toi</Link>
-            <Link to="/home/bookingRoom">Lich su dat phong</Link>
+            <Link to="/home/bookingRoom">Lịch sử đặt phòng</Link>
           </section>
           <section>
             <h3>Lien he</h3>
             <span>Email: LimDim@gmail.com.vn</span>
-            <span>Dia chi:16/52 Ba Trieu, Hue City, Vietnam</span>
+            <span>Địa chỉ:16/52 Ba Trieu, Hue City, Vietnam</span>
             <span>Phone: +84 328 54 7686</span>
             <span>Website: LimDimhomestay.vn</span>
             <span className="footer-social">f</span>

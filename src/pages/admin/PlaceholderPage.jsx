@@ -5,7 +5,7 @@ function PlaceholderPage({ title, endpoint }) {
         <div>
           <p className="eyebrow">Admin module</p>
           <h1>{title}</h1>
-          <p className="muted-text">Module nay se duoc noi chi tiet sau khi hoan thien giao dien phong.</p>
+          <p className="muted-text">Module nay se duoc noi chi tiet sau khi hoan thien giao dien phòng.</p>
         </div>
       </div>
       <div className="panel note-panel">

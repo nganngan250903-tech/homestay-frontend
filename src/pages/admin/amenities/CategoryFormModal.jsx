@@ -1,41 +1,41 @@
 import AppIcon from '../../../components/AppIcon'
 
 function CategoryFormModal({ form, mode, onClose, onSubmit, onUpdateField, saving }) {
-  const title = mode === 'edit' ? 'Chinh sua loai tien nghi' : 'Them loai tien nghi'
+  const title = mode === 'edit' ? 'Chỉnh sửa loại tiện nghi' : 'Thêm loai tiện nghi'
 
   return (
     <div className="modal-backdrop" role="presentation">
       <section className="modal-card room-detail-card" role="dialog" aria-modal="true" aria-labelledby="category-form-title">
         <div className="modal-head detail-modal-head">
           <div>
-            <p className="eyebrow">Loai tien nghi</p>
+            <p className="eyebrow">Loai tiện nghi</p>
             <h2 id="category-form-title">{title}</h2>
           </div>
-          <button className="icon-btn" onClick={onClose} type="button" aria-label="Dong modal">
+          <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng modal">
             <AppIcon name="close" />
           </button>
         </div>
 
         <form className="form-grid room-edit-form" onSubmit={onSubmit}>
           <div className="form-section-title form-wide">
-            <strong>Thong tin loai tien nghi</strong>
+            <strong>Thông tin loại tiện nghi</strong>
           </div>
           <label className="field">
-            <span>Ten loai tien nghi</span>
+            <span>Ten loai tiện nghi</span>
             <input onChange={(event) => onUpdateField('name', event.target.value)} required value={form.name} />
           </label>
           <label className="field form-wide">
-            <span>Mo ta</span>
+            <span>Mô tả</span>
             <textarea onChange={(event) => onUpdateField('description', event.target.value)} value={form.description} />
           </label>
           <div className="modal-actions form-wide">
             <button className="cancel-btn" onClick={onClose} type="button">
               <AppIcon name="close" />
-              Huy
+              Hủy
             </button>
             <button className="save-btn" disabled={saving} type="submit">
               <AppIcon name="save" />
-              {saving ? 'Dang luu...' : 'Luu loai tien nghi'}
+              {saving ? 'Đang lưu...' : 'Lưu loai tiện nghi'}
             </button>
           </div>
         </form>

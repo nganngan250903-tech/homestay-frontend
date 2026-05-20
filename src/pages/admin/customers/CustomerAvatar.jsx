@@ -9,7 +9,7 @@ function CustomerAvatar({ customer, size = 'small' }) {
       <img
         className={`customer-avatar ${size}`}
         src={customer.image}
-        alt={customer.name || 'Khach hang'}
+        alt={customer.name || 'Khách hàng'}
         onError={() => setFailed(true)}
       />
     )

@@ -5,26 +5,26 @@ import { formatRoomPrice } from './homeUtils'
 const aboutFeatures = [
   {
     icon: 'house',
-    title: 'Khong gian nguyen can',
-    description: 'Rieng tu, am ap va gan gui nhu dang nghi tai chinh ngoi nha cua minh.',
+    title: 'Không gian nguyên căn',
+    description: 'Riêng tư, ấm áp và gần gũi như đang nghỉ tại chính ngôi nhà của mình.',
     tone: 'blue',
   },
   {
     icon: 'users',
-    title: 'Phu hop nhom ban va gia dinh',
-    description: 'Khong gian sinh hoat chung thoang, de ket noi va tan huong thoi gian ben nhau.',
+    title: 'Phù hợp nhóm bạn và gia đình',
+    description: 'Không gian sinh hoạt chung thoáng, dễ kết nối và tận hưởng thời gian bên nhau.',
     tone: 'rose',
   },
   {
     icon: 'bath',
-    title: 'Phong ngu tien nghi',
-    description: 'Phong sach se, dieu hoa, phong tam va cac vat dung can thiet cho ky nghi ngan ngay.',
+    title: 'Phòng ngu tiện nghi',
+    description: 'Phòng sạch sẽ, điều hòa, phòng tắm và các vật dụng cần thiết cho kỳ nghỉ ngắn ngày.',
     tone: 'blue',
   },
   {
     icon: 'car',
     title: 'Di chuyen thuan tien',
-    description: 'Gan cac diem dich vu, de tim duong va phu hop cho lich trinh linh hoat.',
+    description: 'Gần các điểm dịch vụ, dễ tìm đường và phù hợp cho lịch trình linh hoạt.',
     tone: 'mint',
   },
 ]
@@ -54,10 +54,10 @@ function RoomDetailModal({ room, onClose }) {
       <section className="customer-room-modal" role="dialog" aria-modal="true" aria-labelledby="customer-room-title">
         <div className="customer-auth-head">
           <div>
-            <p className="eyebrow">Chi tiet phong</p>
+            <p className="eyebrow">Chi tiet phòng</p>
             <h2 id="customer-room-title">{room.name}</h2>
           </div>
-          <button className="icon-btn" onClick={onClose} type="button" aria-label="Dong">
+          <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng">
             <AppIcon name="close" />
           </button>
         </div>
@@ -66,15 +66,15 @@ function RoomDetailModal({ room, onClose }) {
           <div className="customer-room-info">
             <p>{room.description}</p>
             <div className="customer-room-facts">
-              <span>Loai phong</span>
-              <strong>{room.roomType?.name || 'Chua co'}</strong>
-              <span>Chi nhanh</span>
-              <strong>{room.branch?.name || 'Chua co'}</strong>
-              <span>Dien tich</span>
-              <strong>{room.area ? `${room.area} m2` : 'Chua co'}</strong>
-              <span>So khach toi da</span>
-              <strong>{room.maxGuest || room.roomType?.maxGuest || 'Chua co'}</strong>
-              <span>Gia tham khao</span>
+              <span>Loại phòng</span>
+              <strong>{room.roomType?.name || 'Chưa có'}</strong>
+              <span>Chi nhánh</span>
+              <strong>{room.branch?.name || 'Chưa có'}</strong>
+              <span>Diện tích</span>
+              <strong>{room.area ? `${room.area} m2` : 'Chưa có'}</strong>
+              <span>Số khách tối đa</span>
+              <strong>{room.maxGuest || room.roomType?.maxGuest || 'Chưa có'}</strong>
+              <span>Giá tham khảo</span>
               <strong>{room.price ? `${formatRoomPrice(room.price)}d/gio` : 'Lien he'}</strong>
             </div>
           </div>
@@ -111,13 +111,13 @@ export function CustomerRoomSection({ rooms, id = 'phong' }) {
     <>
       <section className="home-room-section" id={id}>
         <div className="home-section-title">
-          <h2>Dat phong tai Lim Dim</h2>
-          <p>Chon phong phu hop va xem chi tiet truoc khi gui yeu cau dat phong.</p>
+          <h2>Đặt phòng tai Lim Dim</h2>
+          <p>Chon phòng phu hop va xem chi tiet truoc khi gui yeu cau dat phòng.</p>
         </div>
         {rooms.length === 0 ? (
           <div className="home-room-empty">
-            <strong>Chua co phong de hien thi</strong>
-            <span>Danh sach phong se duoc cap nhat tu he thong quan tri.</span>
+            <strong>Chưa có phòng de hien thi</strong>
+            <span>Danh sach phòng se duoc cap nhat tu he thong quan tri.</span>
           </div>
         ) : (
           <div className="home-room-grid">
@@ -127,7 +127,7 @@ export function CustomerRoomSection({ rooms, id = 'phong' }) {
                 <div>
                   <h3>{room.name}</h3>
                   <p>{room.description}</p>
-                  <span>Se khach toi da {room.maxGuest || room.roomType?.maxGuest || 3} nguoi</span>
+                  <span>Số khách tối đa {room.maxGuest || room.roomType?.maxGuest || 3} người</span>
                   <div className="home-room-footer">
                     <strong>{room.price ? `${formatRoomPrice(room.price)}d/gio` : 'Lien he'}</strong>
                     <button onClick={() => setSelectedRoom(room)} type="button">Xem Chi Tiet</button>
@@ -182,14 +182,14 @@ function HomeSections({ rooms }) {
         <div className="home-gallery-heading">
           <h2>HINH ANH CAC PHONG CAN HO</h2>
           <p>
-            Nhung goc phong, khong gian sinh hoat va khu nghi duoc cham chut de mang lai cam giac
+            Những góc phòng, không gian sinh hoạt và khu nghỉ được chăm chút để mang lại cảm giác
             gan gui, sach se va thoai mai cho moi ky nghi tai Lim Dim Homestay.
           </p>
         </div>
         <div className="home-gallery-grid">
           {homestayGalleryImages.map((image, index) => (
             <figure className="home-gallery-item" key={image}>
-              <img src={image} alt={`Khong gian Lim Dim Homestay ${index + 1}`} />
+              <img src={image} alt={`Không gian Lim Dim Homestay ${index + 1}`} />
             </figure>
           ))}
         </div>

@@ -47,7 +47,7 @@ function DashboardPage({ auth, onLogout }) {
       setToast({ type: 'success', message: successMessage })
       return response
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong the ket noi backend' })
+      setToast({ type: 'error', message: error.message || 'Không thể kết nối backend' })
       return null
     } finally {
       setLoading(false)
@@ -62,7 +62,7 @@ function DashboardPage({ auth, onLogout }) {
       ? resource.buildPayload(data)
       : buildDefaultPayload(resource, data)
 
-    const response = await runAction('Tao du lieu thanh cong', () =>
+    const response = await runAction('Tạo dữ liệu thành công', () =>
       request(resource.endpoint, {
         method: 'POST',
         body: JSON.stringify(payload),
@@ -93,11 +93,11 @@ function DashboardPage({ auth, onLogout }) {
   const deleteById = async () => {
     const id = lookupIds[activeKey]
     if (!id) {
-      setToast({ type: 'error', message: 'Nhap ID can xoa' })
+      setToast({ type: 'error', message: 'Nhập ID cần xóa' })
       return
     }
 
-    const response = await runAction('Da xoa du lieu', () =>
+    const response = await runAction('Đã xóa dữ liệu', () =>
       request(`${activeResource.endpoint}/${id}`, { method: 'DELETE' }),
     )
 
@@ -107,7 +107,7 @@ function DashboardPage({ auth, onLogout }) {
   }
 
   const loadEmployees = async () => {
-    const response = await runAction('Da tai danh sach nhan vien', () => request('/employees'))
+    const response = await runAction('Đã tải danh sách nhân viên', () => request('/employees'))
     if (response?.data) {
       setEmployees(response.data)
       setResults((current) => ({ ...current, employees: response }))
@@ -186,7 +186,7 @@ function DashboardPage({ auth, onLogout }) {
           type="button"
         >
           <AppIcon name={sidebarOpen ? 'close' : 'menu'} />
-          {sidebarOpen ? 'Dong menu' : 'Mo menu'}
+          {sidebarOpen ? 'Đóng menu' : 'Mo menu'}
         </button>
 
         <header className="topbar">
@@ -207,7 +207,7 @@ function DashboardPage({ auth, onLogout }) {
             </div>
             <button className="cancel-btn logout-btn" onClick={onLogout} type="button">
               <AppIcon name="logout" />
-              Dang xuat
+              Đăng xuất
             </button>
           </div>
         </header>
@@ -216,7 +216,7 @@ function DashboardPage({ auth, onLogout }) {
 
         <section className="stats-grid" aria-label="Tong quan">
           <div className="metric">
-            <span>Endpoint dang chon</span>
+            <span>Endpoint đang chọn</span>
             <strong>{activeResource.endpoint}</strong>
           </div>
           <div className="metric">
@@ -224,7 +224,7 @@ function DashboardPage({ auth, onLogout }) {
             <strong>{resources.length}</strong>
           </div>
           <div className="metric">
-            <span>Nhan vien da tai</span>
+            <span>Nhân viên da tai</span>
             <strong>{employees.length}</strong>
           </div>
         </section>
@@ -236,7 +236,7 @@ function DashboardPage({ auth, onLogout }) {
                 <p className="eyebrow">Tao moi</p>
                 <h2>{activeResource.label}</h2>
               </div>
-              {loading && <span className="loading">Dang xu ly</span>}
+              {loading && <span className="loading">Đang xử lý</span>}
             </div>
 
             <ResourceForm

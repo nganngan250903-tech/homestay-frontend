@@ -11,7 +11,7 @@ function ResultPanel({ result }) {
         <pre>{JSON.stringify(result, null, 2)}</pre>
       ) : (
         <div className="empty-state">
-          Chua co du lieu. Hay tao moi hoac tra cuu mot ban ghi tu backend.
+          Chưa có dữ liệu. Hãy tạo mới hoặc tra cứu một bản ghi từ backend.
         </div>
       )}
     </section>

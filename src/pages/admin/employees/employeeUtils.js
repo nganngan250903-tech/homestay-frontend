@@ -31,7 +31,7 @@ export function getRoleName(employee) {
 }
 
 export function getRoleLabel(role) {
-  return role?.description || role?.name || 'Chua co'
+  return role?.description || role?.name || 'Chưa có'
 }
 
 export function getEmployeeRoleLabel(employee) {

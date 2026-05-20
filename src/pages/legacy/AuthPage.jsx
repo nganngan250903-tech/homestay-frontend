@@ -18,12 +18,12 @@ function AuthPage({ onLogin }) {
 
   const submitLogin = async (event) => {
     event.preventDefault()
-    await submitAuth('/auth/login', loginForm, 'Dang nhap thanh cong')
+    await submitAuth('/auth/login', loginForm, 'Đăng nhập thành công')
   }
 
   const submitRegister = async (event) => {
     event.preventDefault()
-    await submitAuth('/auth/customer/register', registerForm, 'Dang ky thanh cong')
+    await submitAuth('/auth/customer/register', registerForm, 'Đăng ký thành công')
   }
 
   const submitAuth = async (path, payload, successMessage) => {
@@ -37,7 +37,7 @@ function AuthPage({ onLogin }) {
       onLogin(response.data)
       setMessage({ type: 'success', text: successMessage })
     } catch (error) {
-      setMessage({ type: 'error', text: error.message || 'Khong the dang nhap' })
+      setMessage({ type: 'error', text: error.message || 'Không thể đăng nhập' })
     } finally {
       setLoading(false)
     }
@@ -47,10 +47,10 @@ function AuthPage({ onLogin }) {
     <main className="auth-page">
       <section className="auth-panel">
         <div className="auth-copy">
-          <Brand subtitle="Dang nhap bang JWT" />
-          <h1>Quan ly dat phong, phong va nhan su trong mot man hinh.</h1>
+          <Brand subtitle="Đăng nhập bằng JWT" />
+          <h1>Quản lý đặt phòng, phòng và nhân sự trong một màn hình.</h1>
           <p>
-            Employee va customer dang nhap chung qua email/password. Customer co the dang ky
+            Employee và customer đăng nhập chung qua email/password. Customer có thể đăng ký
             tai khoan moi, token duoc luu trong localStorage.
           </p>
           <div className="auth-facts">
@@ -68,7 +68,7 @@ function AuthPage({ onLogin }) {
               type="button"
             >
               <AppIcon name="login" />
-              Dang nhap
+              Đăng nhập
             </button>
             <button
               className={mode === 'register' ? 'active' : ''}
@@ -76,7 +76,7 @@ function AuthPage({ onLogin }) {
               type="button"
             >
               <AppIcon name="plus" />
-              Dang ky customer
+              Đăng ký customer
             </button>
           </div>
 
@@ -96,7 +96,7 @@ function AuthPage({ onLogin }) {
                 />
               </label>
               <label className="field">
-                <span>Mat khau</span>
+                <span>Mật khẩu</span>
                 <input
                   onChange={(event) =>
                     setLoginForm((current) => ({ ...current, password: event.target.value }))
@@ -108,13 +108,13 @@ function AuthPage({ onLogin }) {
               </label>
               <button className="blue-btn" disabled={loading} type="submit">
                 <AppIcon name="login" />
-                {loading ? 'Dang xu ly...' : 'Dang nhap'}
+                {loading ? 'Đang xử lý...' : 'Đăng nhập'}
               </button>
             </form>
           ) : (
             <form className="auth-form" onSubmit={submitRegister}>
               <label className="field">
-                <span>Ho ten</span>
+                <span>Họ tên</span>
                 <input
                   onChange={(event) =>
                     setRegisterForm((current) => ({ ...current, name: event.target.value }))
@@ -135,7 +135,7 @@ function AuthPage({ onLogin }) {
                 />
               </label>
               <label className="field">
-                <span>Mat khau</span>
+                <span>Mật khẩu</span>
                 <input
                   onChange={(event) =>
                     setRegisterForm((current) => ({ ...current, password: event.target.value }))
@@ -146,7 +146,7 @@ function AuthPage({ onLogin }) {
                 />
               </label>
               <label className="field">
-                <span>So dien thoai</span>
+                <span>Số điện thoại</span>
                 <input
                   onChange={(event) =>
                     setRegisterForm((current) => ({ ...current, phone: event.target.value }))
@@ -157,7 +157,7 @@ function AuthPage({ onLogin }) {
               </label>
               <button className="save-btn" disabled={loading} type="submit">
                 <AppIcon name="plus" />
-                {loading ? 'Dang xu ly...' : 'Tao tai khoan customer'}
+                {loading ? 'Đang xử lý...' : 'Tao tai khoan customer'}
               </button>
             </form>
           )}

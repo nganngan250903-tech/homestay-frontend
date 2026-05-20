@@ -25,7 +25,7 @@ export function CustomerProfileModal({ customer, onClose, onSaved }) {
       onSaved(updated)
       onClose()
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong cap nhat duoc thong tin' })
+      setToast({ type: 'error', message: error.message || 'Không cập nhật được thông tin' })
     } finally {
       setSaving(false)
     }
@@ -37,16 +37,16 @@ export function CustomerProfileModal({ customer, onClose, onSaved }) {
         <div className="customer-auth-head">
           <div>
             <p className="eyebrow">Tai khoan</p>
-            <h2 id="customer-profile-title">Chinh sua thong tin</h2>
+            <h2 id="customer-profile-title">Chỉnh sửa thong tin</h2>
           </div>
-          <button className="icon-btn" disabled={saving} onClick={onClose} type="button" aria-label="Dong">
+          <button className="icon-btn" disabled={saving} onClick={onClose} type="button" aria-label="Đóng">
             <AppIcon name="close" />
           </button>
         </div>
         <Toast message={toast?.message} type={toast?.type} />
         <form className="home-account-form" onSubmit={submit}>
           <label className="field">
-            <span>Ho ten</span>
+            <span>Họ tên</span>
             <input onChange={(event) => updateField('name', event.target.value)} required value={form.name} />
           </label>
           <label className="field">
@@ -54,21 +54,21 @@ export function CustomerProfileModal({ customer, onClose, onSaved }) {
             <input onChange={(event) => updateField('email', event.target.value)} required type="email" value={form.email} />
           </label>
           <label className="field">
-            <span>So dien thoai</span>
+            <span>Số điện thoại</span>
             <input onChange={(event) => updateField('phone', event.target.value)} required value={form.phone} />
           </label>
           <label className="field">
-            <span>Dia chi</span>
+            <span>Địa chỉ</span>
             <input onChange={(event) => updateField('address', event.target.value)} value={form.address} />
           </label>
           <div className="modal-actions form-wide">
             <button className="cancel-btn" disabled={saving} onClick={onClose} type="button">
               <AppIcon name="close" />
-              Huy
+              Hủy
             </button>
             <button className="save-btn" disabled={saving} type="submit">
               <AppIcon name="save" />
-              {saving ? 'Dang luu...' : 'Luu thay doi'}
+              {saving ? 'Đang lưu...' : 'Lưu thay doi'}
             </button>
           </div>
         </form>
@@ -85,7 +85,7 @@ export function CustomerPasswordModal({ customer, onClose }) {
   const submit = async (event) => {
     event.preventDefault()
     if (form.password !== form.confirmPassword) {
-      setToast({ type: 'error', message: 'Mat khau xac nhan khong trung khop' })
+      setToast({ type: 'error', message: 'Mật khẩu xác nhận không trùng khớp' })
       return
     }
     setSaving(true)
@@ -94,7 +94,7 @@ export function CustomerPasswordModal({ customer, onClose }) {
       await updateCustomer(customer.id, { password: form.password })
       onClose()
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong doi duoc mat khau' })
+      setToast({ type: 'error', message: error.message || 'Không đổi được mật khẩu' })
     } finally {
       setSaving(false)
     }
@@ -108,14 +108,14 @@ export function CustomerPasswordModal({ customer, onClose }) {
             <p className="eyebrow">Bao mat</p>
             <h2 id="customer-password-title">Doi mat khau</h2>
           </div>
-          <button className="icon-btn" disabled={saving} onClick={onClose} type="button" aria-label="Dong">
+          <button className="icon-btn" disabled={saving} onClick={onClose} type="button" aria-label="Đóng">
             <AppIcon name="close" />
           </button>
         </div>
         <Toast message={toast?.message} type={toast?.type} />
         <form className="home-account-form single" onSubmit={submit}>
           <label className="field">
-            <span>Mat khau moi</span>
+            <span>Mật khẩu moi</span>
             <input
               autoComplete="new-password"
               onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
@@ -125,7 +125,7 @@ export function CustomerPasswordModal({ customer, onClose }) {
             />
           </label>
           <label className="field">
-            <span>Xac nhan mat khau</span>
+            <span>Xác nhận mat khau</span>
             <input
               autoComplete="new-password"
               onChange={(event) => setForm((current) => ({ ...current, confirmPassword: event.target.value }))}
@@ -137,11 +137,11 @@ export function CustomerPasswordModal({ customer, onClose }) {
           <div className="modal-actions form-wide">
             <button className="cancel-btn" disabled={saving} onClick={onClose} type="button">
               <AppIcon name="close" />
-              Huy
+              Hủy
             </button>
             <button className="save-btn" disabled={saving} type="submit">
               <AppIcon name="save" />
-              {saving ? 'Dang luu...' : 'Xac nhan'}
+              {saving ? 'Đang lưu...' : 'Xác nhận'}
             </button>
           </div>
         </form>
@@ -157,25 +157,25 @@ export function CustomerBookingHistoryModal({ bookings, loading, onClose }) {
         <div className="customer-auth-head">
           <div>
             <p className="eyebrow">Booking</p>
-            <h2 id="customer-history-title">Lich su dat phong</h2>
+            <h2 id="customer-history-title">Lịch sử đặt phòng</h2>
           </div>
-          <button className="icon-btn" onClick={onClose} type="button" aria-label="Dong">
+          <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng">
             <AppIcon name="close" />
           </button>
         </div>
         {loading ? (
-          <LoadingSpinner label="Dang tai lich su..." />
+          <LoadingSpinner label="Đang tải lịch sử..." />
         ) : bookings.length === 0 ? (
-          <EmptyState title="Chua co booking" description="Cac booking cua ban se hien thi tai day." />
+          <EmptyState title="Chưa có booking" description="Cac booking cua ban se hien thi tai day." />
         ) : (
           <div className="table-wrap">
             <table className="data-table">
               <thead>
                 <tr>
                   <th>Booking</th>
-                  <th>Phong</th>
+                  <th>Phòng</th>
                   <th>Thoi gian</th>
-                  <th>Trang thai</th>
+                  <th>Trạng thái</th>
                   <th>Tong tien</th>
                 </tr>
               </thead>

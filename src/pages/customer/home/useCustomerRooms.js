@@ -43,8 +43,8 @@ function useCustomerRooms() {
     return rooms.slice(0, 6).map((room, index) => ({
       ...room,
       id: room.id,
-      name: room.name || room.roomType?.name || `Phong ${room.id}`,
-      description: room.roomType?.description || room.description || 'Khong gian nghi ngoi thoai mai tai Lim Dim Homestay.',
+      name: room.name || room.roomType?.name || `Phòng ${room.id}`,
+      description: room.roomType?.description || room.description || 'Không gian nghỉ ngơi thoải mái tại Lim Dim Homestay.',
       image: getRoomCardImage(room, index),
       maxGuest: room.roomType?.maxGuest,
       price: getRoomTypePrice(room.roomType || {}, pricings),

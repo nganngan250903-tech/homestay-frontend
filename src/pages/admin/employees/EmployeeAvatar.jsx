@@ -9,7 +9,7 @@ function EmployeeAvatar({ employee, size = 'small' }) {
       <img
         className={`customer-avatar ${size}`}
         src={employee.image}
-        alt={employee.name || employee.email || 'Nhan vien'}
+        alt={employee.name || employee.email || 'Nhân viên'}
         onError={() => setFailed(true)}
       />
     )

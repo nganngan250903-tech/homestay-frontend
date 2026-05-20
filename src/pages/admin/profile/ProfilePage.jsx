@@ -58,7 +58,7 @@ function ProfileField({ label, value }) {
   return (
     <div className="profile-info-row">
       <span>{label}</span>
-      <strong>{value || 'Chua co'}</strong>
+      <strong>{value || 'Chưa có'}</strong>
     </div>
   )
 }
@@ -87,7 +87,7 @@ function ProfilePage({ auth }) {
       setProfile(data)
       setForm(profileFormFrom(data))
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong tai duoc ho so' })
+      setToast({ type: 'error', message: error.message || 'Không tải được hồ sơ' })
     } finally {
       setLoading(false)
     }
@@ -121,7 +121,7 @@ function ProfilePage({ auth }) {
       uploadedImageRef.current = uploaded.publicId ? { publicId: uploaded.publicId, url: uploaded.url } : null
       updateField('image', uploaded.url)
     } catch (error) {
-      setUploadError(error.message || 'Khong the upload anh dai dien')
+      setUploadError(error.message || 'Không thể upload ảnh đại diện')
     } finally {
       setUploading(false)
     }
@@ -158,9 +158,9 @@ function ProfilePage({ auth }) {
       setForm(profileFormFrom(updated))
       setEditing(false)
       await outlet?.reloadProfile?.()
-      setToast({ type: 'success', message: 'Cap nhat du lieu thanh cong' })
+      setToast({ type: 'success', message: 'Cập nhật dữ liệu thành công' })
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong cap nhat duoc ho so' })
+      setToast({ type: 'error', message: error.message || 'Không cập nhật được hồ sơ' })
     } finally {
       setSaving(false)
     }
@@ -181,7 +181,7 @@ function ProfilePage({ auth }) {
     event.preventDefault()
 
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      setToast({ type: 'error', message: 'Mat khau moi va xac nhan mat khau khong trung khop' })
+      setToast({ type: 'error', message: 'Mật khẩu mới và xác nhận mật khẩu không trùng khớp' })
       return
     }
 
@@ -190,16 +190,16 @@ function ProfilePage({ auth }) {
     try {
       await changeEmployeePassword(profile.id, passwordForm)
       closePasswordModal()
-      setToast({ type: 'success', message: 'Doi mat khau thanh cong' })
+      setToast({ type: 'success', message: 'Đổi mật khẩu thành công' })
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong doi duoc mat khau' })
+      setToast({ type: 'error', message: error.message || 'Không đổi được mật khẩu' })
     } finally {
       setSaving(false)
     }
   }
 
   const roleLabel = profile?.role?.description || profile?.role?.name || auth?.role || 'ADMIN'
-  const salaryLabel = profile?.salary == null ? 'Chua co' : moneyFormatter.format(Number(profile.salary))
+  const salaryLabel = profile?.salary == null ? 'Chưa có' : moneyFormatter.format(Number(profile.salary))
   const canEditSalary = auth?.role === 'ADMIN'
 
   return (
@@ -210,7 +210,7 @@ function ProfilePage({ auth }) {
         <div>
           <p className="eyebrow">Tai khoan</p>
           <h1>Ho so cua toi</h1>
-          <p className="muted-text">Quan ly thong tin ca nhan va thong tin vai tro dang dang nhap.</p>
+          <p className="muted-text">Quản lý thông tin cá nhân và thông tin vai trò đang đăng nhập.</p>
         </div>
       </div>
 
@@ -221,7 +221,7 @@ function ProfilePage({ auth }) {
           <div className="profile-avatar-block">
             <EmployeeAvatar employee={editing ? { ...profile, image: form.image, name: form.name, email: form.email } : profile} size="large" />
             <h2>{profile?.name || auth?.user?.name || 'Admin'}</h2>
-            <span className="status-pill available">Dang hoat dong</span>
+            <span className="status-pill available">Đang hoạt động</span>
           </div>
 
           <div className="profile-content">
@@ -229,22 +229,22 @@ function ProfilePage({ auth }) {
               <>
                 <div className="profile-info-list">
                   <ProfileField label="Email" value={profile?.email || auth?.user?.email} />
-                  <ProfileField label="So dien thoai" value={profile?.phone} />
-                  <ProfileField label="Dia chi" value={profile?.address} />
-                  <ProfileField label="Vai tro" value={roleLabel} />
-                  <ProfileField label="Luong" value={salaryLabel} />
+                  <ProfileField label="Số điện thoại" value={profile?.phone} />
+                  <ProfileField label="Địa chỉ" value={profile?.address} />
+                  <ProfileField label="Vai trò" value={roleLabel} />
+                  <ProfileField label="Lương" value={salaryLabel} />
                 </div>
 
                 <div className="profile-actions">
                   <button className="blue-btn" onClick={() => setEditing(true)} type="button">
                     <AppIcon name="edit" />
-                    Chinh sua thong tin
+                    Chỉnh sửa thong tin
                   </button>
                   <button
                     className="edit-btn"
                     onClick={() => {
                       if (auth?.role === 'ADMIN') {
-                        setToast({ type: 'error', message: 'Tai khoan ADMIN khong duoc doi mat khau tai day' })
+                        setToast({ type: 'error', message: 'Tài khoản ADMIN không được đổi mật khẩu tại đây' })
                         return
                       }
                       setPasswordModalOpen(true)
@@ -259,7 +259,7 @@ function ProfilePage({ auth }) {
             ) : (
               <form className="profile-form" onSubmit={submitProfile}>
                 <label className="field">
-                  <span>Ho ten</span>
+                  <span>Họ tên</span>
                   <input onChange={(event) => updateField('name', event.target.value)} required value={form.name} />
                 </label>
                 <label className="field">
@@ -267,39 +267,39 @@ function ProfilePage({ auth }) {
                   <input onChange={(event) => updateField('email', event.target.value)} required type="email" value={form.email} />
                 </label>
                 <label className="field">
-                  <span>So dien thoai</span>
+                  <span>Số điện thoại</span>
                   <input onChange={(event) => updateField('phone', event.target.value)} required value={form.phone} />
                 </label>
                 <label className="field">
-                  <span>Dia chi</span>
+                  <span>Địa chỉ</span>
                   <input onChange={(event) => updateField('address', event.target.value)} value={form.address} />
                 </label>
                 {canEditSalary ? (
                   <label className="field">
-                    <span>Luong</span>
+                    <span>Lương</span>
                     <input min="0" onChange={(event) => updateField('salary', event.target.value)} type="number" value={form.salary} />
                   </label>
                 ) : (
                   <div className="profile-readonly-field">
-                    <span>Luong</span>
+                    <span>Lương</span>
                     <strong>{salaryLabel}</strong>
                   </div>
                 )}
                 <label className="field">
-                  <span>Anh dai dien</span>
+                  <span>Ảnh đại diện</span>
                   <input accept="image/*" disabled={uploading} onChange={changeImage} type="file" />
-                  {uploading && <small className="helper-text">Dang upload anh...</small>}
+                  {uploading && <small className="helper-text">Đang upload ảnh...</small>}
                   {uploadError && <small className="error-text">{uploadError}</small>}
                 </label>
 
                 <div className="profile-actions">
                   <button className="cancel-btn" disabled={saving} onClick={cancelEdit} type="button">
                     <AppIcon name="close" />
-                    Huy
+                    Hủy
                   </button>
                   <button className="save-btn" disabled={saving || uploading} type="submit">
                     <AppIcon name="save" />
-                    {saving ? 'Dang luu...' : 'Luu thay doi'}
+                    {saving ? 'Đang lưu...' : 'Lưu thay doi'}
                   </button>
                 </div>
               </form>
@@ -316,14 +316,14 @@ function ProfilePage({ auth }) {
                 <p className="eyebrow">Bao mat</p>
                 <h2 id="password-modal-title">Doi mat khau</h2>
               </div>
-              <button className="icon-btn" disabled={saving} onClick={closePasswordModal} type="button" aria-label="Dong modal">
+              <button className="icon-btn" disabled={saving} onClick={closePasswordModal} type="button" aria-label="Đóng modal">
                 <AppIcon name="close" />
               </button>
             </div>
 
             <form className="profile-form password-form" onSubmit={submitPassword}>
               <label className="field">
-                <span>Mat khau hien tai</span>
+                <span>Mật khẩu hien tai</span>
                 <input
                   autoComplete="current-password"
                   onChange={(event) => updatePasswordField('currentPassword', event.target.value)}
@@ -333,7 +333,7 @@ function ProfilePage({ auth }) {
                 />
               </label>
               <label className="field">
-                <span>Mat khau moi</span>
+                <span>Mật khẩu moi</span>
                 <input
                   autoComplete="new-password"
                   onChange={(event) => updatePasswordField('newPassword', event.target.value)}
@@ -343,7 +343,7 @@ function ProfilePage({ auth }) {
                 />
               </label>
               <label className="field">
-                <span>Xac nhan mat khau</span>
+                <span>Xác nhận mat khau</span>
                 <input
                   autoComplete="new-password"
                   onChange={(event) => updatePasswordField('confirmPassword', event.target.value)}
@@ -356,11 +356,11 @@ function ProfilePage({ auth }) {
               <div className="modal-actions form-wide">
                 <button className="cancel-btn" disabled={saving} onClick={closePasswordModal} type="button">
                   <AppIcon name="close" />
-                  Huy
+                  Hủy
                 </button>
                 <button className="save-btn" disabled={saving} type="submit">
                   <AppIcon name="save" />
-                  {saving ? 'Dang luu...' : 'Xac nhan doi'}
+                  {saving ? 'Đang lưu...' : 'Xác nhận doi'}
                 </button>
               </div>
             </form>

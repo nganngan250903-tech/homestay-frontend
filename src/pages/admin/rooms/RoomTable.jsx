@@ -7,9 +7,9 @@ function getRoomStatus(room) {
 
 function formatStatus(status) {
   const labels = {
-    AVAILABLE: 'Dang trong',
-    OCCUPIED: 'Dang thue',
-    NO_STATUS: 'Chua co trang thai',
+    AVAILABLE: 'Đang trống',
+    OCCUPIED: 'Đang thuê',
+    NO_STATUS: 'Chưa có trang thai',
   }
 
   return labels[status] || status
@@ -19,8 +19,8 @@ function RoomTable({ rooms, loading, onDelete, onEdit, onStatusChange, onView })
   if (!loading && rooms.length === 0) {
     return (
       <EmptyState
-        title="Khong co phong"
-        description="Khong tim thay phong phu hop voi dieu kien hien tai."
+        title="Không có phòng"
+        description="Không tìm thấy phòng phù hợp với điều kiện hiện tại."
       />
     )
   }
@@ -30,11 +30,11 @@ function RoomTable({ rooms, loading, onDelete, onEdit, onStatusChange, onView })
       <table className="data-table">
         <thead>
           <tr>
-            <th>Ten phong</th>
-            <th>Chi nhanh</th>
-            <th>Loai phong</th>
-            <th>Trang thai</th>
-            <th>Thao tac</th>
+            <th>Tên phòng</th>
+            <th>Chi nhánh</th>
+            <th>Loại phòng</th>
+            <th>Trạng thái</th>
+            <th>Thao tác</th>
           </tr>
         </thead>
         <tbody>
@@ -43,8 +43,8 @@ function RoomTable({ rooms, loading, onDelete, onEdit, onStatusChange, onView })
               <td>
                 <strong>{room.name}</strong>
               </td>
-              <td>{room.branch?.name || 'Chua gan'}</td>
-              <td>{room.roomType?.name || 'Chua gan'}</td>
+              <td>{room.branch?.name || 'Chưa gắn'}</td>
+              <td>{room.roomType?.name || 'Chưa gắn'}</td>
               <td>
                 <button
                   className={`status-action-pill ${getRoomStatus(room) === 'OCCUPIED' ? 'locked' : 'active'}`}
@@ -65,7 +65,7 @@ function RoomTable({ rooms, loading, onDelete, onEdit, onStatusChange, onView })
                   {onEdit && (
                     <button className="edit-btn compact-btn" onClick={() => onEdit(room)} type="button">
                       <AppIcon name="edit" />
-                      Sua
+                      Sửa
                     </button>
                   )}
                   {onDelete && (
@@ -75,7 +75,7 @@ function RoomTable({ rooms, loading, onDelete, onEdit, onStatusChange, onView })
                       type="button"
                     >
                       <AppIcon name="trash" />
-                      Xoa
+                      Xóa
                     </button>
                   )}
                 </div>

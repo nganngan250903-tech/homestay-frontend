@@ -9,27 +9,27 @@ function CustomerHistoryModal({ bookings, customer, loading, onClose }) {
       <section className="modal-card room-detail-card" role="dialog" aria-modal="true" aria-labelledby="history-title">
         <div className="modal-head detail-modal-head">
           <div>
-            <p className="eyebrow">Lich su dat phong</p>
+            <p className="eyebrow">Lịch sử đặt phòng</p>
             <h2 id="history-title">{customer.name}</h2>
           </div>
-          <button className="icon-btn" onClick={onClose} type="button" aria-label="Dong modal">
+          <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng modal">
             <AppIcon name="close" />
           </button>
         </div>
 
         {loading ? (
-          <LoadingSpinner label="Dang tai lich su..." />
+          <LoadingSpinner label="Đang tải lịch sử..." />
         ) : bookings.length === 0 ? (
-          <EmptyState title="Chua co booking" description="Khach hang nay chua co lich su dat phong." />
+          <EmptyState title="Chưa có booking" description="Khách hàng này chưa có lịch sử đặt phòng." />
         ) : (
           <div className="table-wrap">
             <table className="data-table">
               <thead>
                 <tr>
                   <th>Booking</th>
-                  <th>Phong</th>
+                  <th>Phòng</th>
                   <th>Thoi gian</th>
-                  <th>Trang thai</th>
+                  <th>Trạng thái</th>
                   <th>Tong tien</th>
                 </tr>
               </thead>

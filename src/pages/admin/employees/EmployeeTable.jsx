@@ -24,28 +24,28 @@ function EmployeeTable({
     <section className="panel">
       <div className="section-head">
         <div>
-          <p className="eyebrow">DANH SACH NHAN VIEN</p>
-          <h2>Danh sach nhan vien</h2>
+          <p className="eyebrow">DANH SÁCH NHÂN VIÊN</p>
+          <h2>Danh sách nhân viên</h2>
         </div>
         <button className="blue-btn" onClick={onCreate} type="button">
           <AppIcon name="plus" />
-          Them nhan vien
+          Thêm nhân viên
         </button>
       </div>
 
       <form className="room-toolbar" onSubmit={onApplySearch}>
         <label className="field">
-          <span>Tim kiem nhan vien</span>
+          <span>Tìm kiếm nhân viên</span>
           <input
             onChange={(event) => onSearchInputChange(event.target.value)}
-            placeholder="Ten, username, email hoac so dien thoai"
+            placeholder="Tên, username, email hoặc số điện thoại"
             value={searchInput}
           />
         </label>
         <div className="room-toolbar-action">
           <button className="blue-btn" type="submit">
             <AppIcon name="search" />
-            Tim kiem
+            Tìm kiếm
           </button>
         </div>
       </form>
@@ -53,18 +53,18 @@ function EmployeeTable({
       {loading ? (
         <LoadingSpinner />
       ) : employees.length === 0 ? (
-        <EmptyState title="Khong co nhan vien" description="Khong tim thay nhan vien phu hop." />
+        <EmptyState title="Không có nhân viên" description="Không tìm thấy nhân viên phù hợp." />
       ) : (
         <div className="table-wrap">
           <table className="data-table">
             <thead>
               <tr>
-                <th>Nhan vien</th>
+                <th>Nhân viên</th>
                 <th>Username</th>
                 <th>Email</th>
-                <th>Vai tro</th>
-                <th>Trang thai</th>
-                <th>Thao tac</th>
+                <th>Vai trò</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
               </tr>
             </thead>
             <tbody>
@@ -87,7 +87,7 @@ function EmployeeTable({
                       type="button"
                     >
                       <AppIcon name={employee.active === false ? 'unlock' : 'lock'} />
-                      {employee.active === false ? 'Da vo hieu hoa' : 'Hoat dong'}
+                      {employee.active === false ? 'Đã vô hiệu hóa' : 'Hoạt động'}
                     </button>
                   </td>
                   <td>
@@ -98,7 +98,7 @@ function EmployeeTable({
                       </button>
                       <button className="edit-btn compact-btn" onClick={() => onEdit(employee)} type="button">
                         <AppIcon name="edit" />
-                        Sua
+                        Sửa
                       </button>
                     </div>
                   </td>
@@ -111,7 +111,7 @@ function EmployeeTable({
 
       <div className="pagination-bar">
         <span>
-          Hien thi {employees.length} / {total} nhan vien
+          Hiển thị {employees.length} / {total} nhân viên
         </span>
         <div className="pagination-actions">
           <button className="cancel-btn compact-btn" disabled={page === 1} onClick={() => setPage((current) => Math.max(1, current - 1))} type="button">

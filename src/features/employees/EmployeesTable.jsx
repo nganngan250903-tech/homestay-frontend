@@ -7,8 +7,8 @@ function EmployeesTable({ employees }) {
     <section className="panel">
       <div className="panel-heading">
         <div>
-          <p className="eyebrow">Nhan su</p>
-          <h2>Danh sach nhan vien</h2>
+          <p className="eyebrow">Nhân sự</p>
+          <h2>Danh sách nhân viên</h2>
         </div>
       </div>
       <div className="table-wrap">
@@ -16,10 +16,10 @@ function EmployeesTable({ employees }) {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Ho ten</th>
+              <th>Họ tên</th>
               <th>Email</th>
-              <th>Dien thoai</th>
-              <th>Vai tro</th>
+              <th>Điện thoại</th>
+              <th>Vai trò</th>
             </tr>
           </thead>
           <tbody>

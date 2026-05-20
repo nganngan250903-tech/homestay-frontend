@@ -8,11 +8,11 @@ function CustomerConfirmModal({ confirm, onCancel, onConfirm, saving }) {
         <div className="modal-actions detail-actions">
           <button className="cancel-btn" disabled={saving} onClick={onCancel} type="button">
             <AppIcon name="close" />
-            Dong
+            Đóng
           </button>
           <button className={confirm.action === 'delete' ? 'danger-btn' : 'blue-btn'} disabled={saving} onClick={onConfirm} type="button">
             <AppIcon name={confirm.action === 'delete' ? 'trash' : confirm.nextStatus === 'LOCKED' ? 'lock' : 'unlock'} />
-            {saving ? 'Dang xu ly...' : confirm.label}
+            {saving ? 'Đang xử lý...' : confirm.label}
           </button>
         </div>
       </section>

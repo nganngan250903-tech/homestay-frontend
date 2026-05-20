@@ -23,27 +23,27 @@ function CategoryTable({
       <div className="section-head">
         <div>
           <p className="eyebrow">DANH SACH LOAI TIEN NGHI</p>
-          <h2>Danh sach loai tien nghi</h2>
+          <h2>Danh sach loai tiện nghi</h2>
         </div>
         <button className="blue-btn" onClick={onCreate} type="button">
           <AppIcon name="plus" />
-          Them loai tien nghi
+          Thêm loai tiện nghi
         </button>
       </div>
 
       <form className="room-toolbar" onSubmit={onApplySearch}>
         <label className="field">
-          <span>Tim kiem loai tien nghi</span>
+          <span>Tìm kiếm loai tiện nghi</span>
           <input
             onChange={(event) => onSearchInputChange(event.target.value)}
-            placeholder="Ten hoac mo ta"
+            placeholder="Ten hoac mô tả"
             value={searchInput}
           />
         </label>
         <div className="room-toolbar-action">
           <button className="blue-btn" type="submit">
             <AppIcon name="search" />
-            Tim kiem
+            Tìm kiếm
           </button>
         </div>
       </form>
@@ -51,15 +51,15 @@ function CategoryTable({
       {loading ? (
         <LoadingSpinner />
       ) : categories.length === 0 ? (
-        <EmptyState title="Khong co loai tien nghi" description="Khong tim thay loai tien nghi phu hop." />
+        <EmptyState title="Không có loại tiện nghi" description="Không tìm thấy loại tiện nghi phù hợp." />
       ) : (
         <div className="table-wrap">
           <table className="data-table room-type-table">
             <thead>
               <tr>
-                <th>Loai tien nghi</th>
-                <th>Mo ta</th>
-                <th>Thao tac</th>
+                <th>Loai tiện nghi</th>
+                <th>Mô tả</th>
+                <th>Thao tác</th>
               </tr>
             </thead>
             <tbody>
@@ -68,7 +68,7 @@ function CategoryTable({
                   <td>
                     <strong>{category.name}</strong>
                   </td>
-                  <td>{category.description || 'Chua co'}</td>
+                  <td>{category.description || 'Chưa có'}</td>
                   <td>
                     <div className="table-actions">
                       <button className="view-btn compact-btn" onClick={() => onView(category)} type="button">
@@ -77,11 +77,11 @@ function CategoryTable({
                       </button>
                       <button className="edit-btn compact-btn" onClick={() => onEdit(category)} type="button">
                         <AppIcon name="edit" />
-                        Sua
+                        Sửa
                       </button>
                       <button className="danger-btn compact-btn" disabled={saving} onClick={() => onDelete(category)} type="button">
                         <AppIcon name="trash" />
-                        Xoa
+                        Xóa
                       </button>
                     </div>
                   </td>
@@ -94,7 +94,7 @@ function CategoryTable({
 
       <div className="pagination-bar">
         <span>
-          Hien thi {categories.length} / {total} loai tien nghi
+          Hiển thị {categories.length} / {total} loai tiện nghi
         </span>
         <div className="pagination-actions">
           <button className="cancel-btn compact-btn" disabled={page === 1} onClick={() => setPage((current) => Math.max(1, current - 1))} type="button">

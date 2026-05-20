@@ -9,10 +9,10 @@ function EmployeeDetailModal({ employee, onClose, onEdit }) {
       <section className="modal-card room-detail-card" role="dialog" aria-modal="true" aria-labelledby="employee-detail-title">
         <div className="modal-head detail-modal-head">
           <div>
-            <p className="eyebrow">Nhan vien</p>
-            <h2 id="employee-detail-title">Thong tin chi tiet nhan vien</h2>
+            <p className="eyebrow">Nhân viên</p>
+            <h2 id="employee-detail-title">Thông tin chi tiết nhân viên</h2>
           </div>
-          <button className="icon-btn" onClick={onClose} type="button" aria-label="Dong modal">
+          <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng modal">
             <AppIcon name="close" />
           </button>
         </div>
@@ -22,7 +22,7 @@ function EmployeeDetailModal({ employee, onClose, onEdit }) {
           <div>
             <h2>{employee.name}</h2>
             <span className={`status-pill ${employee.active === false ? 'occupied' : 'available'}`}>
-              {employee.active === false ? 'Da vo hieu hoa' : 'Hoat dong'}
+              {employee.active === false ? 'Đã vô hiệu hóa' : 'Hoạt động'}
             </span>
           </div>
         </div>
@@ -30,21 +30,21 @@ function EmployeeDetailModal({ employee, onClose, onEdit }) {
         <div className="detail-list">
           <DetailItem label="Username" value={employee.username} />
           <DetailItem label="Email" value={employee.email} />
-          <DetailItem label="So dien thoai" value={employee.phone} />
-          <DetailItem label="Vai tro" value={getEmployeeRoleLabel(employee)} />
-          <DetailItem label="Ma vai tro" value={getRoleName(employee)} />
-          <DetailItem label="Luong" value={employee.salary} />
-          <DetailItem label="Dia chi" value={employee.address} />
+          <DetailItem label="Số điện thoại" value={employee.phone} />
+          <DetailItem label="Vai trò" value={getEmployeeRoleLabel(employee)} />
+          <DetailItem label="Mã vai trò" value={getRoleName(employee)} />
+          <DetailItem label="Lương" value={employee.salary} />
+          <DetailItem label="Địa chỉ" value={employee.address} />
         </div>
 
         <div className="modal-actions detail-actions">
           <button className="cancel-btn" onClick={onClose} type="button">
             <AppIcon name="close" />
-            Dong
+            Đóng
           </button>
           <button className="blue-btn" onClick={() => onEdit(employee)} type="button">
             <AppIcon name="edit" />
-            Chinh sua
+            Chỉnh sửa
           </button>
         </div>
       </section>

@@ -40,7 +40,7 @@ export async function request(path, options = {}) {
     return body
   } catch (error) {
     const body = error.response?.data
-    throw new Error(body?.message || error.message || 'Khong the ket noi backend', {
+    throw new Error(body?.message || error.message || 'Không thể kết nối backend', {
       cause: error,
     })
   }

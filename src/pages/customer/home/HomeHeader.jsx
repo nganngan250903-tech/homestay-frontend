@@ -16,8 +16,8 @@ function HomeHeader({
     <header className="customer-nav">
       <Link className="customer-logo" to="/home">Lim Dim Homestay</Link>
       <nav aria-label="Dieu huong trang chu">
-        <NavLink end to="/home">Thong tin</NavLink>
-        <NavLink to="/home/bookingRoom">Dat phong</NavLink>
+        <NavLink end to="/home">Thông tin</NavLink>
+        <NavLink to="/home/bookingRoom">Đặt phòng</NavLink>
         <NavLink to="/home/amenities">Tien nghi</NavLink>
         <NavLink to="/home/services">Dich vu</NavLink>
         <NavLink to="/home/offers">Uu dai</NavLink>
@@ -35,7 +35,7 @@ function HomeHeader({
               <div className="customer-account-dropdown">
                 <button onClick={() => onOpenModal('profile')} type="button">
                   <AppIcon name="edit" />
-                  Chinh sua thong tin
+                  Chỉnh sửa thong tin
                 </button>
                 <button onClick={() => onOpenModal('password')} type="button">
                   <AppIcon name="lock" />
@@ -47,15 +47,15 @@ function HomeHeader({
                 </button>
                 <button onClick={onLogout} type="button">
                   <AppIcon name="logout" />
-                  Dang xuat
+                  Đăng xuất
                 </button>
               </div>
             )}
           </div>
         ) : (
           <>
-            <button onClick={() => onAuthOpen('login')} type="button">Dang nhap</button>
-            <button onClick={() => onAuthOpen('register')} type="button">Dang ky</button>
+            <button onClick={() => onAuthOpen('login')} type="button">Đăng nhập</button>
+            <button onClick={() => onAuthOpen('register')} type="button">Đăng ký</button>
           </>
         )}
       </div>

@@ -13,7 +13,7 @@ async function deleteUploadedImage(publicId) {
 }
 
 function CustomerFormModal({ form, mode, onClose, onSubmit, onUpdateField, saving }) {
-  const title = mode === 'edit' ? 'Chinh sua khach hang' : 'Them khach hang'
+  const title = mode === 'edit' ? 'Chỉnh sửa khách hàng' : 'Thêm khách hàng'
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState('')
   const uploadedImageRef = useRef(null)
@@ -30,7 +30,7 @@ function CustomerFormModal({ form, mode, onClose, onSubmit, onUpdateField, savin
       uploadedImageRef.current = uploaded.publicId ? { publicId: uploaded.publicId, url: uploaded.url } : null
       onUpdateField('image', uploaded.url)
     } catch (error) {
-      setUploadError(error.message || 'Khong the upload anh dai dien.')
+      setUploadError(error.message || 'Không thể upload ảnh đại diện.')
     } finally {
       setUploading(false)
     }
@@ -46,10 +46,10 @@ function CustomerFormModal({ form, mode, onClose, onSubmit, onUpdateField, savin
       <section className="modal-card room-detail-card" role="dialog" aria-modal="true" aria-labelledby="customer-form-title">
         <div className="modal-head detail-modal-head">
           <div>
-            <p className="eyebrow">Khach hang</p>
+            <p className="eyebrow">Khách hàng</p>
             <h2 id="customer-form-title">{title}</h2>
           </div>
-          <button className="icon-btn" onClick={closeWithoutSaving} type="button" aria-label="Dong modal">
+          <button className="icon-btn" onClick={closeWithoutSaving} type="button" aria-label="Đóng modal">
             <AppIcon name="close" />
           </button>
         </div>
@@ -60,7 +60,7 @@ function CustomerFormModal({ form, mode, onClose, onSubmit, onUpdateField, savin
           </div>
 
           <label className="field">
-            <span>Ho ten</span>
+            <span>Họ tên</span>
             <input onChange={(event) => onUpdateField('name', event.target.value)} required value={form.name} />
           </label>
           <label className="field">
@@ -68,28 +68,28 @@ function CustomerFormModal({ form, mode, onClose, onSubmit, onUpdateField, savin
             <input onChange={(event) => onUpdateField('email', event.target.value)} required type="email" value={form.email} />
           </label>
           <label className="field">
-            <span>So dien thoai</span>
+            <span>Số điện thoại</span>
             <input onChange={(event) => onUpdateField('phone', event.target.value)} required value={form.phone} />
           </label>
           <label className="field form-wide">
-            <span>Dia chi</span>
+            <span>Địa chỉ</span>
             <textarea onChange={(event) => onUpdateField('address', event.target.value)} value={form.address} />
           </label>
           <label className="field form-wide">
-            <span>Anh dai dien</span>
+            <span>Ảnh đại diện</span>
             <input accept="image/*" disabled={uploading} onChange={changeImage} type="file" />
-            {uploading && <small className="helper-text">Dang upload anh len Cloudinary...</small>}
+            {uploading && <small className="helper-text">Đang upload ảnh lên Cloudinary...</small>}
             {uploadError && <small className="error-text">{uploadError}</small>}
           </label>
 
           <div className="modal-actions form-wide">
             <button className="cancel-btn" onClick={closeWithoutSaving} type="button">
               <AppIcon name="close" />
-              Huy
+              Hủy
             </button>
             <button className="save-btn" disabled={saving || uploading} type="submit">
               <AppIcon name="save" />
-              {saving ? 'Dang luu...' : 'Luu khach hang'}
+              {saving ? 'Đang lưu...' : 'Lưu khách hàng'}
             </button>
           </div>
         </form>

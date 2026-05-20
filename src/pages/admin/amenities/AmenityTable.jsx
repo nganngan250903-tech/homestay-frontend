@@ -24,27 +24,27 @@ function AmenityTable({
       <div className="section-head">
         <div>
           <p className="eyebrow">DANH SACH TIEN NGHI</p>
-          <h2>Danh sach tien nghi</h2>
+          <h2>Danh sach tiện nghi</h2>
         </div>
         <button className="blue-btn" onClick={onCreate} type="button">
           <AppIcon name="plus" />
-          Them tien nghi
+          Thêm tiện nghi
         </button>
       </div>
 
       <form className="room-toolbar" onSubmit={onApplySearch}>
         <label className="field">
-          <span>Tim kiem tien nghi</span>
+          <span>Tìm kiếm tiện nghi</span>
           <input
             onChange={(event) => onSearchInputChange(event.target.value)}
-            placeholder="Ten hoac loai tien nghi"
+            placeholder="Ten hoac loai tiện nghi"
             value={searchInput}
           />
         </label>
         <div className="room-toolbar-action">
           <button className="blue-btn" type="submit">
             <AppIcon name="search" />
-            Tim kiem
+            Tìm kiếm
           </button>
         </div>
       </form>
@@ -52,15 +52,15 @@ function AmenityTable({
       {loading ? (
         <LoadingSpinner />
       ) : amenities.length === 0 ? (
-        <EmptyState title="Khong co tien nghi" description="Khong tim thay tien nghi phu hop." />
+        <EmptyState title="Không có tiện nghi" description="Không tìm thấy tiện nghi phù hợp." />
       ) : (
         <div className="table-wrap">
           <table className="data-table">
             <thead>
               <tr>
                 <th>Tien nghi</th>
-                <th>Loai tien nghi</th>
-                <th>Thao tac</th>
+                <th>Loai tiện nghi</th>
+                <th>Thao tác</th>
               </tr>
             </thead>
             <tbody>
@@ -74,7 +74,7 @@ function AmenityTable({
                       </div>
                     </div>
                   </td>
-                  <td>{amenity.category?.name || 'Chua phan loai'}</td>
+                  <td>{amenity.category?.name || 'Chưa phân loại'}</td>
                   <td>
                     <div className="table-actions">
                       <button className="view-btn compact-btn" onClick={() => onView(amenity)} type="button">
@@ -83,11 +83,11 @@ function AmenityTable({
                       </button>
                       <button className="edit-btn compact-btn" onClick={() => onEdit(amenity)} type="button">
                         <AppIcon name="edit" />
-                        Sua
+                        Sửa
                       </button>
                       <button className="danger-btn compact-btn" disabled={saving} onClick={() => onDelete(amenity)} type="button">
                         <AppIcon name="trash" />
-                        Xoa
+                        Xóa
                       </button>
                     </div>
                   </td>
@@ -100,7 +100,7 @@ function AmenityTable({
 
       <div className="pagination-bar">
         <span>
-          Hien thi {amenities.length} / {total} tien nghi
+          Hiển thị {amenities.length} / {total} tiện nghi
         </span>
         <div className="pagination-actions">
           <button className="cancel-btn compact-btn" disabled={page === 1} onClick={() => setPage((current) => Math.max(1, current - 1))} type="button">

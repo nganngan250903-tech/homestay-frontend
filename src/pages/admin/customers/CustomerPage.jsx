@@ -55,7 +55,7 @@ function CustomerPage({ auth }) {
     try {
       setCustomers(await getCustomers(''))
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong tai duoc khach hang' })
+      setToast({ type: 'error', message: error.message || 'Không tải được khách hàng' })
     } finally {
       setLoading(false)
     }
@@ -103,15 +103,15 @@ function CustomerPage({ auth }) {
           await Promise.allSettled([deleteCloudImageByUrl(modal.customer.image)])
         }
         await loadCustomers(false)
-        setToast({ type: 'success', message: 'Cap nhat du lieu thanh cong' })
+        setToast({ type: 'success', message: 'Cập nhật dữ liệu thành công' })
       } else {
         await createCustomer(modal.form)
         await loadCustomers(false)
-        setToast({ type: 'success', message: 'Da them thanh cong' })
+        setToast({ type: 'success', message: 'Đã thêm thành công' })
       }
       closeModal()
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong luu duoc khach hang' })
+      setToast({ type: 'error', message: error.message || 'Không lưu được khách hàng' })
     } finally {
       setSaving(false)
     }
@@ -124,8 +124,8 @@ function CustomerPage({ auth }) {
       action: 'status',
       customer,
       nextStatus,
-      label: nextStatus === 'LOCKED' ? 'Khoa' : 'Mo khoa',
-      message: `Ban chac chan muon ${nextStatus === 'LOCKED' ? 'khoa' : 'mo khoa'} khach hang nay`,
+      label: nextStatus === 'LOCKED' ? 'Khóa' : 'Mở khóa',
+      message: `Ban chac chan muon ${nextStatus === 'LOCKED' ? 'khoa' : 'mo khoa'} khách hàng nay`,
     })
   }
 
@@ -135,8 +135,8 @@ function CustomerPage({ auth }) {
       action: 'delete',
       customer,
       nextStatus: '',
-      label: 'Xoa',
-      message: 'Ban chac chan muon xoa khach hang nay',
+      label: 'Xóa',
+      message: 'Bạn chắc chắn muốn xóa khách hàng này',
     })
   }
 
@@ -153,7 +153,7 @@ function CustomerPage({ auth }) {
       if (confirm.action === 'status') {
         await updateCustomerStatus(confirm.customer.id, confirm.nextStatus)
         await loadCustomers(false)
-        setToast({ type: 'success', message: 'Cap nhat du lieu thanh cong' })
+        setToast({ type: 'success', message: 'Cập nhật dữ liệu thành công' })
       }
 
       if (confirm.action === 'delete') {
@@ -162,11 +162,11 @@ function CustomerPage({ auth }) {
           await Promise.allSettled([deleteCloudImageByUrl(confirm.customer.image)])
         }
         await loadCustomers(false)
-        setToast({ type: 'delete', message: 'Da xoa thanh cong' })
+        setToast({ type: 'delete', message: 'Đã xóa thành công' })
       }
       closeConfirm()
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong thuc hien duoc thao tac' })
+      setToast({ type: 'error', message: error.message || 'Không thực hiện được thao tác' })
     } finally {
       setSaving(false)
     }
@@ -179,7 +179,7 @@ function CustomerPage({ auth }) {
       const bookings = await getCustomerBookings(customer.id)
       setHistoryModal({ open: true, customer, bookings })
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong tai duoc lich su dat phong' })
+      setToast({ type: 'error', message: error.message || 'Không tải được lịch sử đặt phòng' })
     } finally {
       setHistoryLoading(false)
     }
@@ -190,9 +190,9 @@ function CustomerPage({ auth }) {
       <Toast message={toast?.message} type={toast?.type} />
 
       <div className="stats-grid">
-        <StatCard label="Tong khach hang" value={customers.length} />
-        <StatCard label="Dang hoat dong" value={customers.filter((item) => item.status !== 'LOCKED').length} tone="mint" />
-        <StatCard label="Dang khoa" value={customers.filter((item) => item.status === 'LOCKED').length} tone="cream" />
+        <StatCard label="Tổng khách hàng" value={customers.length} />
+        <StatCard label="Đang hoạt động" value={customers.filter((item) => item.status !== 'LOCKED').length} tone="mint" />
+        <StatCard label="Đang khóa" value={customers.filter((item) => item.status === 'LOCKED').length} tone="cream" />
       </div>
 
       <CustomerTable

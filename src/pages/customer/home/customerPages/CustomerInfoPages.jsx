@@ -11,25 +11,25 @@ const amenityHighlights = [
   {
     icon: 'snowflake',
     title: 'Dieu hoa rieng',
-    description: 'Moi phong deu co dieu hoa, giup khong gian nghi ngoi luon de chiu.',
+    description: 'Mỗi phòng đều có điều hòa, giúp không gian nghỉ ngơi luôn dễ chịu.',
   },
   {
     icon: 'bath',
-    title: 'Phong tam sach se',
-    description: 'Vat dung co ban duoc chuan bi gon gang, thuan tien cho khach luu tru.',
+    title: 'Phòng tam sach se',
+    description: 'Vật dụng cơ bản được chuẩn bị gọn gàng, thuận tiện cho khách lưu trú.',
   },
   {
     icon: 'coffee',
     title: 'Khu sinh hoat chung',
-    description: 'Khong gian chung am cung de uong tra, tro chuyen va thu gian.',
+    description: 'Không gian chung ấm cúng để uống trà, trò chuyện và thư giãn.',
   },
 ]
 
 const serviceHighlights = [
   {
     icon: 'calendar',
-    title: 'Ho tro dat phong',
-    description: 'Tu van phong phu hop theo so khach, lich trinh va ngan sach cua ban.',
+    title: 'Ho tro dat phòng',
+    description: 'Tu van phòng phu hop theo số khách, lich trinh va ngan sach cua ban.',
   },
   {
     icon: 'car',
@@ -44,23 +44,23 @@ const serviceHighlights = [
 ]
 
 const offerHighlights = [
-  'Uu dai cho khach dat phong dai ngay.',
-  'Gia tot hon cho nhom ban va gia dinh khi dat nhieu phong.',
+  'Ưu đãi cho khách đặt phòng dài ngày.',
+  'Giá tốt hơn cho nhóm bạn và gia đình khi đặt nhiều phòng.',
   'Cap nhat uu dai theo mua va cac dip le trong nam.',
 ]
 
 const faqItems = [
   {
-    question: 'Khach co can dat coc truoc khong?',
-    answer: 'Homestay se xac nhan thong tin dat phong va huong dan thanh toan theo tung thoi diem.',
+    question: 'Khách có cần đặt cọc trước không?',
+    answer: 'Homestay sẽ xác nhận thông tin đặt phòng và hướng dẫn thanh toán theo từng thời điểm.',
   },
   {
-    question: 'Co the huy lich dat phong khong?',
-    answer: 'Khach hang da dang nhap co the xem lich su booking va gui yeu cau huy theo quy dinh he thong.',
+    question: 'Có thể hủy lịch đặt phòng không?',
+    answer: 'Khách hàng đã đăng nhập có thể xem lịch sử booking và gửi yêu cầu hủy theo quy định hệ thống.',
   },
   {
-    question: 'Gio nhan phong va tra phong nhu the nao?',
-    answer: 'Thong tin gio nhan phong, tra phong se duoc nhan vien xac nhan khi booking duoc duyet.',
+    question: 'Giờ nhận phòng và trả phòng như thế nào?',
+    answer: 'Thông tin giờ nhận phòng, trả phòng sẽ được nhân viên xác nhận khi booking được duyệt.',
   },
 ]
 
@@ -79,8 +79,8 @@ export function BookingPage() {
   return (
     <>
       <PageHero
-        title="Dat phong"
-        description="Chon phong phu hop voi lich trinh cua ban va xem chi tiet tien nghi, gia tham khao truoc khi dat."
+        title="Đặt phòng"
+        description="Chọn phòng phù hợp với lịch trình của bạn và xem chi tiết tiện nghi, giá tham khảo trước khi đặt."
       />
       <CustomerRoomSection rooms={rooms} id="dat-phong" />
     </>
@@ -92,7 +92,7 @@ export function AmenityInfoPage() {
     <>
       <PageHero
         title="Tien nghi"
-        description="Nhung tien ich can thiet duoc sap xep gon gang de ky nghi ngan ngay van thoai mai."
+        description="Những tiện ích cần thiết được sắp xếp gọn gàng để kỳ nghỉ ngắn ngày vẫn thoải mái."
       />
       <section className="home-info-section">
         <div className="home-info-grid">
@@ -116,7 +116,7 @@ export function ServiceInfoPage() {
     <>
       <PageHero
         title="Dich vu"
-        description="Cac dich vu ho tro khach hang tu luc chon phong den khi hoan tat ky nghi tai Lim Dim."
+        description="Cac dich vu ho tro khách hàng tu luc chon phòng den khi hoan tat ky nghi tai Lim Dim."
       />
       <section className="home-info-section soft">
         <div className="home-service-list">
@@ -142,7 +142,7 @@ export function OfferInfoPage() {
     <>
       <PageHero
         title="Uu dai"
-        description="Cac chuong trinh uu dai duoc cap nhat theo tinh trang phong, thoi diem dat va so luong khach."
+        description="Các chương trình ưu đãi được cập nhật theo tình trạng phòng, thời điểm đặt và số lượng khách."
       />
       <section className="home-info-section">
         <div className="home-offer-list">
@@ -163,7 +163,7 @@ export function RulesFaqPage() {
     <>
       <PageHero
         title="Quy tac & FAQ"
-        description="Mot so thong tin can biet truoc khi dat phong va luu tru tai homestay."
+        description="Mot so thong tin can biet truoc khi dat phòng va luu tru tai homestay."
       />
       <section className="home-info-section soft">
         <div className="home-faq-list">

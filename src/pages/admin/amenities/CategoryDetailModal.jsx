@@ -7,25 +7,25 @@ function CategoryDetailModal({ category, onClose, onEdit }) {
       <section className="modal-card room-detail-card" role="dialog" aria-modal="true" aria-labelledby="category-detail-title">
         <div className="modal-head detail-modal-head">
           <div>
-            <p className="eyebrow">Loai tien nghi</p>
-            <h2 id="category-detail-title">Thong tin chi tiet loai tien nghi</h2>
+            <p className="eyebrow">Loai tiện nghi</p>
+            <h2 id="category-detail-title">Thông tin chi tiết loại tiện nghi</h2>
           </div>
-          <button className="icon-btn" onClick={onClose} type="button" aria-label="Dong modal">
+          <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng modal">
             <AppIcon name="close" />
           </button>
         </div>
         <div className="detail-list">
-          <DetailItem label="Ten loai tien nghi" value={category.name} />
-          <DetailItem label="Mo ta" value={category.description} />
+          <DetailItem label="Ten loai tiện nghi" value={category.name} />
+          <DetailItem label="Mô tả" value={category.description} />
         </div>
         <div className="modal-actions detail-actions">
           <button className="cancel-btn" onClick={onClose} type="button">
             <AppIcon name="close" />
-            Dong
+            Đóng
           </button>
           <button className="blue-btn" onClick={() => onEdit(category)} type="button">
             <AppIcon name="edit" />
-            Chinh sua
+            Chỉnh sửa
           </button>
         </div>
       </section>

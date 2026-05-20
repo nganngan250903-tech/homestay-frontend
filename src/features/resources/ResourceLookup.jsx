@@ -19,8 +19,8 @@ function ResourceLookup({
     <section className="panel">
       <div className="panel-heading">
         <div>
-          <p className="eyebrow">Tra cuu</p>
-          <h2>{canDelete ? 'Lay hoac xoa theo ID' : 'Lay du lieu theo ID'}</h2>
+          <p className="eyebrow">Tra cứu</p>
+          <h2>{canDelete ? 'Lấy hoặc xóa theo ID' : 'Lấy dữ liệu theo ID'}</h2>
         </div>
       </div>
 
@@ -36,7 +36,7 @@ function ResourceLookup({
         {canDelete && (
           <button className="danger-btn" disabled={loading} onClick={onDeleteById} type="button">
             <AppIcon name="trash" />
-            Xoa
+            Xóa
           </button>
         )}
       </div>
@@ -44,7 +44,7 @@ function ResourceLookup({
       {activeKey === 'employees' && (
         <button className="blue-btn wide-btn" disabled={loading} onClick={onLoadEmployees} type="button">
           <AppIcon name="list" />
-          Tai danh sach nhan vien
+          Tải danh sách nhân viên
         </button>
       )}
 
@@ -62,7 +62,7 @@ function ResourceLookup({
               />
             </label>
             <label className="field compact">
-              <span>Trang thai</span>
+              <span>Trạng thái</span>
               <select
                 onChange={(event) => onStatusChange('status', event.target.value)}
                 value={bookingStatus.status}
@@ -82,7 +82,7 @@ function ResourceLookup({
             </button>
             <button className="danger-btn" disabled={loading} onClick={onCancelBooking} type="button">
               <AppIcon name="close" />
-              Huy booking
+              Hủy booking
             </button>
           </div>
         </form>

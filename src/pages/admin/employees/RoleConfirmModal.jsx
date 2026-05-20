@@ -5,16 +5,16 @@ function RoleConfirmModal({ role, onCancel, onConfirm, saving }) {
     <div className="modal-backdrop" role="presentation">
       <section className="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="role-confirm-title">
         <p className="confirm-message" id="role-confirm-title">
-          Ban chac chan muon xoa vai tro {role?.name}?
+          Bạn chắc chắn muốn xóa vai trò {role?.name}?
         </p>
         <div className="modal-actions detail-actions">
           <button className="cancel-btn" disabled={saving} onClick={onCancel} type="button">
             <AppIcon name="close" />
-            Huy
+            Hủy
           </button>
           <button className="danger-btn" disabled={saving} onClick={onConfirm} type="button">
             <AppIcon name="trash" />
-            {saving ? 'Dang xu ly...' : 'Xac nhan xoa'}
+            {saving ? 'Đang xử lý...' : 'Xác nhận xóa'}
           </button>
         </div>
       </section>

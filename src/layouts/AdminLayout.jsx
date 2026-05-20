@@ -7,12 +7,12 @@ import { getEmployee } from '../services/employeeService'
 
 const menuItems = [
   { label: 'Dashboard', path: '/admin', icon: 'dashboard', end: true, roles: ['ADMIN'] },
-  { label: 'Dat phong', path: '/admin/bookings', icon: 'calendar', roles: ['ADMIN', 'EMPLOYEE'] },
+  { label: 'Đặt phòng', path: '/admin/bookings', icon: 'calendar', roles: ['ADMIN', 'EMPLOYEE'] },
   { label: 'Thanh toan', path: '/admin/payments', icon: 'wallet', roles: ['ADMIN', 'EMPLOYEE'] },
-  { label: 'Phong', path: '/admin/rooms', icon: 'bed', roles: ['ADMIN', 'EMPLOYEE'] },
+  { label: 'Phòng', path: '/admin/rooms', icon: 'bed', roles: ['ADMIN', 'EMPLOYEE'] },
   { label: 'Tien nghi', path: '/admin/amenities', icon: 'sparkles', roles: ['ADMIN'] },
-  { label: 'Khach hang', path: '/admin/customers', icon: 'users', roles: ['ADMIN', 'EMPLOYEE'] },
-  { label: 'Nhan vien', path: '/admin/employees', icon: 'badge', roles: ['ADMIN'] },
+  { label: 'Khách hàng', path: '/admin/customers', icon: 'users', roles: ['ADMIN', 'EMPLOYEE'] },
+  { label: 'Nhân viên', path: '/admin/employees', icon: 'badge', roles: ['ADMIN'] },
   { label: 'Ho so', path: '/admin/profile', icon: 'profile', roles: ['ADMIN', 'EMPLOYEE'] },
 ]
 
@@ -134,7 +134,7 @@ function AdminLayout({ auth, onLogout }) {
             className="icon-btn mobile-only"
             onClick={() => setSidebarOpen(false)}
             type="button"
-            aria-label="Dong menu"
+            aria-label="Đóng menu"
           >
             <AppIcon name="close" />
           </button>
@@ -159,7 +159,7 @@ function AdminLayout({ auth, onLogout }) {
             <span className="nav-icon">
               <SidebarIcon name="logout" />
             </span>
-            <span>Dang xuat</span>
+            <span>Đăng xuất</span>
           </button>
         </nav>
       </aside>

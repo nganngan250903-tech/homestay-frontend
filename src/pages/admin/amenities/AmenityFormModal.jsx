@@ -1,7 +1,7 @@
 import AppIcon from '../../../components/AppIcon'
 
 function AmenityFormModal({ categories, form, mode, onClose, onSubmit, onUpdateField, saving }) {
-  const title = mode === 'edit' ? 'Chinh sua tien nghi' : 'Them tien nghi'
+  const title = mode === 'edit' ? 'Chỉnh sửa tiện nghi' : 'Thêm tiện nghi'
 
   return (
     <div className="modal-backdrop" role="presentation">
@@ -11,23 +11,23 @@ function AmenityFormModal({ categories, form, mode, onClose, onSubmit, onUpdateF
             <p className="eyebrow">Tien nghi</p>
             <h2 id="amenity-form-title">{title}</h2>
           </div>
-          <button className="icon-btn" onClick={onClose} type="button" aria-label="Dong modal">
+          <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng modal">
             <AppIcon name="close" />
           </button>
         </div>
 
         <form className="form-grid room-edit-form" onSubmit={onSubmit}>
           <div className="form-section-title form-wide">
-            <strong>Thong tin tien nghi</strong>
+            <strong>Thông tin tiện nghi</strong>
           </div>
           <label className="field">
-            <span>Ten tien nghi</span>
+            <span>Ten tiện nghi</span>
             <input onChange={(event) => onUpdateField('name', event.target.value)} required value={form.name} />
           </label>
           <label className="field">
-            <span>Loai tien nghi</span>
+            <span>Loai tiện nghi</span>
             <select onChange={(event) => onUpdateField('categoryId', event.target.value)} value={form.categoryId}>
-              <option value="">Chua phan loai</option>
+              <option value="">Chưa phân loại</option>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}
@@ -38,11 +38,11 @@ function AmenityFormModal({ categories, form, mode, onClose, onSubmit, onUpdateF
           <div className="modal-actions form-wide">
             <button className="cancel-btn" onClick={onClose} type="button">
               <AppIcon name="close" />
-              Huy
+              Hủy
             </button>
             <button className="save-btn" disabled={saving} type="submit">
               <AppIcon name="save" />
-              {saving ? 'Dang luu...' : 'Luu tien nghi'}
+              {saving ? 'Đang lưu...' : 'Lưu tiện nghi'}
             </button>
           </div>
         </form>

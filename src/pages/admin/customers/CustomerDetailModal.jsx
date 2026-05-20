@@ -8,10 +8,10 @@ function CustomerDetailModal({ customer, onClose, onEdit }) {
       <section className="modal-card room-detail-card" role="dialog" aria-modal="true" aria-labelledby="customer-detail-title">
         <div className="modal-head detail-modal-head">
           <div>
-            <p className="eyebrow">Khach hang</p>
-            <h2 id="customer-detail-title">Thong tin chi tiet khach hang</h2>
+            <p className="eyebrow">Khách hàng</p>
+            <h2 id="customer-detail-title">Thông tin chi tiet khách hàng</h2>
           </div>
-          <button className="icon-btn" onClick={onClose} type="button" aria-label="Dong modal">
+          <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng modal">
             <AppIcon name="close" />
           </button>
         </div>
@@ -21,25 +21,25 @@ function CustomerDetailModal({ customer, onClose, onEdit }) {
           <div>
             <h2>{customer.name}</h2>
             <span className={`status-pill ${customer.status === 'LOCKED' ? 'occupied' : 'available'}`}>
-              {customer.status === 'LOCKED' ? 'Dang khoa' : 'Hoat dong'}
+              {customer.status === 'LOCKED' ? 'Đang khóa' : 'Hoạt động'}
             </span>
           </div>
         </div>
 
         <div className="detail-list">
           <DetailItem label="Email" value={customer.email} />
-          <DetailItem label="So dien thoai" value={customer.phone} />
-          <DetailItem label="Dia chi" value={customer.address} />
+          <DetailItem label="Số điện thoại" value={customer.phone} />
+          <DetailItem label="Địa chỉ" value={customer.address} />
         </div>
 
         <div className="modal-actions detail-actions">
           <button className="cancel-btn" onClick={onClose} type="button">
             <AppIcon name="close" />
-            Dong
+            Đóng
           </button>
           <button className="blue-btn" onClick={() => onEdit(customer)} type="button">
             <AppIcon name="edit" />
-            Chinh sua
+            Chỉnh sửa
           </button>
         </div>
       </section>

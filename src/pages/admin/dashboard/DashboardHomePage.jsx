@@ -14,12 +14,12 @@ const numberFormatter = new Intl.NumberFormat('vi-VN')
 
 const bookingLabels = {
   PENDING: 'Cho thanh toan',
-  CONFIRMED: 'Da xac nhan',
-  CHECKED_IN: 'Dang o',
-  CHECKED_OUT: 'Da tra phong',
+  CONFIRMED: 'Đã xác nhận',
+  CHECKED_IN: 'Đang ở',
+  CHECKED_OUT: 'Da tra phòng',
   CANCELLED: 'Da huy',
-  NO_SHOW: 'Khong den',
-  UNKNOWN: 'Khong ro',
+  NO_SHOW: 'Không đến',
+  UNKNOWN: 'Không rõ',
 }
 
 function toDateInput(date) {
@@ -128,7 +128,7 @@ function DashboardHomePage() {
     try {
       setOverview(await getStatisticsOverview())
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong tai duoc du lieu dashboard' })
+      setToast({ type: 'error', message: error.message || 'Không tải được dữ liệu dashboard' })
     } finally {
       setLoading(false)
     }
@@ -184,12 +184,12 @@ function DashboardHomePage() {
 
   const totalRevenue = overview ? sumValues(overview.yearlyRevenue) : 0
   const roomSegments = overview ? [
-    { label: 'Phong trong', value: Number(overview.availableRooms || 0), color: '#22c55e' },
-    { label: 'Dang hoat dong', value: Number(overview.occupiedRooms || 0), color: '#38bdf8' },
+    { label: 'Phòng trong', value: Number(overview.availableRooms || 0), color: '#22c55e' },
+    { label: 'Đang hoạt động', value: Number(overview.occupiedRooms || 0), color: '#38bdf8' },
   ] : []
   const customerSegments = overview ? [
-    { label: 'Dang hoat dong', value: Number(overview.activeCustomers || 0), color: '#22c55e' },
-    { label: 'Dang khoa', value: Number(overview.lockedCustomers || 0), color: '#f59e0b' },
+    { label: 'Đang hoạt động', value: Number(overview.activeCustomers || 0), color: '#22c55e' },
+    { label: 'Đang khóa', value: Number(overview.lockedCustomers || 0), color: '#f59e0b' },
   ] : []
   const bookingSegments = overview
     ? Object.entries(overview.currentMonthBookingsByStatus || {}).map(([status, value], index) => ({
@@ -206,7 +206,7 @@ function DashboardHomePage() {
         <div>
           <p className="eyebrow">Overview</p>
           <h1>Dashboard</h1>
-          <p className="muted-text">Tong quan doanh thu, phong, khach hang va booking cua LimDimHomestay.</p>
+          <p className="muted-text">Tong quan doanh thu, phòng, khách hàng va booking cua LimDimHomestay.</p>
         </div>
       </div>
 
@@ -225,16 +225,16 @@ function DashboardHomePage() {
             <article className="dashboard-card wide-card">
               <div className="dashboard-card-head">
                 <div>
-                  <h2>Doanh thu theo ngay</h2>
-                  <p>Khoang loc toi da 7 ngay</p>
+                  <h2>Doanh thu theo ngày</h2>
+                  <p>Khoảng lọc tối đa 7 ngày</p>
                 </div>
                 <div className="dashboard-filters">
                   <label>
-                    <span>Tu ngay</span>
+                    <span>Từ ngày</span>
                     <input onChange={(event) => changeDailyStart(event.target.value)} type="date" value={dailyRange.start} />
                   </label>
                   <label>
-                    <span>Den ngay</span>
+                    <span>Đến ngày</span>
                     <input
                       max={addDays(dailyRange.start, 6)}
                       min={dailyRange.start}
@@ -245,7 +245,7 @@ function DashboardHomePage() {
                   </label>
                 </div>
               </div>
-              <BarChart data={dailyData} emptyText="Chua co doanh thu trong khoang ngay nay." />
+              <BarChart data={dailyData} emptyText="Chưa có doanh thu trong khoảng ngày này." />
             </article>
 
             <article className="dashboard-card wide-card">
@@ -259,36 +259,36 @@ function DashboardHomePage() {
                   <input min="2000" onChange={(event) => setMonthYear(event.target.value)} type="number" value={monthYear} />
                 </label>
               </div>
-              <BarChart data={monthlyData} emptyText="Chua co doanh thu trong nam da chon." />
+              <BarChart data={monthlyData} emptyText="Chưa có doanh thu trong nam da chon." />
             </article>
 
             <article className="dashboard-card wide-card">
               <div className="dashboard-card-head">
                 <div>
                   <h2>Doanh thu theo nam</h2>
-                  <p>Hien thi 5 nam ket thuc tai nam da chon</p>
+                  <p>Hiển thị 5 nam ket thuc tai nam da chon</p>
                 </div>
                 <label className="compact-filter">
                   <span>Den nam</span>
                   <input min="2000" onChange={(event) => setYearEnd(event.target.value)} type="number" value={yearEnd} />
                 </label>
               </div>
-              <BarChart data={yearlyData} emptyText="Chua co doanh thu trong giai doan nay." />
+              <BarChart data={yearlyData} emptyText="Chưa có doanh thu trong giai doan nay." />
             </article>
           </section>
 
           <section className="dashboard-grid summary-grid">
             <DonutChart
-              title="Tinh trang phong"
+              title="Tinh trang phòng"
               total={Number(overview.totalRooms || 0)}
               segments={roomSegments}
-              note="Phong trong va phong dang hoat dong/da co khach theo trang thai hien tai."
+              note="Phòng trống và phòng đang hoạt động/đã có khách theo trạng thái hiện tại."
             />
             <DonutChart
-              title="Khach hang"
+              title="Khách hàng"
               total={Number(overview.totalCustomers || 0)}
               segments={customerSegments}
-              note="Tong hop tai khoan khach hang dang hoat dong va dang khoa."
+              note="Tổng hợp tài khoản khách hàng đang hoạt động và đang khóa."
             />
             <DonutChart
               title="Booking thang hien tai"
@@ -300,8 +300,8 @@ function DashboardHomePage() {
         </>
       ) : (
         <section className="panel note-panel">
-          <h2>Khong co du lieu</h2>
-          <p>Chua tai duoc du lieu thong ke tu backend.</p>
+          <h2>Không có dữ liệu</h2>
+          <p>Chưa tải được dữ liệu thống kê từ backend.</p>
         </section>
       )}
     </section>

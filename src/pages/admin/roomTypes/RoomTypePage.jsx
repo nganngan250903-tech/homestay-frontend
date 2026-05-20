@@ -34,7 +34,7 @@ function DetailItem({ label, value }) {
   return (
     <div className="detail-item">
       <span>{label}</span>
-      <strong>{value || 'Chua co'}</strong>
+      <strong>{value || 'Chưa có'}</strong>
     </div>
   )
 }
@@ -43,13 +43,13 @@ function RoomTypeImage({ image, name }) {
   const [failed, setFailed] = useState(false)
 
   if (!image) {
-    return <DetailItem label="Anh loai phong" value="Chua co" />
+    return <DetailItem label="Anh loai phòng" value="Chưa có" />
   }
 
   if (failed) {
     return (
       <div className="image-error-box form-wide">
-        <strong>Khong tai duoc anh</strong>
+        <strong>Không tải được ảnh</strong>
         <span>{image}</span>
       </div>
     )
@@ -57,8 +57,8 @@ function RoomTypeImage({ image, name }) {
 
   return (
     <div className="detail-image form-wide">
-      <span className="detail-section-label">Anh loai phong</span>
-      <img src={image} alt={name || 'Loai phong'} onError={() => setFailed(true)} />
+      <span className="detail-section-label">Anh loai phòng</span>
+      <img src={image} alt={name || 'Loại phòng'} onError={() => setFailed(true)} />
     </div>
   )
 }
@@ -70,7 +70,7 @@ function ImagePreview({ alt, src }) {
   if (failed) {
     return (
       <div className="image-error-box">
-        <strong>Khong tai duoc anh</strong>
+        <strong>Không tải được ảnh</strong>
         <span>{src}</span>
       </div>
     )
@@ -86,28 +86,28 @@ function RoomTypeDetailModal({ onClose, onEdit, roomType }) {
         <div className="modal-head detail-modal-head">
           <div>
             <p className="eyebrow">Room type</p>
-            <h2 id="room-type-detail-title">Thong tin chi tiet loai phong</h2>
+            <h2 id="room-type-detail-title">Thông tin chi tiet loai phòng</h2>
           </div>
-          <button className="icon-btn" onClick={onClose} type="button" aria-label="Dong modal">
+          <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng modal">
             <AppIcon name="close" />
           </button>
         </div>
 
         <div className="detail-list">
-          <DetailItem label="Ten loai phong" value={roomType.name} />
-          <DetailItem label="So khach toi da" value={roomType.maxGuest} />
-          <DetailItem label="Mo ta" value={roomType.description} />
+          <DetailItem label="Tên loại phòng" value={roomType.name} />
+          <DetailItem label="Số khách tối đa" value={roomType.maxGuest} />
+          <DetailItem label="Mô tả" value={roomType.description} />
           <RoomTypeImage image={roomType.image} name={roomType.name} />
         </div>
 
         <div className="modal-actions detail-actions">
           <button className="cancel-btn" onClick={onClose} type="button">
             <AppIcon name="close" />
-            Dong
+            Đóng
           </button>
           <button className="blue-btn" onClick={() => onEdit(roomType)} type="button">
             <AppIcon name="edit" />
-            Chinh sua
+            Chỉnh sửa
           </button>
         </div>
       </section>
@@ -116,7 +116,7 @@ function RoomTypeDetailModal({ onClose, onEdit, roomType }) {
 }
 
 function RoomTypeFormModal({ form, mode, onClose, onSubmit, onUpdateField, saving }) {
-  const title = mode === 'edit' ? 'Chinh sua loai phong' : 'Them loai phong'
+  const title = mode === 'edit' ? 'Chỉnh sửa loai phòng' : 'Thêm loai phòng'
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState('')
   const uploadedImageRef = useRef(null)
@@ -136,7 +136,7 @@ function RoomTypeFormModal({ form, mode, onClose, onSubmit, onUpdateField, savin
       uploadedImageRef.current = uploaded.publicId ? { publicId: uploaded.publicId, url: uploaded.url } : null
       onUpdateField('image', uploaded.url)
     } catch (error) {
-      setUploadError(error.message || 'Khong the upload anh loai phong. Vui long thu lai.')
+      setUploadError(error.message || 'Không thể upload ảnh loại phòng. Vui lòng thử lại.')
     } finally {
       setUploading(false)
     }
@@ -155,18 +155,18 @@ function RoomTypeFormModal({ form, mode, onClose, onSubmit, onUpdateField, savin
             <p className="eyebrow">Room type</p>
             <h2 id="room-type-form-title">{title}</h2>
           </div>
-          <button className="icon-btn" onClick={closeWithoutSaving} type="button" aria-label="Dong modal">
+          <button className="icon-btn" onClick={closeWithoutSaving} type="button" aria-label="Đóng modal">
             <AppIcon name="close" />
           </button>
         </div>
 
         <form className="form-grid room-edit-form" onSubmit={onSubmit}>
           <div className="form-section-title form-wide">
-            <strong>Thong tin loai phong</strong>
+            <strong>Thông tin loai phòng</strong>
           </div>
 
           <label className="field">
-            <span>Ten loai phong</span>
+            <span>Tên loại phòng</span>
             <input
               onChange={(event) => onUpdateField('name', event.target.value)}
               required
@@ -175,7 +175,7 @@ function RoomTypeFormModal({ form, mode, onClose, onSubmit, onUpdateField, savin
           </label>
 
           <label className="field">
-            <span>So khach toi da</span>
+            <span>Số khách tối đa</span>
             <input
               min="1"
               onChange={(event) => onUpdateField('maxGuest', event.target.value)}
@@ -186,31 +186,31 @@ function RoomTypeFormModal({ form, mode, onClose, onSubmit, onUpdateField, savin
           </label>
 
           <label className="field form-wide">
-            <span>Mo ta</span>
+            <span>Mô tả</span>
             <textarea onChange={(event) => onUpdateField('description', event.target.value)} value={form.description} />
           </label>
 
           <label className="field form-wide">
-            <span>Anh loai phong</span>
+            <span>Anh loai phòng</span>
             <input accept="image/*" disabled={uploading} onChange={changeImage} type="file" />
-            {uploading && <small className="helper-text">Dang upload anh len Cloudinary...</small>}
+            {uploading && <small className="helper-text">Đang upload ảnh lên Cloudinary...</small>}
             {uploadError && <small className="error-text">{uploadError}</small>}
           </label>
 
           {form.image && (
             <div className="image-preview form-wide">
-              <ImagePreview src={form.image} alt={form.name || 'Loai phong'} />
+              <ImagePreview src={form.image} alt={form.name || 'Loại phòng'} />
             </div>
           )}
 
           <div className="modal-actions form-wide">
             <button className="cancel-btn" onClick={closeWithoutSaving} type="button">
               <AppIcon name="close" />
-              Huy
+              Hủy
             </button>
             <button className="save-btn" disabled={saving || uploading} type="submit">
               <AppIcon name="save" />
-              {saving ? 'Dang luu...' : 'Luu loai phong'}
+              {saving ? 'Đang lưu...' : 'Lưu loai phòng'}
             </button>
           </div>
         </form>
@@ -259,7 +259,7 @@ function RoomTypePage() {
     try {
       setRoomTypes(await getRoomTypes())
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong tai duoc loai phong' })
+      setToast({ type: 'error', message: error.message || 'Không tải được loại phòng' })
     } finally {
       setLoading(false)
     }
@@ -315,22 +315,22 @@ function RoomTypePage() {
         if (modal.roomType.image && modal.roomType.image !== payload.image) {
           await Promise.allSettled([deleteCloudImageByUrl(modal.roomType.image)])
         }
-        setToast({ type: 'success', message: 'Da cap nhat loai phong' })
+        setToast({ type: 'success', message: 'Da cap nhat loai phòng' })
       } else {
         await createRoomType(payload)
-        setToast({ type: 'success', message: 'Da them loai phong' })
+        setToast({ type: 'success', message: 'Đã thêm loại phòng' })
       }
       closeModal()
       await loadRoomTypes()
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong luu duoc loai phong' })
+      setToast({ type: 'error', message: error.message || 'Không lưu được loại phòng' })
     } finally {
       setSaving(false)
     }
   }
 
   const removeRoomType = async (roomType) => {
-    const confirmed = window.confirm(`Xoa loai phong ${roomType.name}?`)
+    const confirmed = window.confirm(`Xóa loai phòng ${roomType.name}?`)
     if (!confirmed) {
       return
     }
@@ -342,10 +342,10 @@ function RoomTypePage() {
       if (roomType.image) {
         await Promise.allSettled([deleteCloudImageByUrl(roomType.image)])
       }
-      setToast({ type: 'success', message: 'Da xoa loai phong' })
+      setToast({ type: 'success', message: 'Đã xóa loại phòng' })
       await loadRoomTypes()
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Khong xoa duoc loai phong' })
+      setToast({ type: 'error', message: error.message || 'Không xóa được loại phòng' })
     } finally {
       setSaving(false)
     }
@@ -356,21 +356,21 @@ function RoomTypePage() {
       <div className="page-heading">
         <div>
           <p className="eyebrow">QUAN LY LOAI PHONG</p>
-          <h1>Loai phong</h1>
-          <p className="muted-text">Quan ly ten, mo ta, so khach toi da va anh loai phong.</p>
+          <h1>Loại phòng</h1>
+          <p className="muted-text">Quan ly ten, mô tả, số khách toi da va anh loai phòng.</p>
         </div>
         <button className="blue-btn" onClick={openCreateModal} type="button">
           <AppIcon name="plus" />
-          Them loai phong
+          Thêm loai phòng
         </button>
       </div>
 
       <Toast message={toast?.message} type={toast?.type} />
 
       <div className="stats-grid">
-        <StatCard label="So loai phong" value={roomTypes.length} />
+        <StatCard label="So loai phòng" value={roomTypes.length} />
         <StatCard
-          label="Suc chua lon nhat"
+          label="Sức chứa lớn nhất"
           value={roomTypes.length ? Math.max(...roomTypes.map((item) => item.maxGuest || 0)) : 0}
           tone="mint"
         />
@@ -385,23 +385,23 @@ function RoomTypePage() {
         <div className="section-head">
           <div>
             <p className="eyebrow">DANH SACH LOAI PHONG</p>
-            <h2>Danh sach loai phong</h2>
+            <h2>Danh sach loai phòng</h2>
           </div>
         </div>
 
         <form className="room-toolbar" onSubmit={applySearch}>
           <label className="field">
-            <span>Tim kiem loai phong</span>
+            <span>Tìm kiếm loai phòng</span>
             <input
               onChange={(event) => setSearchInput(event.target.value)}
-              placeholder="Ten, mo ta hoac so khach"
+              placeholder="Tên, mô tả hoặc số khách"
               value={searchInput}
             />
           </label>
           <div className="room-toolbar-action">
             <button className="blue-btn" type="submit">
               <AppIcon name="search" />
-              Tim kiem
+              Tìm kiếm
             </button>
           </div>
         </form>
@@ -409,16 +409,16 @@ function RoomTypePage() {
         {loading ? (
           <LoadingSpinner />
         ) : filteredRoomTypes.length === 0 ? (
-          <EmptyState title="Khong co loai phong" description="Khong tim thay loai phong phu hop." />
+          <EmptyState title="Không có loại phòng" description="Không tìm thấy loại phòng phù hợp." />
         ) : (
           <div className="table-wrap">
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Loai phong</th>
-                  <th>So khach</th>
-                  <th>Mo ta</th>
-                  <th>Thao tac</th>
+                  <th>Loại phòng</th>
+                  <th>Số khách</th>
+                  <th>Mô tả</th>
+                  <th>Thao tác</th>
                 </tr>
               </thead>
               <tbody>
@@ -440,7 +440,7 @@ function RoomTypePage() {
                       </div>
                     </td>
                     <td>{roomType.maxGuest}</td>
-                    <td>{roomType.description || 'Chua co'}</td>
+                    <td>{roomType.description || 'Chưa có'}</td>
                     <td>
                       <div className="table-actions">
                         <button className="view-btn compact-btn" onClick={() => openDetailModal(roomType)} type="button">
@@ -449,7 +449,7 @@ function RoomTypePage() {
                         </button>
                         <button className="edit-btn compact-btn" onClick={() => openEditModal(roomType)} type="button">
                           <AppIcon name="edit" />
-                          Sua
+                          Sửa
                         </button>
                         <button
                           className="danger-btn compact-btn"
@@ -458,7 +458,7 @@ function RoomTypePage() {
                           type="button"
                         >
                           <AppIcon name="trash" />
-                          Xoa
+                          Xóa
                         </button>
                       </div>
                     </td>
@@ -471,7 +471,7 @@ function RoomTypePage() {
 
         <div className="pagination-bar">
           <span>
-            Hien thi {pagedRoomTypes.length} / {filteredRoomTypes.length} loai phong
+            Hiển thị {pagedRoomTypes.length} / {filteredRoomTypes.length} loai phòng
           </span>
           <div className="pagination-actions">
             <button

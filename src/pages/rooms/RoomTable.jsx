@@ -46,9 +46,9 @@ function RoomTable({ rooms, loading, onEdit, onDelete }) {
                 <strong>#{room.number}</strong>
                 <span className="cell-subtext">ID {room.id}</span>
               </td>
-              <td>{room.branch?.name || 'Chua gan'}</td>
-              <td>{room.roomType?.name || 'Chua gan'}</td>
-              <td>{room.area ? `${room.area} m2` : 'Chua co'}</td>
+              <td>{room.branch?.name || 'Chưa gắn'}</td>
+              <td>{room.roomType?.name || 'Chưa gắn'}</td>
+              <td>{room.area ? `${room.area} m2` : 'Chưa có'}</td>
               <td>
                 <span className={`status-pill ${getRoomStatus(room).toLowerCase()}`}>
                   {formatStatus(getRoomStatus(room))}
@@ -57,12 +57,12 @@ function RoomTable({ rooms, loading, onEdit, onDelete }) {
               <td>
                 <span className="cell-subtext">
                   {(room.amenities || []).map((amenity) => amenity.amenityName).join(', ') ||
-                    'Chua gan'}
+                    'Chưa gắn'}
                 </span>
               </td>
               <td>
                 {room.thumbnail ? (
-                  <img className="room-thumb" src={room.thumbnail} alt={`Phong ${room.number}`} />
+                  <img className="room-thumb" src={room.thumbnail} alt={`Phòng ${room.number}`} />
                 ) : (
                   <span className="muted-text">Chưa có ảnh</span>
                 )}
@@ -70,14 +70,14 @@ function RoomTable({ rooms, loading, onEdit, onDelete }) {
               <td>
                 <div className="table-actions">
                   <button className="ghost-btn compact-btn" onClick={() => onEdit(room)} type="button">
-                    Sua
+                    Sửa
                   </button>
                   <button
                     className="danger-btn compact-btn"
                     onClick={() => onDelete(room)}
                     type="button"
                   >
-                    Xoa
+                    Xóa
                   </button>
                 </div>
               </td>

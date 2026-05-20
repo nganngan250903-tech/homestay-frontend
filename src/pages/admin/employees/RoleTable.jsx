@@ -22,27 +22,27 @@ function RoleTable({
       <div className="section-head">
         <div>
           <p className="eyebrow">QUAN LY VAI TRO</p>
-          <h2>Danh sach vai tro</h2>
+          <h2>Danh sach vai trò</h2>
         </div>
         <button className="blue-btn" onClick={onCreate} type="button">
           <AppIcon name="plus" />
-          Them vai tro
+          Thêm vai trò
         </button>
       </div>
 
       <form className="room-toolbar" onSubmit={onApplySearch}>
         <label className="field">
-          <span>Tim kiem vai tro</span>
+          <span>Tìm kiếm vai trò</span>
           <input
             onChange={(event) => onSearchInputChange(event.target.value)}
-            placeholder="Ten hoac mo ta vai tro"
+            placeholder="Ten hoac mô tả vai trò"
             value={searchInput}
           />
         </label>
         <div className="room-toolbar-action">
           <button className="blue-btn" type="submit">
             <AppIcon name="search" />
-            Tim kiem
+            Tìm kiếm
           </button>
         </div>
       </form>
@@ -50,15 +50,15 @@ function RoleTable({
       {loading ? (
         <LoadingSpinner />
       ) : roles.length === 0 ? (
-        <EmptyState title="Khong co vai tro" description="Khong tim thay vai tro phu hop." />
+        <EmptyState title="Không có vai trò" description="Không tìm thấy vai trò phù hợp." />
       ) : (
         <div className="table-wrap">
           <table className="data-table">
             <thead>
               <tr>
-                <th>Vai tro</th>
-                <th>Mo ta</th>
-                <th>Thao tac</th>
+                <th>Vai trò</th>
+                <th>Mô tả</th>
+                <th>Thao tác</th>
               </tr>
             </thead>
             <tbody>
@@ -67,7 +67,7 @@ function RoleTable({
                   <td>
                     <strong>{role.name}</strong>
                   </td>
-                  <td>{role.description || 'Chua co'}</td>
+                  <td>{role.description || 'Chưa có'}</td>
                   <td>
                     <div className="table-actions">
                       <button
@@ -76,7 +76,7 @@ function RoleTable({
                         type="button"
                       >
                         <AppIcon name="edit" />
-                        Sua
+                        Sửa
                       </button>
                       <button
                         className="danger-btn compact-btn"
@@ -85,7 +85,7 @@ function RoleTable({
                         type="button"
                       >
                         <AppIcon name="trash" />
-                        Xoa
+                        Xóa
                       </button>
                     </div>
                   </td>
@@ -98,7 +98,7 @@ function RoleTable({
 
       <div className="pagination-bar">
         <span>
-          Hien thi {roles.length} / {total} vai tro
+          Hiển thị {roles.length} / {total} vai trò
         </span>
         <div className="pagination-actions">
           <button className="cancel-btn compact-btn" disabled={page === 1} onClick={() => setPage((current) => Math.max(1, current - 1))} type="button">
