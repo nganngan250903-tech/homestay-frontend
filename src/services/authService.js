@@ -1,14 +1,14 @@
 import { request } from './api'
 
-export async function loginAdmin(credentials) {
+export async function loginStaff(credentials) {
   const response = await request('/auth/login', {
     method: 'POST',
     data: credentials,
   })
 
   const auth = response.data
-  if (auth?.role !== 'ADMIN') {
-    throw new Error('Tai khoan nay khong co quyen ADMIN')
+  if (!['ADMIN', 'EMPLOYEE'].includes(auth?.role)) {
+    throw new Error('Tai khoan nay khong co quyen truy cap he thong quan ly')
   }
 
   return auth

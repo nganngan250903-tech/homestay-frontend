@@ -59,11 +59,7 @@ function CustomerFormModal({ form, mode, onClose, onSubmit, onUpdateField, savin
             <textarea onChange={(event) => onUpdateField('address', event.target.value)} value={form.address} />
           </label>
           <label className="field form-wide">
-            <span>Image URL</span>
-            <input onChange={(event) => onUpdateField('image', event.target.value)} value={form.image} />
-          </label>
-          <label className="field form-wide">
-            <span>Upload anh dai dien</span>
+            <span>Anh dai dien</span>
             <input accept="image/*" disabled={uploading} onChange={changeImage} type="file" />
             {uploading && <small className="helper-text">Dang upload anh len Cloudinary...</small>}
             {uploadError && <small className="error-text">{uploadError}</small>}

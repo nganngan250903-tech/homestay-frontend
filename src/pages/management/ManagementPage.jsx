@@ -7,7 +7,7 @@ import { resources } from '../../features/resources/resourceConfig'
 import { buildDefaultPayload, defaultForm } from '../../features/resources/resourceUtils'
 import { request } from '../../services/api'
 
-function ManagementPage({ resourceKey }) {
+function ManagementPage({ auth, resourceKey }) {
   const resource = useMemo(
     () => resources.find((item) => item.key === resourceKey),
     [resourceKey],
@@ -18,6 +18,7 @@ function ManagementPage({ resourceKey }) {
   const [toast, setToast] = useState(null)
   const [loading, setLoading] = useState(false)
   const [bookingStatus, setBookingStatus] = useState({ bookingId: '', status: 'CONFIRMED' })
+  const isAdmin = auth?.role === 'ADMIN'
 
   if (!resource) {
     return (
@@ -159,6 +160,7 @@ function ManagementPage({ resourceKey }) {
       <ResourceLookup
         activeKey={resource.key}
         bookingStatus={bookingStatus}
+        canDelete={isAdmin}
         loading={loading}
         lookupId={lookupId}
         onCancelBooking={cancelBooking}

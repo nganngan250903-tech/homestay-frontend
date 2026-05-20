@@ -7,6 +7,7 @@ function ResourceLookup({
   loading,
   lookupId,
   onCancelBooking,
+  canDelete = true,
   onDeleteById,
   onFetchById,
   onLoadEmployees,
@@ -19,7 +20,7 @@ function ResourceLookup({
       <div className="panel-heading">
         <div>
           <p className="eyebrow">Tra cuu</p>
-          <h2>Lay hoac xoa theo ID</h2>
+          <h2>{canDelete ? 'Lay hoac xoa theo ID' : 'Lay du lieu theo ID'}</h2>
         </div>
       </div>
 
@@ -32,10 +33,12 @@ function ResourceLookup({
           <AppIcon name="eye" />
           Lay du lieu
         </button>
-        <button className="danger-btn" disabled={loading} onClick={onDeleteById} type="button">
-          <AppIcon name="trash" />
-          Xoa
-        </button>
+        {canDelete && (
+          <button className="danger-btn" disabled={loading} onClick={onDeleteById} type="button">
+            <AppIcon name="trash" />
+            Xoa
+          </button>
+        )}
       </div>
 
       {activeKey === 'employees' && (

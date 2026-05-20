@@ -1,16 +1,19 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import AppIcon from '../components/AppIcon'
 import Brand from '../components/Brand'
+import EmployeeAvatar from '../pages/employees/EmployeeAvatar'
+import { getEmployee } from '../services/employeeService'
 
 const menuItems = [
-  { label: 'Dashboard', path: '/admin', icon: 'dashboard', end: true },
-  { label: 'Dat phong', path: '/admin/bookings', icon: 'calendar' },
-  { label: 'Thanh toan', path: '/admin/payments', icon: 'wallet' },
-  { label: 'Phong', path: '/admin/rooms', icon: 'bed' },
-  { label: 'Tien nghi', path: '/admin/amenities', icon: 'sparkles' },
-  { label: 'Khach hang', path: '/admin/customers', icon: 'users' },
-  { label: 'Nhan vien', path: '/admin/employees', icon: 'badge' },
+  { label: 'Dashboard', path: '/admin', icon: 'dashboard', end: true, roles: ['ADMIN'] },
+  { label: 'Dat phong', path: '/admin/bookings', icon: 'calendar', roles: ['ADMIN', 'EMPLOYEE'] },
+  { label: 'Thanh toan', path: '/admin/payments', icon: 'wallet', roles: ['ADMIN', 'EMPLOYEE'] },
+  { label: 'Phong', path: '/admin/rooms', icon: 'bed', roles: ['ADMIN', 'EMPLOYEE'] },
+  { label: 'Tien nghi', path: '/admin/amenities', icon: 'sparkles', roles: ['ADMIN'] },
+  { label: 'Khach hang', path: '/admin/customers', icon: 'users', roles: ['ADMIN', 'EMPLOYEE'] },
+  { label: 'Nhan vien', path: '/admin/employees', icon: 'badge', roles: ['ADMIN'] },
+  { label: 'Ho so', path: '/admin/profile', icon: 'profile', roles: ['ADMIN', 'EMPLOYEE'] },
 ]
 
 const iconPaths = {
@@ -71,6 +74,12 @@ const iconPaths = {
       <path d="M10 12h4" />
     </>
   ),
+  profile: (
+    <>
+      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
+      <path d="M4 21a8 8 0 0 1 16 0" />
+    </>
+  ),
   logout: (
     <>
       <path d="M10 5H5v14h5" />
@@ -90,8 +99,26 @@ function SidebarIcon({ name }) {
 
 function AdminLayout({ auth, onLogout }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [profile, setProfile] = useState(null)
   const navigate = useNavigate()
-  const adminName = auth?.user?.name || auth?.user?.email || 'ADMIN'
+  const userId = auth?.user?.id
+  const userType = auth?.userType
+  const role = auth?.role || 'EMPLOYEE'
+  const adminName = profile?.name || auth?.user?.name || auth?.user?.email || 'ADMIN'
+  const visibleMenuItems = menuItems.filter((item) => item.roles.includes(role))
+
+  const loadProfile = useCallback(async () => {
+    if (!userId || userType !== 'EMPLOYEE') return
+    try {
+      setProfile(await getEmployee(userId))
+    } catch {
+      setProfile(null)
+    }
+  }, [userId, userType])
+
+  useEffect(() => {
+    Promise.resolve().then(loadProfile)
+  }, [loadProfile])
 
   const logout = () => {
     onLogout()
@@ -114,7 +141,7 @@ function AdminLayout({ auth, onLogout }) {
         </div>
 
         <nav className="admin-nav" aria-label="Admin navigation">
-          {menuItems.map((item) => (
+          {visibleMenuItems.map((item) => (
             <NavLink
               className={({ isActive }) => (isActive ? 'admin-nav-link active' : 'admin-nav-link')}
               end={item.end}
@@ -150,16 +177,16 @@ function AdminLayout({ auth, onLogout }) {
             <AppIcon name="menu" />
           </button>
           <Brand subtitle="Admin dashboard" />
-          <div className="admin-profile">
+          <button className="admin-profile profile-trigger" onClick={() => navigate('/admin/profile')} type="button">
+            <EmployeeAvatar employee={profile || auth?.user} />
             <div>
               <strong>{adminName}</strong>
-              <small>ADMIN</small>
             </div>
-          </div>
+          </button>
         </header>
 
         <main className="admin-content">
-          <Outlet />
+          <Outlet context={{ profile, reloadProfile: loadProfile }} />
         </main>
       </section>
     </div>

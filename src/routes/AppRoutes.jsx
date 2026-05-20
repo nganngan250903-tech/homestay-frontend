@@ -8,6 +8,7 @@ import CustomerPage from '../pages/customers/CustomerPage'
 import EmployeePage from '../pages/employees/EmployeePage'
 import PlaceholderPage from '../pages/PlaceholderPage'
 import ManagementPage from '../pages/management/ManagementPage'
+import ProfilePage from '../pages/profile/ProfilePage'
 import RoomTypePage from '../pages/roomTypes/RoomTypePage'
 import RoomPage from '../pages/rooms/RoomPage'
 
@@ -16,7 +17,7 @@ function getDefaultPath(auth) {
     return '/login'
   }
 
-  return auth.role === 'ADMIN' ? '/admin' : '/home'
+  return ['ADMIN', 'EMPLOYEE'].includes(auth.role) ? '/admin' : '/home'
 }
 
 function RequireAuth({ auth, children }) {
@@ -27,13 +28,25 @@ function RequireAuth({ auth, children }) {
   return children
 }
 
-function RequireAdmin({ auth, children }) {
+function RequireStaff({ auth, children }) {
   if (!auth) {
     return <Navigate to="/login" replace />
   }
 
-  if (auth.role !== 'ADMIN') {
+  if (!['ADMIN', 'EMPLOYEE'].includes(auth.role)) {
     return <Navigate to="/home" replace />
+  }
+
+  return children
+}
+
+function RequireRole({ auth, roles, children }) {
+  if (!auth) {
+    return <Navigate to="/login" replace />
+  }
+
+  if (!roles.includes(auth.role)) {
+    return <Navigate to={getDefaultPath(auth)} replace />
   }
 
   return children
@@ -57,24 +70,25 @@ function AppRoutes({ auth, onLogin, onLogout }) {
       <Route
         path="/admin"
         element={
-          <RequireAdmin auth={auth}>
+          <RequireStaff auth={auth}>
             <AdminLayout auth={auth} onLogout={onLogout} />
-          </RequireAdmin>
+          </RequireStaff>
         }
       >
-        <Route index element={<DashboardHomePage />} />
-        <Route path="bookings" element={<ManagementPage resourceKey="bookings" />} />
+        <Route index element={auth?.role === 'ADMIN' ? <DashboardHomePage /> : <Navigate to="/admin/bookings" replace />} />
+        <Route path="bookings" element={<ManagementPage auth={auth} resourceKey="bookings" />} />
         <Route path="payments" element={<PlaceholderPage title="Thanh toan" endpoint="/payments" />} />
-        <Route path="rooms" element={<RoomPage />} />
-        <Route path="room-types" element={<RoomTypePage />} />
-        <Route path="room-pricings" element={<ManagementPage resourceKey="roomPricings" />} />
-        <Route path="room-photos" element={<ManagementPage resourceKey="roomPhotos" />} />
-        <Route path="branches" element={<ManagementPage resourceKey="branches" />} />
-        <Route path="categories" element={<AmenityPage />} />
-        <Route path="amenities" element={<AmenityPage />} />
-        <Route path="customers" element={<CustomerPage />} />
-        <Route path="employees" element={<EmployeePage />} />
-        <Route path="roles" element={<ManagementPage resourceKey="roles" />} />
+        <Route path="rooms" element={<RoomPage auth={auth} />} />
+        <Route path="room-types" element={<RequireRole auth={auth} roles={['ADMIN']}><RoomTypePage /></RequireRole>} />
+        <Route path="room-pricings" element={<RequireRole auth={auth} roles={['ADMIN']}><ManagementPage auth={auth} resourceKey="roomPricings" /></RequireRole>} />
+        <Route path="room-photos" element={<RequireRole auth={auth} roles={['ADMIN']}><ManagementPage auth={auth} resourceKey="roomPhotos" /></RequireRole>} />
+        <Route path="branches" element={<RequireRole auth={auth} roles={['ADMIN']}><ManagementPage auth={auth} resourceKey="branches" /></RequireRole>} />
+        <Route path="categories" element={<RequireRole auth={auth} roles={['ADMIN']}><AmenityPage /></RequireRole>} />
+        <Route path="amenities" element={<RequireRole auth={auth} roles={['ADMIN']}><AmenityPage /></RequireRole>} />
+        <Route path="customers" element={<CustomerPage auth={auth} />} />
+        <Route path="employees" element={<RequireRole auth={auth} roles={['ADMIN']}><EmployeePage /></RequireRole>} />
+        <Route path="profile" element={<ProfilePage auth={auth} />} />
+        <Route path="roles" element={<RequireRole auth={auth} roles={['ADMIN']}><ManagementPage auth={auth} resourceKey="roles" /></RequireRole>} />
       </Route>
       <Route path="*" element={<Navigate to={getDefaultPath(auth)} replace />} />
     </Routes>

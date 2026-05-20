@@ -5,6 +5,11 @@ export async function getEmployees() {
   return response.data || []
 }
 
+export async function getEmployee(id) {
+  const response = await request(`/employees/${id}`)
+  return response.data
+}
+
 export async function getRoles() {
   const response = await request('/roles')
   return response.data || []
@@ -41,6 +46,14 @@ export async function createEmployee(payload) {
 
 export async function updateEmployee(id, payload) {
   const response = await request(`/employees/${id}`, {
+    method: 'PATCH',
+    data: payload,
+  })
+  return response.data
+}
+
+export async function changeEmployeePassword(id, payload) {
+  const response = await request(`/employees/${id}/password`, {
     method: 'PATCH',
     data: payload,
   })

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import AppIcon from '../components/AppIcon'
 import Brand from '../components/Brand'
 import Toast from '../components/Toast'
-import { loginAdmin } from '../services/authService'
+import { loginStaff } from '../services/authService'
 
 function LoginPage({ onLogin }) {
   const [form, setForm] = useState({ email: '', password: '' })
@@ -21,7 +21,7 @@ function LoginPage({ onLogin }) {
     setToast(null)
 
     try {
-      const auth = await loginAdmin(form)
+      const auth = await loginStaff(form)
       onLogin(auth)
       navigate('/admin', { replace: true })
     } catch (error) {
@@ -34,14 +34,14 @@ function LoginPage({ onLogin }) {
   return (
     <main className="login-page">
       <header className="login-header">
-        <Brand subtitle="Admin portal" />
+        <Brand subtitle="Staff portal" />
       </header>
 
       <section className="login-card">
         <div>
           <p className="eyebrow">LIMDIMHOMESTAY</p>
-          <h1>ĐĂNG NHẬP DÀNH CHO QUẢN LÝ</h1>
-          
+          <h1>Dang nhap he thong quan ly</h1>
+          <p className="muted-text">Admin co toan quyen. Nhan vien duoc truy cap cac nghiep vu duoc phan cong.</p>
         </div>
 
         <Toast message={toast?.message} type={toast?.type} />
@@ -58,7 +58,7 @@ function LoginPage({ onLogin }) {
             />
           </label>
           <label className="field">
-            <span>Password</span>
+            <span>Mat khau</span>
             <input
               autoComplete="current-password"
               onChange={(event) => updateField('password', event.target.value)}
@@ -69,7 +69,7 @@ function LoginPage({ onLogin }) {
           </label>
           <button className="blue-btn" disabled={loading} type="submit">
             <AppIcon name="login" />
-            {loading ? 'Dang dang nhap...' : 'Login'}
+            {loading ? 'Dang dang nhap...' : 'Dang nhap'}
           </button>
         </form>
       </section>

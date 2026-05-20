@@ -168,12 +168,7 @@ function RoomTypeFormModal({ form, mode, onClose, onSubmit, onUpdateField, savin
           </label>
 
           <label className="field form-wide">
-            <span>Image URL</span>
-            <input onChange={(event) => onUpdateField('image', event.target.value)} value={form.image} />
-          </label>
-
-          <label className="field form-wide">
-            <span>Upload anh loai phong</span>
+            <span>Anh loai phong</span>
             <input accept="image/*" disabled={uploading} onChange={changeImage} type="file" />
             {uploading && <small className="helper-text">Dang upload anh len Cloudinary...</small>}
             {uploadError && <small className="error-text">{uploadError}</small>}

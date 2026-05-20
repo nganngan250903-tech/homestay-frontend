@@ -81,7 +81,8 @@ function CustomerTable({
                   <td>
                     <button
                       className={`status-action-pill ${customer.status === 'LOCKED' ? 'locked' : 'active'}`}
-                      onClick={() => onStatusChange(customer)}
+                      disabled={!onStatusChange}
+                      onClick={() => onStatusChange?.(customer)}
                       type="button"
                     >
                       <AppIcon name={customer.status === 'LOCKED' ? 'unlock' : 'lock'} />
@@ -94,18 +95,24 @@ function CustomerTable({
                         <AppIcon name="eye" />
                         Xem
                       </button>
-                      <button className="edit-btn compact-btn" onClick={() => onEdit(customer)} type="button">
-                        <AppIcon name="edit" />
-                        Sua
-                      </button>
-                      <button className="blue-btn compact-btn" onClick={() => onHistory(customer)} type="button">
-                        <AppIcon name="history" />
-                        Lich su
-                      </button>
-                      <button className="danger-btn compact-btn" disabled={saving} onClick={() => onDelete(customer)} type="button">
-                        <AppIcon name="trash" />
-                        Xoa
-                      </button>
+                      {onEdit && (
+                        <button className="edit-btn compact-btn" onClick={() => onEdit(customer)} type="button">
+                          <AppIcon name="edit" />
+                          Sua
+                        </button>
+                      )}
+                      {onHistory && (
+                        <button className="blue-btn compact-btn" onClick={() => onHistory(customer)} type="button">
+                          <AppIcon name="history" />
+                          Lich su
+                        </button>
+                      )}
+                      {onDelete && (
+                        <button className="danger-btn compact-btn" disabled={saving} onClick={() => onDelete(customer)} type="button">
+                          <AppIcon name="trash" />
+                          Xoa
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>

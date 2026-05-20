@@ -16,7 +16,7 @@ import CustomerHistoryModal from './CustomerHistoryModal'
 import CustomerTable from './CustomerTable'
 import { PAGE_SIZE, customerFormFrom, emptyCustomerForm } from './customerUtils'
 
-function CustomerPage() {
+function CustomerPage({ auth }) {
   const [customers, setCustomers] = useState([])
   const [searchInput, setSearchInput] = useState('')
   const [filters, setFilters] = useState({ search: '' })
@@ -29,6 +29,7 @@ function CustomerPage() {
   const [historyLoading, setHistoryLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [toast, setToast] = useState(null)
+  const isAdmin = auth?.role === 'ADMIN'
 
   const filteredCustomers = useMemo(() => {
     const keyword = filters.search.trim().toLowerCase()
@@ -186,11 +187,11 @@ function CustomerPage() {
         loading={loading}
         onApplySearch={submitSearch}
         onCreate={openCreateModal}
-        onDelete={requestDelete}
-        onEdit={openEditModal}
-        onHistory={viewHistory}
+        onDelete={isAdmin ? requestDelete : null}
+        onEdit={isAdmin ? openEditModal : null}
+        onHistory={isAdmin ? viewHistory : null}
         onSearchInputChange={setSearchInput}
-        onStatusChange={requestStatusChange}
+        onStatusChange={isAdmin ? requestStatusChange : null}
         onView={(customer) => setDetailModal({ open: true, customer })}
         page={page}
         searchInput={searchInput}

@@ -15,7 +15,7 @@ function formatStatus(status) {
   return labels[status] || status
 }
 
-function RoomTable({ rooms, loading, onDelete, onEdit, onView }) {
+function RoomTable({ rooms, loading, onDelete, onEdit, onStatusChange, onView }) {
   if (!loading && rooms.length === 0) {
     return (
       <EmptyState
@@ -46,9 +46,15 @@ function RoomTable({ rooms, loading, onDelete, onEdit, onView }) {
               <td>{room.branch?.name || 'Chua gan'}</td>
               <td>{room.roomType?.name || 'Chua gan'}</td>
               <td>
-                <span className={`status-pill ${getRoomStatus(room).toLowerCase()}`}>
+                <button
+                  className={`status-action-pill ${getRoomStatus(room) === 'OCCUPIED' ? 'locked' : 'active'}`}
+                  disabled={!onStatusChange}
+                  onClick={() => onStatusChange?.(room)}
+                  type="button"
+                >
+                  <AppIcon name={getRoomStatus(room) === 'OCCUPIED' ? 'unlock' : 'lock'} />
                   {formatStatus(getRoomStatus(room))}
-                </span>
+                </button>
               </td>
               <td>
                 <div className="table-actions">
@@ -56,18 +62,22 @@ function RoomTable({ rooms, loading, onDelete, onEdit, onView }) {
                     <AppIcon name="eye" />
                     Xem
                   </button>
-                  <button className="edit-btn compact-btn" onClick={() => onEdit(room)} type="button">
-                    <AppIcon name="edit" />
-                    Sua
-                  </button>
-                  <button
-                    className="danger-btn compact-btn"
-                    onClick={() => onDelete(room)}
-                    type="button"
-                  >
-                    <AppIcon name="trash" />
-                    Xoa
-                  </button>
+                  {onEdit && (
+                    <button className="edit-btn compact-btn" onClick={() => onEdit(room)} type="button">
+                      <AppIcon name="edit" />
+                      Sua
+                    </button>
+                  )}
+                  {onDelete && (
+                    <button
+                      className="danger-btn compact-btn"
+                      onClick={() => onDelete(room)}
+                      type="button"
+                    >
+                      <AppIcon name="trash" />
+                      Xoa
+                    </button>
+                  )}
                 </div>
               </td>
             </tr>
