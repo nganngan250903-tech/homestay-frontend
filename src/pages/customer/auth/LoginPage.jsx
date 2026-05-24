@@ -5,6 +5,8 @@ import Brand from '../../../components/Brand'
 import Toast from '../../../components/Toast'
 import { request } from '../../../services/api'
 
+const GOOGLE_OAUTH_URL = import.meta.env.VITE_GOOGLE_OAUTH_URL || 'http://localhost:8080/oauth2/authorization/google'
+
 function getRolePath(auth) {
   const role = String(auth?.role || auth?.userType || '').toUpperCase()
   if (role === 'ADMIN') return '/admin'
@@ -66,6 +68,10 @@ function LoginPage({ onLogin }) {
     }
   }
 
+  const loginWithGoogle = () => {
+    window.location.href = GOOGLE_OAUTH_URL
+  }
+
   return (
     <main className="login-page">
       <header className="login-header">
@@ -117,6 +123,11 @@ function LoginPage({ onLogin }) {
             <button className="blue-btn" disabled={loading} type="submit">
               <AppIcon name="login" />
               {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+            </button>
+            <div className="oauth-divider"><span>hoặc</span></div>
+            <button className="google-login-btn" onClick={loginWithGoogle} type="button">
+              <img className="google-mark" src="/page/google-logo.png" alt="" />
+              Đăng nhập bằng Google
             </button>
           </form>
         ) : (

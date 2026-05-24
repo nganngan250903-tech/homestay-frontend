@@ -4,6 +4,7 @@ import Toast from '../../../components/Toast'
 import { request } from '../../../services/api'
 
 const AUTH_MODAL_ANIMATION_MS = 180
+const GOOGLE_OAUTH_URL = import.meta.env.VITE_GOOGLE_OAUTH_URL || 'http://localhost:8080/oauth2/authorization/google'
 
 function CustomerAuthModal({ initialMode = 'login', onClose, onLogin }) {
   const [mode, setMode] = useState(initialMode)
@@ -67,6 +68,10 @@ function CustomerAuthModal({ initialMode = 'login', onClose, onLogin }) {
     }
   }
 
+  const loginWithGoogle = () => {
+    window.location.href = GOOGLE_OAUTH_URL
+  }
+
   return (
     <div className={`modal-backdrop auth-modal-backdrop ${closing ? 'closing' : ''}`} role="presentation">
       <section className="customer-auth-modal" role="dialog" aria-modal="true" aria-labelledby="customer-auth-title">
@@ -116,6 +121,11 @@ function CustomerAuthModal({ initialMode = 'login', onClose, onLogin }) {
             <button className="home-primary-btn" disabled={loading} type="submit">
               <AppIcon name="login" />
               {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+            </button>
+            <div className="oauth-divider"><span>hoặc</span></div>
+            <button className="google-login-btn" onClick={loginWithGoogle} type="button">
+              <img className="google-mark" src="/page/google-logo.png" alt="" />
+              Đăng nhập bằng Google
             </button>
           </form>
         ) : (

@@ -10,6 +10,7 @@ import ProfilePage from '../pages/admin/profile/ProfilePage'
 import RoomTypePage from '../pages/admin/roomTypes/RoomTypePage'
 import RoomPage from '../pages/admin/rooms/RoomPage'
 import LoginPage from '../pages/customer/auth/LoginPage'
+import OAuth2Redirect from '../pages/customer/auth/OAuth2Redirect'
 import CustomerLayout from '../pages/customer/home/CustomerLayout'
 import HomePage from '../pages/customer/home/HomePage'
 import PaymentPage from '../pages/customer/payment/PaymentPage'
@@ -62,6 +63,7 @@ function AppRoutes({ auth, onLogin, onLogout }) {
         path="/login"
         element={auth ? <Navigate to={getDefaultPath(auth)} replace /> : <LoginPage onLogin={onLogin} />}
       />
+      <Route path="/oauth2/redirect" element={<OAuth2Redirect onLogin={onLogin} />} />
       <Route
         path="/home"
         element={

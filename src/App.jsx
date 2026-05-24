@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import './App.css'
 import AppRoutes from './routes/AppRoutes'
 import { clearStoredAuth, readStoredAuth, saveStoredAuth } from './services/authStorage'
@@ -6,15 +6,15 @@ import { clearStoredAuth, readStoredAuth, saveStoredAuth } from './services/auth
 function App() {
   const [auth, setAuth] = useState(readStoredAuth)
 
-  const login = (loginData) => {
+  const login = useCallback((loginData) => {
     saveStoredAuth(loginData)
     setAuth(loginData)
-  }
+  }, [])
 
-  const logout = () => {
+  const logout = useCallback(() => {
     clearStoredAuth()
     setAuth(null)
-  }
+  }, [])
 
   return <AppRoutes auth={auth} onLogin={login} onLogout={logout} />
 }
