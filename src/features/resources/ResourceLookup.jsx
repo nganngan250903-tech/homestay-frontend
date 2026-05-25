@@ -1,4 +1,4 @@
-import AppIcon from '../../components/AppIcon'
+﻿import AppIcon from '../../components/AppIcon'
 import { bookingStatuses } from './resourceConfig'
 
 function ResourceLookup({
@@ -19,19 +19,18 @@ function ResourceLookup({
     <section className="panel">
       <div className="panel-heading">
         <div>
-          <p className="eyebrow">Tra cứu</p>
-          <h2>{canDelete ? 'Lấy hoặc xóa theo ID' : 'Lấy dữ liệu theo ID'}</h2>
+          <h2>{canDelete ? 'Tra cứu hoặc xóa dữ liệu' : 'Tra cứu dữ liệu'}</h2>
         </div>
       </div>
 
       <div className="lookup-row">
         <label className="field compact">
-          <span>ID</span>
+          <span>Giá trị tra cứu</span>
           <input min="1" onChange={onLookupIdChange} type="number" value={lookupId || ''} />
         </label>
         <button className="view-btn" disabled={loading} onClick={onFetchById} type="button">
           <AppIcon name="eye" />
-          Lay du lieu
+          Lấy dữ liệu
         </button>
         {canDelete && (
           <button className="danger-btn" disabled={loading} onClick={onDeleteById} type="button">
@@ -50,10 +49,10 @@ function ResourceLookup({
 
       {activeKey === 'bookings' && (
         <form className="status-box" onSubmit={onSubmitStatus}>
-          <h3>Cap nhat booking</h3>
+          <h3>Cập nhật booking</h3>
           <div className="lookup-row">
             <label className="field compact">
-              <span>ID booking</span>
+              <span>Booking</span>
               <input
                 min="1"
                 onChange={(event) => onStatusChange('bookingId', event.target.value)}
@@ -78,7 +77,7 @@ function ResourceLookup({
           <div className="form-actions">
             <button className="save-btn" disabled={loading} type="submit">
               <AppIcon name="save" />
-              Cap nhat
+              Cập nhật
             </button>
             <button className="danger-btn" disabled={loading} onClick={onCancelBooking} type="button">
               <AppIcon name="close" />

@@ -1,5 +1,16 @@
 import { request } from './api'
 
+export async function getBookings(params = {}) {
+  const query = new URLSearchParams()
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      query.set(key, value)
+    }
+  })
+  const response = await request(`/bookings${query.toString() ? `?${query.toString()}` : ''}`)
+  return response.data
+}
+
 export async function createBooking(payload) {
   const response = await request('/bookings', {
     method: 'POST',
@@ -28,10 +39,28 @@ export async function confirmDemoPayment(bookingId) {
   return response.data
 }
 
+export async function confirmVnPayReturnPayment(params) {
+  const response = await request('/payments/vnpay/confirm-return', {
+    method: 'POST',
+    data: params,
+  })
+  return response.data
+}
+
 export async function updateBookingStatus(id, status) {
   const response = await request(`/bookings/${id}/status`, {
     method: 'PATCH',
     data: { status },
   })
+  return response.data
+}
+
+export async function checkInBooking(id) {
+  const response = await request(`/bookings/${id}/check-in`, { method: 'POST' })
+  return response.data
+}
+
+export async function checkOutBooking(id) {
+  const response = await request(`/bookings/${id}/check-out`, { method: 'POST' })
   return response.data
 }

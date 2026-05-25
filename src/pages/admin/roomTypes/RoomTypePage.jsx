@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+﻿import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AppIcon from '../../../components/AppIcon'
 import EmptyState from '../../../components/EmptyState'
 import LoadingSpinner from '../../../components/LoadingSpinner'
@@ -43,7 +43,7 @@ function RoomTypeImage({ image, name }) {
   const [failed, setFailed] = useState(false)
 
   if (!image) {
-    return <DetailItem label="Anh loai phòng" value="Chưa có" />
+    return <DetailItem label="Ảnh loại phòng" value="Chưa có" />
   }
 
   if (failed) {
@@ -57,7 +57,7 @@ function RoomTypeImage({ image, name }) {
 
   return (
     <div className="detail-image form-wide">
-      <span className="detail-section-label">Anh loai phòng</span>
+      <span className="detail-section-label">Ảnh loại phòng</span>
       <img src={image} alt={name || 'Loại phòng'} onError={() => setFailed(true)} />
     </div>
   )
@@ -85,8 +85,7 @@ function RoomTypeDetailModal({ onClose, onEdit, roomType }) {
       <section className="modal-card room-detail-card" role="dialog" aria-modal="true" aria-labelledby="room-type-detail-title">
         <div className="modal-head detail-modal-head">
           <div>
-            <p className="eyebrow">Room type</p>
-            <h2 id="room-type-detail-title">Thông tin chi tiet loai phòng</h2>
+            <h2 id="room-type-detail-title">Thông tin chi tiết loại phòng</h2>
           </div>
           <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng modal">
             <AppIcon name="close" />
@@ -116,7 +115,7 @@ function RoomTypeDetailModal({ onClose, onEdit, roomType }) {
 }
 
 function RoomTypeFormModal({ form, mode, onClose, onSubmit, onUpdateField, saving }) {
-  const title = mode === 'edit' ? 'Chỉnh sửa loai phòng' : 'Thêm loai phòng'
+  const title = mode === 'edit' ? 'Chỉnh sửa loại phòng' : 'Thêm loại phòng'
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState('')
   const uploadedImageRef = useRef(null)
@@ -152,7 +151,6 @@ function RoomTypeFormModal({ form, mode, onClose, onSubmit, onUpdateField, savin
       <section className="modal-card room-detail-card" role="dialog" aria-modal="true" aria-labelledby="room-type-form-title">
         <div className="modal-head detail-modal-head">
           <div>
-            <p className="eyebrow">Room type</p>
             <h2 id="room-type-form-title">{title}</h2>
           </div>
           <button className="icon-btn" onClick={closeWithoutSaving} type="button" aria-label="Đóng modal">
@@ -162,7 +160,7 @@ function RoomTypeFormModal({ form, mode, onClose, onSubmit, onUpdateField, savin
 
         <form className="form-grid room-edit-form" onSubmit={onSubmit}>
           <div className="form-section-title form-wide">
-            <strong>Thông tin loai phòng</strong>
+            <strong>Thông tin loại phòng</strong>
           </div>
 
           <label className="field">
@@ -191,7 +189,7 @@ function RoomTypeFormModal({ form, mode, onClose, onSubmit, onUpdateField, savin
           </label>
 
           <label className="field form-wide">
-            <span>Anh loai phòng</span>
+            <span>Ảnh loại phòng</span>
             <input accept="image/*" disabled={uploading} onChange={changeImage} type="file" />
             {uploading && <small className="helper-text">Đang upload ảnh lên Cloudinary...</small>}
             {uploadError && <small className="error-text">{uploadError}</small>}
@@ -210,7 +208,7 @@ function RoomTypeFormModal({ form, mode, onClose, onSubmit, onUpdateField, savin
             </button>
             <button className="save-btn" disabled={saving || uploading} type="submit">
               <AppIcon name="save" />
-              {saving ? 'Đang lưu...' : 'Lưu loai phòng'}
+              {saving ? 'Đang lưu...' : 'Lưu loại phòng'}
             </button>
           </div>
         </form>
@@ -315,7 +313,7 @@ function RoomTypePage() {
         if (modal.roomType.image && modal.roomType.image !== payload.image) {
           await Promise.allSettled([deleteCloudImageByUrl(modal.roomType.image)])
         }
-        setToast({ type: 'success', message: 'Da cap nhat loai phòng' })
+        setToast({ type: 'success', message: 'Đã cập nhật loại phòng' })
       } else {
         await createRoomType(payload)
         setToast({ type: 'success', message: 'Đã thêm loại phòng' })
@@ -330,7 +328,7 @@ function RoomTypePage() {
   }
 
   const removeRoomType = async (roomType) => {
-    const confirmed = window.confirm(`Xóa loai phòng ${roomType.name}?`)
+    const confirmed = window.confirm(`Xóa loại phòng ${roomType.name}?`)
     if (!confirmed) {
       return
     }
@@ -355,20 +353,19 @@ function RoomTypePage() {
     <section className="page-stack">
       <div className="page-heading">
         <div>
-          <p className="eyebrow">QUAN LY LOAI PHONG</p>
           <h1>Loại phòng</h1>
-          <p className="muted-text">Quan ly ten, mô tả, số khách toi da va anh loai phòng.</p>
+          <p className="muted-text">Quản lý tên, mô tả, số khách tối đa và ảnh loại phòng.</p>
         </div>
         <button className="blue-btn" onClick={openCreateModal} type="button">
           <AppIcon name="plus" />
-          Thêm loai phòng
+          Thêm loại phòng
         </button>
       </div>
 
       <Toast message={toast?.message} type={toast?.type} />
 
       <div className="stats-grid">
-        <StatCard label="So loai phòng" value={roomTypes.length} />
+        <StatCard label="Số loại phòng" value={roomTypes.length} />
         <StatCard
           label="Sức chứa lớn nhất"
           value={roomTypes.length ? Math.max(...roomTypes.map((item) => item.maxGuest || 0)) : 0}
@@ -384,14 +381,13 @@ function RoomTypePage() {
       <section className="panel">
         <div className="section-head">
           <div>
-            <p className="eyebrow">DANH SACH LOAI PHONG</p>
-            <h2>Danh sach loai phòng</h2>
+            <h2>Danh sách loại phòng</h2>
           </div>
         </div>
 
         <form className="room-toolbar" onSubmit={applySearch}>
           <label className="field">
-            <span>Tìm kiếm loai phòng</span>
+            <span>Tìm kiếm loại phòng</span>
             <input
               onChange={(event) => setSearchInput(event.target.value)}
               placeholder="Tên, mô tả hoặc số khách"
@@ -435,7 +431,6 @@ function RoomTypePage() {
                         )}
                         <div>
                           <strong>{roomType.name}</strong>
-                          <span className="cell-subtext">ID {roomType.id}</span>
                         </div>
                       </div>
                     </td>
@@ -471,7 +466,7 @@ function RoomTypePage() {
 
         <div className="pagination-bar">
           <span>
-            Hiển thị {pagedRoomTypes.length} / {filteredRoomTypes.length} loai phòng
+            Hiển thị {pagedRoomTypes.length} / {filteredRoomTypes.length} loại phòng
           </span>
           <div className="pagination-actions">
             <button
@@ -522,3 +517,4 @@ function RoomTypePage() {
 }
 
 export default RoomTypePage
+

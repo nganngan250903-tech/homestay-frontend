@@ -51,7 +51,7 @@ function AuthPage({ onLogin }) {
           <h1>Quản lý đặt phòng, phòng và nhân sự trong một màn hình.</h1>
           <p>
             Employee và customer đăng nhập chung qua email/password. Customer có thể đăng ký
-            tai khoan moi, token duoc luu trong localStorage.
+            tai khóan moi, token duoc luu trong localStorage.
           </p>
           <div className="auth-facts">
             <span>POST /auth/login</span>
@@ -157,7 +157,7 @@ function AuthPage({ onLogin }) {
               </label>
               <button className="save-btn" disabled={loading} type="submit">
                 <AppIcon name="plus" />
-                {loading ? 'Đang xử lý...' : 'Tao tai khoan customer'}
+                {loading ? 'Đang xử lý...' : 'Tạo tài khoản khách hàng'}
               </button>
             </form>
           )}

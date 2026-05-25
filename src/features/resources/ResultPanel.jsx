@@ -1,9 +1,8 @@
-function ResultPanel({ result }) {
+﻿function ResultPanel({ result }) {
   return (
     <section className="panel result-panel">
       <div className="panel-heading">
         <div>
-          <p className="eyebrow">Ket qua API</p>
           <h2>Response gan nhat</h2>
         </div>
       </div>

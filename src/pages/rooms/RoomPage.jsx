@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+﻿import { useCallback, useEffect, useMemo, useState } from 'react'
 import EmptyState from '../../components/EmptyState'
 import AppIcon from '../../components/AppIcon'
 import LoadingSpinner from '../../components/LoadingSpinner'
@@ -42,8 +42,11 @@ function roomMatchesStatus(room, status) {
 
 function formatRoomStatus(status) {
   const labels = {
-    AVAILABLE: 'Đang trống',
-    OCCUPIED: 'Đang thuê',
+    AVAILABLE: 'Trống',
+    WAITING_CHECKIN: 'Chờ nhận phòng',
+    OCCUPIED: 'Đang ở',
+    CLEANING: 'Cần dọn phòng',
+    MAINTENANCE: 'Bảo trì',
     NO_STATUS: 'Chưa có trang thai',
   }
 
@@ -183,10 +186,10 @@ function RoomInfoGrid({ pricing, room }) {
       <DetailItem label="Mô tả" value={room.roomType?.description} />
       <DetailItem label="Loại phòng" value={room.roomType?.name} />
       <DetailItem label="Diện tích" value={room.area ? `${room.area} m2` : ''} />
-      <DetailItem label="Giá cơ bản / qua dem" value={formatMoney(pricing?.basePrice)} />
+      <DetailItem label="Giá cơ bản / qua đêm" value={formatMoney(pricing?.basePrice)} />
       <DetailItem label="Giá cuối tuần" value={formatMoney(pricing?.weekendPrice)} />
       <DetailItem label="Giá ngày lễ" value={formatMoney(pricing?.holidayPrice)} />
-      <DetailItem label="Bắt đầu ap dung" value={formatDate(pricing?.startDate)} />
+      <DetailItem label="Bắt đầu áp dụng" value={formatDate(pricing?.startDate)} />
       <DetailItem label="Kết thúc" value={formatDate(pricing?.endDate)} />
       <RoomImages room={room} />
     </div>
@@ -259,7 +262,7 @@ function RoomDetailModal({
   savingAmenities,
 }) {
   const status = getRoomStatus(room)
-  const isOccupied = status === 'OCCUPIED'
+  const showsBooking = status === 'OCCUPIED' || status === 'WAITING_CHECKIN'
   const [editingAmenities, setEditingAmenities] = useState(false)
   const [amenityForm, setAmenityForm] = useState(() =>
     Object.fromEntries((room.amenities || []).map((item) => [item.amenityId, String(item.quantity || 1)])),
@@ -287,8 +290,7 @@ function RoomDetailModal({
       <section className="modal-card room-detail-card" role="dialog" aria-modal="true" aria-labelledby="room-detail-title">
         <div className="modal-head detail-modal-head">
           <div>
-            <p className="eyebrow">{isOccupied ? 'Booking detail' : 'Room detail'}</p>
-            <h2 id="room-detail-title">Thông tin chi tiet phòng so {room.number}</h2>
+            <h2 id="room-detail-title">Thông tin chi tiết phòng so {room.number}</h2>
           </div>
           <StatusBadge status={status} />
           <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng modal">
@@ -296,27 +298,25 @@ function RoomDetailModal({
           </button>
         </div>
 
-        {isOccupied ? (
+        {showsBooking ? (
           loadingBooking ? (
             <LoadingSpinner />
           ) : booking ? (
             <>
               <RoomInfoGrid pricing={pricing} room={room} />
-              <div className="detail-list detail-list-spaced">
-                <DetailItem label="Ma booking" value={`#${booking.id}`} />
-                <DetailItem label="Khách hàng" value={booking.customerName} />
+              <div className="detail-list detail-list-spaced">                <DetailItem label="Khách hàng" value={booking.customerName} />
                 <DetailItem label="Trạng thái booking" value={booking.currentStatus} />
                 <DetailItem label="Check-in" value={formatDateTime(booking.checkIn)} />
                 <DetailItem label="Check-out" value={formatDateTime(booking.checkOut)} />
                 <DetailItem label="Số khách" value={booking.guestCount} />
                 <DetailItem label="Tong tien" value={formatMoney(booking.totalAmount)} />
-                <DetailItem label="Da thanh toan" value={formatMoney(booking.paidAmount)} />
-                <DetailItem label="Nhân viên" value={booking.employeeId ? `#${booking.employeeId}` : 'Chưa gắn'} />
+                <DetailItem label="Đã thanh toán" value={formatMoney(booking.paidAmount)} />
+                <DetailItem label="Nhân viên" value={booking.employeeName || 'Chưa gắn'} />
               </div>
             </>
           ) : (
             <EmptyState
-              title={`Chưa tìm thấy booking của phòng #${room.number}`}
+              title={`Chưa tìm thấy booking của phòng ${room.name || room.number}`}
               description="Backend không trả về booking đang gắn với phòng này."
             />
           )
@@ -327,8 +327,7 @@ function RoomDetailModal({
         <section className="amenity-detail-section">
           <div className="section-head compact-section-head">
             <div>
-              <p className="eyebrow">Tien nghi</p>
-              <h2>Tien nghi trong phòng</h2>
+              <h2>Tiện nghi trong phòng</h2>
             </div>
             {editingAmenities ? (
               <div className="table-actions">
@@ -374,14 +373,13 @@ function RoomDetailModal({
 
 function RoomTypeModal({ form, mode, onClose, onSubmit, onUpdateField, saving }) {
   const readOnly = mode === 'view'
-  const title = mode === 'view' ? 'Chi tiet loai phòng' : mode === 'edit' ? 'Sửa loai phòng' : 'Thêm loai phòng'
+  const title = mode === 'view' ? 'Chi tiết loại phòng' : mode === 'edit' ? 'Sửa loại phòng' : 'Thêm loại phòng'
 
   return (
     <div className="modal-backdrop" role="presentation">
       <section className="modal-card" role="dialog" aria-modal="true" aria-labelledby="room-type-title">
         <div className="modal-head">
           <div>
-            <p className="eyebrow">Room type</p>
             <h2 id="room-type-title">{title}</h2>
           </div>
           <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng modal">
@@ -439,7 +437,7 @@ function RoomTypeModal({ form, mode, onClose, onSubmit, onUpdateField, saving })
             {!readOnly && (
               <button className="save-btn" disabled={saving} type="submit">
                 <AppIcon name="save" />
-                {saving ? 'Đang lưu...' : 'Lưu loai phòng'}
+                {saving ? 'Đang lưu...' : 'Lưu loại phòng'}
               </button>
             )}
           </div>
@@ -557,7 +555,7 @@ function RoomPage() {
   const openDetailModal = async (room) => {
     setDetailModal({ open: true, room, booking: null })
 
-    if (getRoomStatus(room) !== 'OCCUPIED') {
+    if (!['OCCUPIED', 'WAITING_CHECKIN'].includes(getRoomStatus(room))) {
       return
     }
 
@@ -565,7 +563,7 @@ function RoomPage() {
     try {
       const bookings = await getBookingsByRoom(room.id)
       const activeBooking =
-        bookings.find((booking) => booking.currentStatus === 'CHECKED_IN') ||
+        bookings.find((booking) => booking.currentStatus === 'CONFIRMED' && booking.actualCheckInAt && !booking.actualCheckOutAt) ||
         bookings.find((booking) => booking.currentStatus === 'CONFIRMED') ||
         bookings[0] ||
         null
@@ -596,7 +594,7 @@ function RoomPage() {
       let roomId = modal.room?.id
       if (modal.mode === 'edit') {
         await updateRoom(modal.room.id, roomPayload)
-        setToast({ type: 'success', message: 'Da cap nhat phòng' })
+        setToast({ type: 'success', message: 'Đã cập nhật phòng' })
       } else {
         roomId = await createRoom(roomPayload)
         setToast({ type: 'success', message: 'Đã thêm phòng mới' })
@@ -640,7 +638,7 @@ function RoomPage() {
   }
 
   const removeRoom = async (room) => {
-    const confirmed = window.confirm(`Xóa phòng #${room.number}?`)
+    const confirmed = window.confirm(`Xóa phòng ${room.name || room.number}?`)
     if (!confirmed) {
       return
     }
@@ -684,12 +682,12 @@ function RoomPage() {
         const amenity = amenities.find((current) => current.id === item.amenityId)
         return {
           ...item,
-          amenityName: amenity?.name || `Tien nghi #${item.amenityId}`,
+          amenityName: amenity?.name || 'Tiện nghi',
         }
       })
       const nextRoom = { ...room, amenities: nextAmenities }
       setDetailModal((current) => ({ ...current, room: nextRoom }))
-      setToast({ type: 'success', message: 'Da cap nhat tiện nghi phòng' })
+      setToast({ type: 'success', message: 'Đã cập nhật tiện nghi phòng' })
       await loadData()
     } catch (error) {
       setToast({ type: 'error', message: error.message || 'Không lưu được tiện nghi phòng' })
@@ -741,7 +739,7 @@ function RoomPage() {
     try {
       if (roomTypeModal.mode === 'edit') {
         await updateRoomType(roomTypeModal.roomType.id, payload)
-        setToast({ type: 'success', message: 'Da cap nhat loai phòng' })
+        setToast({ type: 'success', message: 'Đã cập nhật loại phòng' })
       } else {
         await createRoomType(payload)
         setToast({ type: 'success', message: 'Đã thêm loại phòng' })
@@ -756,7 +754,7 @@ function RoomPage() {
   }
 
   const removeRoomType = async (roomType) => {
-    const confirmed = window.confirm(`Xóa loai phòng ${roomType.name}?`)
+    const confirmed = window.confirm(`Xóa loại phòng ${roomType.name}?`)
     if (!confirmed) {
       return
     }
@@ -788,7 +786,7 @@ function RoomPage() {
       <Toast message={toast?.message} type={toast?.type} />
 
       <div className="stats-grid">
-        <StatCard label="So luong phòng" value={rooms.length} />
+        <StatCard label="Số lượng phòng" value={rooms.length} />
         <StatCard label="Chi nhánh" value={branches.length} tone="mint" />
         <StatCard label="Loại phòng" value={roomTypes.length} tone="cream" />
       </div>
@@ -803,14 +801,17 @@ function RoomPage() {
         <form className="room-toolbar" onSubmit={applySearch}>
           <label className="field">
             <span>Tìm kiếm phòng</span>
-            <input onChange={(event) => setSearchInput(event.target.value)} placeholder="So phòng..." value={searchInput} />
+            <input onChange={(event) => setSearchInput(event.target.value)} placeholder="Số phòng..." value={searchInput} />
           </label>
           <label className="field">
             <span>Trạng thái</span>
             <select onChange={(event) => setStatusInput(event.target.value)} value={statusInput}>
               <option value="ALL">Tat ca</option>
-              <option value="AVAILABLE">Đang trống</option>
-              <option value="OCCUPIED">Đang thuê</option>
+              <option value="AVAILABLE">Trống</option>
+              <option value="WAITING_CHECKIN">Chờ nhận phòng</option>
+              <option value="OCCUPIED">Đang ở</option>
+              <option value="CLEANING">Cần dọn phòng</option>
+              <option value="MAINTENANCE">Bảo trì</option>
             </select>
           </label>
           <div className="room-toolbar-action">
@@ -866,8 +867,7 @@ function RoomPage() {
       <section className="panel">
         <div className="section-head">
           <div>
-            <p className="eyebrow">QUAN LY LOAI PHONG</p>
-            <h2>Danh sach loai phòng</h2>
+            <h2>Danh sách loại phòng</h2>
           </div>
         </div>
 
@@ -925,7 +925,7 @@ function RoomPage() {
         <div className="panel-footer">
           <button className="blue-btn" onClick={openCreateRoomType} type="button">
             <AppIcon name="plus" />
-            Thêm loai phòng
+            Thêm loại phòng
           </button>
         </div>
       </section>

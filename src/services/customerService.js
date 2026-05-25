@@ -6,6 +6,12 @@ export async function getCustomers(keyword = '') {
   return response.data || []
 }
 
+export async function lookupCustomers(keyword = '') {
+  const query = keyword ? `?keyword=${encodeURIComponent(keyword)}` : ''
+  const response = await request(`/customers/lookup${query}`)
+  return response.data || []
+}
+
 export async function getCustomer(id) {
   const response = await request(`/customers/${id}`)
   return response.data

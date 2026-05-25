@@ -1,15 +1,20 @@
 import EmptyState from '../../../components/EmptyState'
 import AppIcon from '../../../components/AppIcon'
 
+const roomStatusOptions = ['AVAILABLE', 'WAITING_CHECKIN', 'OCCUPIED', 'CLEANING', 'MAINTENANCE']
+
 function getRoomStatus(room) {
   return room.status || room.roomStatus || 'NO_STATUS'
 }
 
 function formatStatus(status) {
   const labels = {
-    AVAILABLE: 'Đang trống',
-    OCCUPIED: 'Đang thuê',
-    NO_STATUS: 'Chưa có trang thai',
+    AVAILABLE: 'Trống',
+    WAITING_CHECKIN: 'Chờ nhận phòng',
+    OCCUPIED: 'Đang ở',
+    CLEANING: 'Cần dọn phòng',
+    MAINTENANCE: 'Bảo trì',
+    NO_STATUS: 'Chưa có trạng thái',
   }
 
   return labels[status] || status
@@ -46,15 +51,18 @@ function RoomTable({ rooms, loading, onDelete, onEdit, onStatusChange, onView })
               <td>{room.branch?.name || 'Chưa gắn'}</td>
               <td>{room.roomType?.name || 'Chưa gắn'}</td>
               <td>
-                <button
-                  className={`status-action-pill ${getRoomStatus(room) === 'OCCUPIED' ? 'locked' : 'active'}`}
+                <select
+                  className={`booking-status-select ${getRoomStatus(room).toLowerCase()}`}
                   disabled={!onStatusChange}
-                  onClick={() => onStatusChange?.(room)}
-                  type="button"
+                  onChange={(event) => onStatusChange?.(room, event.target.value)}
+                  value={getRoomStatus(room)}
                 >
-                  <AppIcon name={getRoomStatus(room) === 'OCCUPIED' ? 'unlock' : 'lock'} />
-                  {formatStatus(getRoomStatus(room))}
-                </button>
+                  {roomStatusOptions.map((status) => (
+                    <option key={status} value={status}>
+                      {formatStatus(status)}
+                    </option>
+                  ))}
+                </select>
               </td>
               <td>
                 <div className="table-actions">

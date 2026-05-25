@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+﻿import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AppIcon from '../../../components/AppIcon'
 import Toast from '../../../components/Toast'
@@ -114,7 +114,7 @@ function RoomDetailModal({
         guestCount: Number(bookingForm.guestCount),
       })
       onBookingCreated?.(booking)
-      setToast({ type: 'success', message: `Đặt phòng thành công. Đang chuyển sang thanh toán #${booking.id}.` })
+      setToast({ type: 'success', message: 'Đặt phòng thành công. Đang chuyển sang thanh toán.' })
       setBookingForm(createDefaultBookingForm())
       window.setTimeout(() => navigate(`/home/payment/${booking.id}`), 500)
     } catch (error) {
@@ -129,7 +129,6 @@ function RoomDetailModal({
       <section className="customer-room-modal" role="dialog" aria-modal="true" aria-labelledby="customer-room-title">
         <div className="customer-auth-head">
           <div>
-            <p className="eyebrow">Chi tiết phòng</p>
             <h2 id="customer-room-title">{room.name}</h2>
           </div>
           <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng">
@@ -179,7 +178,6 @@ function RoomDetailModal({
         <form className="customer-booking-form" onSubmit={submitBooking}>
           <div className="compact-section-head">
             <div>
-              <p className="eyebrow">Tạo booking</p>
               <h3>Thông tin đặt phòng</h3>
             </div>
           </div>
@@ -341,3 +339,4 @@ function HomeSections({ bookingCustomer, isCustomer, onBookingCreated, onRequire
 }
 
 export default HomeSections
+

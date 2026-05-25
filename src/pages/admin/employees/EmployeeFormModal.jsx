@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+﻿import { useRef, useState } from 'react'
 import AppIcon from '../../../components/AppIcon'
 import { deleteCloudImage, uploadImage } from '../../../services/uploadService'
 import EmployeeAvatar from './EmployeeAvatar'
@@ -47,7 +47,6 @@ function EmployeeFormModal({ form, mode, onClose, onSubmit, onUpdateField, roles
       <section className="modal-card room-detail-card" role="dialog" aria-modal="true" aria-labelledby="employee-form-title">
         <div className="modal-head detail-modal-head">
           <div>
-            <p className="eyebrow">Nhân viên</p>
             <h2 id="employee-form-title">{title}</h2>
           </div>
           <button className="icon-btn" onClick={closeWithoutSaving} type="button" aria-label="Đóng modal">
@@ -89,7 +88,7 @@ function EmployeeFormModal({ form, mode, onClose, onSubmit, onUpdateField, roles
           <label className="field form-wide">
             <span>Vai trò</span>
             <select onChange={(event) => onUpdateField('roleId', event.target.value)} required value={form.roleId}>
-              <option value="">Chon vai trò</option>
+              <option value="">Chọn vai trò</option>
               {roles.map((role) => (
                 <option key={role.id} value={role.id}>
                   {getRoleLabel(role)}

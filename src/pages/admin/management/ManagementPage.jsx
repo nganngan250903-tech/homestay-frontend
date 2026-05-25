@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+﻿import { useMemo, useState } from 'react'
 import Toast from '../../../components/Toast'
 import ResourceForm from '../../../features/resources/ResourceForm'
 import ResourceLookup from '../../../features/resources/ResourceLookup'
@@ -46,7 +46,6 @@ function ManagementPage({ auth, resourceKey }) {
       <section className="page-stack">
         <div className="page-heading">
           <div>
-            <p className="eyebrow">Admin module</p>
             <h1>Không tìm thấy module</h1>
             <p className="muted-text">Resource key "{resourceKey}" chưa được khai báo.</p>
           </div>
@@ -89,16 +88,16 @@ function ManagementPage({ auth, resourceKey }) {
 
   const fetchById = async () => {
     if (!lookupId) {
-      setToast({ type: 'error', message: 'Nhap ID can tra cuu' })
+      setToast({ type: 'error', message: 'Nhập thông tin cần tra cứu' })
       return
     }
 
-    await runAction('Da tai du lieu', () => request(`${resource.endpoint}/${lookupId}`))
+    await runAction('Đã tải dữ liệu', () => request(`${resource.endpoint}/${lookupId}`))
   }
 
   const deleteById = async () => {
     if (!lookupId) {
-      setToast({ type: 'error', message: 'Nhập ID cần xóa' })
+      setToast({ type: 'error', message: 'Nhập thông tin cần xóa' })
       return
     }
 
@@ -114,11 +113,11 @@ function ManagementPage({ auth, resourceKey }) {
   const updateBookingStatus = async (event) => {
     event.preventDefault()
     if (!bookingStatus.bookingId) {
-      setToast({ type: 'error', message: 'Nhap ID booking' })
+      setToast({ type: 'error', message: 'Nhập booking cần thao tác' })
       return
     }
 
-    await runAction('Da cap nhat trang thai booking', () =>
+    await runAction('Đã cập nhật trạng thái booking', () =>
       request(`/bookings/${bookingStatus.bookingId}/status`, {
         method: 'PATCH',
         body: JSON.stringify({ status: bookingStatus.status }),
@@ -128,11 +127,11 @@ function ManagementPage({ auth, resourceKey }) {
 
   const cancelBooking = async () => {
     if (!bookingStatus.bookingId) {
-      setToast({ type: 'error', message: 'Nhap ID booking' })
+      setToast({ type: 'error', message: 'Nhập booking cần thao tác' })
       return
     }
 
-    await runAction('Da huy booking', () =>
+    await runAction('Đã hủy booking', () =>
       request(`/bookings/${bookingStatus.bookingId}/cancel`, { method: 'POST' }),
     )
   }
@@ -141,7 +140,6 @@ function ManagementPage({ auth, resourceKey }) {
     <section className="page-stack">
       <div className="page-heading">
         <div>
-          <p className="eyebrow">Admin module</p>
           <h1>{resource.label}</h1>
           <p className="muted-text">{resource.description}</p>
         </div>
@@ -167,7 +165,6 @@ function ManagementPage({ auth, resourceKey }) {
       <section className="panel">
         <div className="panel-title-row">
           <div>
-            <p className="eyebrow">Tao moi</p>
             <h2>{resource.label}</h2>
           </div>
         </div>
@@ -213,3 +210,4 @@ function ManagementPage({ auth, resourceKey }) {
 }
 
 export default ManagementPage
+

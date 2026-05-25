@@ -3,8 +3,6 @@ import { nestedId, optionalNumber, toNumber } from './resourceUtils'
 export const bookingStatuses = [
   'PENDING',
   'CONFIRMED',
-  'CHECKED_IN',
-  'CHECKED_OUT',
   'CANCELLED',
   'NO_SHOW',
 ]
@@ -27,9 +25,9 @@ export const resources = [
     endpoint: '/bookings',
     description: 'Tạo booking, tính tiền theo bảng giá và cập nhật trạng thái.',
     fields: [
-      { name: 'customerId', label: 'ID khách hàng', type: 'number', required: true },
-      { name: 'employeeId', label: 'ID nhân viên', type: 'number' },
-      { name: 'roomId', label: 'ID phòng', type: 'number', required: true },
+      { name: 'customerId', label: 'khách hàng', type: 'number', required: true },
+      { name: 'employeeId', label: 'nhân viên', type: 'number' },
+      { name: 'roomId', label: 'phòng', type: 'number', required: true },
       { name: 'checkIn', label: 'Check-in', type: 'datetime-local', required: true },
       { name: 'checkOut', label: 'Check-out', type: 'datetime-local', required: true },
       { name: 'guestCount', label: 'Số khách', type: 'number', required: true },
@@ -63,7 +61,7 @@ export const resources = [
       { name: 'phone', label: 'Số điện thoại', required: true },
       { name: 'address', label: 'Địa chỉ' },
       { name: 'image', label: 'Ảnh đại diện' },
-      { name: 'roleId', label: 'ID vai trò', type: 'number' },
+      { name: 'roleId', label: 'vai trò', type: 'number' },
     ],
     buildPayload: (data) => ({
       name: data.name,
@@ -112,8 +110,8 @@ export const resources = [
     endpoint: '/rooms',
     description: 'Phòng thực tế gắn với chi nhánh và loại phòng.',
     fields: [
-      { name: 'branchId', label: 'ID chi nhánh', type: 'number', required: true },
-      { name: 'roomTypeId', label: 'ID loại phòng', type: 'number', required: true },
+      { name: 'branchId', label: 'chi nhánh', type: 'number', required: true },
+      { name: 'roomTypeId', label: 'loại phòng', type: 'number', required: true },
       { name: 'name', label: 'Tên phòng', required: true },
       { name: 'area', label: 'Diện tích', type: 'number', required: true },
       { name: 'thumbnail', label: 'Ảnh phòng' },
@@ -132,7 +130,7 @@ export const resources = [
     endpoint: '/roomPricings',
     description: 'Giá ngày thường, cuối tuần, ngày lễ theo loại phòng.',
     fields: [
-      { name: 'roomTypeId', label: 'ID loại phòng', type: 'number', required: true },
+      { name: 'roomTypeId', label: 'loại phòng', type: 'number', required: true },
       { name: 'baseDuration', label: 'Đơn vị tính', placeholder: 'NIGHT', required: true },
       { name: 'basePrice', label: 'Giá cơ bản', type: 'number', required: true },
       { name: 'weekendPrice', label: 'Giá cuối tuần', type: 'number', required: true },
@@ -170,7 +168,7 @@ export const resources = [
     endpoint: '/amenities',
     description: 'Tiện ích gắn với nhóm tiện ích.',
     fields: [
-      { name: 'categoryId', label: 'ID nhóm tiện ích', type: 'number' },
+      { name: 'categoryId', label: 'nhóm tiện ích', type: 'number' },
       { name: 'name', label: 'Tên tiện ích', required: true },
     ],
     buildPayload: (data) => ({
@@ -194,7 +192,7 @@ export const resources = [
     endpoint: '/roomPhotos',
     description: 'Ảnh bổ sung cho phòng.',
     fields: [
-      { name: 'roomId', label: 'ID phòng', type: 'number', required: true },
+      { name: 'roomId', label: 'phòng', type: 'number', required: true },
       { name: 'photo', label: 'Anh', required: true },
     ],
     buildPayload: (data) => ({

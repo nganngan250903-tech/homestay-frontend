@@ -1,4 +1,4 @@
-import EmptyState from '../../components/EmptyState'
+﻿import EmptyState from '../../components/EmptyState'
 
 function getRoomStatus(room) {
   return room.status || room.roomStatus || 'NO_STATUS'
@@ -6,8 +6,11 @@ function getRoomStatus(room) {
 
 function formatStatus(status) {
   const labels = {
-    AVAILABLE: 'Còn trống',
-    OCCUPIED: 'Đang thuê',
+    AVAILABLE: 'Trống',
+    WAITING_CHECKIN: 'Chờ nhận phòng',
+    OCCUPIED: 'Đang ở',
+    CLEANING: 'Cần dọn phòng',
+    MAINTENANCE: 'Bảo trì',
     NO_STATUS: 'Chưa có trạng thái',
   }
 
@@ -44,7 +47,6 @@ function RoomTable({ rooms, loading, onEdit, onDelete }) {
             <tr key={room.id}>
               <td>
                 <strong>#{room.number}</strong>
-                <span className="cell-subtext">ID {room.id}</span>
               </td>
               <td>{room.branch?.name || 'Chưa gắn'}</td>
               <td>{room.roomType?.name || 'Chưa gắn'}</td>
@@ -90,3 +92,4 @@ function RoomTable({ rooms, loading, onEdit, onDelete }) {
 }
 
 export default RoomTable
+

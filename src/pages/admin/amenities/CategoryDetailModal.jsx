@@ -1,4 +1,4 @@
-import AppIcon from '../../../components/AppIcon'
+﻿import AppIcon from '../../../components/AppIcon'
 import DetailItem from './DetailItem'
 
 function CategoryDetailModal({ category, onClose, onEdit }) {
@@ -7,7 +7,6 @@ function CategoryDetailModal({ category, onClose, onEdit }) {
       <section className="modal-card room-detail-card" role="dialog" aria-modal="true" aria-labelledby="category-detail-title">
         <div className="modal-head detail-modal-head">
           <div>
-            <p className="eyebrow">Loai tiện nghi</p>
             <h2 id="category-detail-title">Thông tin chi tiết loại tiện nghi</h2>
           </div>
           <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng modal">
@@ -15,7 +14,7 @@ function CategoryDetailModal({ category, onClose, onEdit }) {
           </button>
         </div>
         <div className="detail-list">
-          <DetailItem label="Ten loai tiện nghi" value={category.name} />
+          <DetailItem label="Tên loại tiện nghi" value={category.name} />
           <DetailItem label="Mô tả" value={category.description} />
         </div>
         <div className="modal-actions detail-actions">

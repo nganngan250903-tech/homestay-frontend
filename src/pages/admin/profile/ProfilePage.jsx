@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+﻿import { useCallback, useEffect, useRef, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import AppIcon from '../../../components/AppIcon'
 import LoadingSpinner from '../../../components/LoadingSpinner'
@@ -208,8 +208,7 @@ function ProfilePage({ auth }) {
 
       <div className="page-heading">
         <div>
-          <p className="eyebrow">Tai khoan</p>
-          <h1>Ho so cua toi</h1>
+          <h1>Hồ sơ cua toi</h1>
           <p className="muted-text">Quản lý thông tin cá nhân và thông tin vai trò đang đăng nhập.</p>
         </div>
       </div>
@@ -299,7 +298,7 @@ function ProfilePage({ auth }) {
                   </button>
                   <button className="save-btn" disabled={saving || uploading} type="submit">
                     <AppIcon name="save" />
-                    {saving ? 'Đang lưu...' : 'Lưu thay doi'}
+                    {saving ? 'Đang lưu...' : 'Lưu thay đổi'}
                   </button>
                 </div>
               </form>
@@ -313,7 +312,6 @@ function ProfilePage({ auth }) {
           <section className="confirm-modal password-modal" role="dialog" aria-modal="true" aria-labelledby="password-modal-title">
             <div className="modal-head detail-modal-head">
               <div>
-                <p className="eyebrow">Bao mat</p>
                 <h2 id="password-modal-title">Doi mat khau</h2>
               </div>
               <button className="icon-btn" disabled={saving} onClick={closePasswordModal} type="button" aria-label="Đóng modal">
@@ -360,7 +358,7 @@ function ProfilePage({ auth }) {
                 </button>
                 <button className="save-btn" disabled={saving} type="submit">
                   <AppIcon name="save" />
-                  {saving ? 'Đang lưu...' : 'Xác nhận doi'}
+                  {saving ? 'Đang lưu...' : 'Xác nhận đổi'}
                 </button>
               </div>
             </form>
@@ -372,3 +370,4 @@ function ProfilePage({ auth }) {
 }
 
 export default ProfilePage
+

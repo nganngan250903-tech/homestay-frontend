@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react'
+﻿import { useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import AppIcon from '../../../components/AppIcon'
 import Brand from '../../../components/Brand'
 import Toast from '../../../components/Toast'
 import { request } from '../../../services/api'
+import { clearStoredAuth } from '../../../services/authStorage'
 
 const GOOGLE_OAUTH_URL = import.meta.env.VITE_GOOGLE_OAUTH_URL || 'http://localhost:8080/oauth2/authorization/google'
 
@@ -29,13 +30,13 @@ function LoginPage({ onLogin }) {
     event.preventDefault()
     setLoading(true)
     setToast(null)
+    clearStoredAuth()
 
     try {
       const response = await request('/auth/login', { method: 'POST', data: loginForm })
       const auth = response.data
       if (!auth?.role && !auth?.userType) {
-        setToast({ type: 'error', message: 'Không tìm thấy vai trò tài khoản. Vui lòng đăng ký tài khoản khách hàng.' })
-        setMode('register')
+        setToast({ type: 'error', message: 'Không tìm thấy vai trò tài khoản. Vui lòng liên hệ quản trị viên.' })
         return
       }
       onLogin(auth)
@@ -43,9 +44,8 @@ function LoginPage({ onLogin }) {
     } catch (error) {
       setToast({
         type: 'error',
-        message: `${error.message || 'Không tìm thấy tài khoản phù hợp.'} Nếu chưa có tài khoản, vui lòng đăng ký khách hàng.`,
+        message: error.message || 'Không đăng nhập được. Vui lòng kiểm tra email và mật khẩu.',
       })
-      setMode('register')
       setRegisterForm((current) => ({ ...current, email: loginForm.email }))
     } finally {
       setLoading(false)
@@ -80,10 +80,9 @@ function LoginPage({ onLogin }) {
 
       <section className="login-card">
         <div>
-          <p className="eyebrow">LULLABY HOMESTAY</p>
-          <h1>{mode === 'login' ? 'Đăng nhập tai khoan' : 'Đăng ký khách hàng'}</h1>
+          <h1>{mode === 'login' ? 'Đăng nhập tài khoản' : 'Đăng ký khách hàng'}</h1>
           <p className="muted-text">
-            Admin vao khu quan tri, nhân viên vao trang nghiep vu, khách hàng vao trang dat phòng.
+            Admin vào khu quản trị, nhân viên vào trang nghiệp vụ, khách hàng vào trang đặt phòng.
           </p>
         </div>
 
@@ -180,3 +179,4 @@ function LoginPage({ onLogin }) {
 }
 
 export default LoginPage
+

@@ -1,4 +1,4 @@
-import AppIcon from '../../../components/AppIcon'
+﻿import AppIcon from '../../../components/AppIcon'
 
 function RoleFormModal({ form, mode, onClose, onSubmit, onUpdateField, saving }) {
   const title = mode === 'edit' ? 'Chỉnh sửa vai trò' : 'Thêm vai trò'
@@ -8,7 +8,6 @@ function RoleFormModal({ form, mode, onClose, onSubmit, onUpdateField, saving })
       <section className="modal-card room-detail-card" role="dialog" aria-modal="true" aria-labelledby="role-form-title">
         <div className="modal-head detail-modal-head">
           <div>
-            <p className="eyebrow">Vai trò</p>
             <h2 id="role-form-title">{title}</h2>
           </div>
           <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng modal">

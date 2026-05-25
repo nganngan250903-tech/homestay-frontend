@@ -83,7 +83,7 @@ function ResourceForm({ commitToken, form, loading, onReset, onSubmit, onUpdateF
                   type="file"
                 />
                 {uploadingField === field.name && <small className="helper-text">Đang upload ảnh...</small>}
-                {form[field.name] && <small className="helper-text">Da upload anh</small>}
+                {form[field.name] && <small className="helper-text">Đã upload ảnh</small>}
               </>
             ) : (
               <input

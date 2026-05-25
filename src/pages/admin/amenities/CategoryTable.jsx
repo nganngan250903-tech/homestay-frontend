@@ -1,4 +1,4 @@
-import AppIcon from '../../../components/AppIcon'
+﻿import AppIcon from '../../../components/AppIcon'
 import EmptyState from '../../../components/EmptyState'
 import LoadingSpinner from '../../../components/LoadingSpinner'
 
@@ -22,21 +22,20 @@ function CategoryTable({
     <section className="panel">
       <div className="section-head">
         <div>
-          <p className="eyebrow">DANH SACH LOAI TIEN NGHI</p>
-          <h2>Danh sach loai tiện nghi</h2>
+          <h2>Danh sách loại tiện nghi</h2>
         </div>
         <button className="blue-btn" onClick={onCreate} type="button">
           <AppIcon name="plus" />
-          Thêm loai tiện nghi
+          Thêm loại tiện nghi
         </button>
       </div>
 
       <form className="room-toolbar" onSubmit={onApplySearch}>
         <label className="field">
-          <span>Tìm kiếm loai tiện nghi</span>
+          <span>Tìm kiếm loại tiện nghi</span>
           <input
             onChange={(event) => onSearchInputChange(event.target.value)}
-            placeholder="Ten hoac mô tả"
+            placeholder="Tên hoặc mô tả"
             value={searchInput}
           />
         </label>
@@ -57,7 +56,7 @@ function CategoryTable({
           <table className="data-table room-type-table">
             <thead>
               <tr>
-                <th>Loai tiện nghi</th>
+                <th>Loại tiện nghi</th>
                 <th>Mô tả</th>
                 <th>Thao tác</th>
               </tr>
@@ -94,7 +93,7 @@ function CategoryTable({
 
       <div className="pagination-bar">
         <span>
-          Hiển thị {categories.length} / {total} loai tiện nghi
+          Hiển thị {categories.length} / {total} loại tiện nghi
         </span>
         <div className="pagination-actions">
           <button className="cancel-btn compact-btn" disabled={page === 1} onClick={() => setPage((current) => Math.max(1, current - 1))} type="button">

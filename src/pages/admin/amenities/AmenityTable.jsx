@@ -1,4 +1,4 @@
-import AppIcon from '../../../components/AppIcon'
+﻿import AppIcon from '../../../components/AppIcon'
 import EmptyState from '../../../components/EmptyState'
 import LoadingSpinner from '../../../components/LoadingSpinner'
 import AmenityIconBox from './AmenityIconBox'
@@ -23,8 +23,7 @@ function AmenityTable({
     <section className="panel">
       <div className="section-head">
         <div>
-          <p className="eyebrow">DANH SACH TIEN NGHI</p>
-          <h2>Danh sach tiện nghi</h2>
+          <h2>Danh sách tiện nghi</h2>
         </div>
         <button className="blue-btn" onClick={onCreate} type="button">
           <AppIcon name="plus" />
@@ -37,7 +36,7 @@ function AmenityTable({
           <span>Tìm kiếm tiện nghi</span>
           <input
             onChange={(event) => onSearchInputChange(event.target.value)}
-            placeholder="Ten hoac loai tiện nghi"
+            placeholder="Tên hoặc loại tiện nghi"
             value={searchInput}
           />
         </label>
@@ -58,8 +57,8 @@ function AmenityTable({
           <table className="data-table">
             <thead>
               <tr>
-                <th>Tien nghi</th>
-                <th>Loai tiện nghi</th>
+                <th>Tiện nghi</th>
+                <th>Loại tiện nghi</th>
                 <th>Thao tác</th>
               </tr>
             </thead>

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+﻿import { useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { request } from '../../../services/api'
 
@@ -76,7 +76,6 @@ function OAuth2Redirect({ onLogin }) {
   return (
     <main className="login-page">
       <section className="login-card oauth-redirect-card">
-        <p className="eyebrow">GOOGLE LOGIN</p>
         <h1>Dang dang nhap...</h1>
       </section>
     </main>

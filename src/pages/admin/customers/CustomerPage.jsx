@@ -125,7 +125,7 @@ function CustomerPage({ auth }) {
       customer,
       nextStatus,
       label: nextStatus === 'LOCKED' ? 'Khóa' : 'Mở khóa',
-      message: `Ban chac chan muon ${nextStatus === 'LOCKED' ? 'khoa' : 'mo khoa'} khách hàng nay`,
+      message: `Bạn chắc chắn muốn ${nextStatus === 'LOCKED' ? 'khóa' : 'mo khóa'} khách hàng này`,
     })
   }
 

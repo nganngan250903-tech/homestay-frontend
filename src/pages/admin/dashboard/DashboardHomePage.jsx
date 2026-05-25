@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+﻿import { useCallback, useEffect, useMemo, useState } from 'react'
 import LoadingSpinner from '../../../components/LoadingSpinner'
 import StatCard from '../../../components/StatCard'
 import Toast from '../../../components/Toast'
@@ -13,11 +13,9 @@ const moneyFormatter = new Intl.NumberFormat('vi-VN', {
 const numberFormatter = new Intl.NumberFormat('vi-VN')
 
 const bookingLabels = {
-  PENDING: 'Cho thanh toan',
+  PENDING: 'Chờ thanh toán',
   CONFIRMED: 'Đã xác nhận',
-  CHECKED_IN: 'Đang ở',
-  CHECKED_OUT: 'Da tra phòng',
-  CANCELLED: 'Da huy',
+  CANCELLED: 'Đã hủy',
   NO_SHOW: 'Không đến',
   UNKNOWN: 'Không rõ',
 }
@@ -204,9 +202,8 @@ function DashboardHomePage() {
       <Toast message={toast?.message} type={toast?.type} />
       <div className="page-heading">
         <div>
-          <p className="eyebrow">Overview</p>
           <h1>Dashboard</h1>
-          <p className="muted-text">Tong quan doanh thu, phòng, khách hàng va booking cua LimDimHomestay.</p>
+          <p className="muted-text">Tổng quan doanh thu, phòng, khách hàng và booking của LimDimHomestay.</p>
         </div>
       </div>
 
@@ -215,10 +212,10 @@ function DashboardHomePage() {
       ) : overview ? (
         <>
           <div className="stats-grid dashboard-stats">
-            <StatCard label="Doanh thu tong" value={formatCurrency(totalRevenue)} />
-            <StatCard label="Hom nay" value={formatCurrency(overview.revenueToday)} tone="mint" />
-            <StatCard label="Thang nay" value={formatCurrency(overview.revenueThisMonth)} tone="cream" />
-            <StatCard label="Nam nay" value={formatCurrency(overview.revenueThisYear)} />
+            <StatCard label="Doanh thu tổng" value={formatCurrency(totalRevenue)} />
+            <StatCard label="Hôm nay" value={formatCurrency(overview.revenueToday)} tone="mint" />
+            <StatCard label="Tháng này" value={formatCurrency(overview.revenueThisMonth)} tone="cream" />
+            <StatCard label="Năm này" value={formatCurrency(overview.revenueThisYear)} />
           </div>
 
           <section className="dashboard-grid">
@@ -251,35 +248,35 @@ function DashboardHomePage() {
             <article className="dashboard-card wide-card">
               <div className="dashboard-card-head">
                 <div>
-                  <h2>Doanh thu theo thang</h2>
-                  <p>Loc theo nam</p>
+                  <h2>Doanh thu theo tháng</h2>
+                  <p>Lọc theo năm</p>
                 </div>
                 <label className="compact-filter">
                   <span>Nam</span>
                   <input min="2000" onChange={(event) => setMonthYear(event.target.value)} type="number" value={monthYear} />
                 </label>
               </div>
-              <BarChart data={monthlyData} emptyText="Chưa có doanh thu trong nam da chon." />
+              <BarChart data={monthlyData} emptyText="Chưa có doanh thu trong năm đã chọn." />
             </article>
 
             <article className="dashboard-card wide-card">
               <div className="dashboard-card-head">
                 <div>
-                  <h2>Doanh thu theo nam</h2>
-                  <p>Hiển thị 5 nam ket thuc tai nam da chon</p>
+                  <h2>Doanh thu theo năm</h2>
+                  <p>Hiển thị 5 năm kết thúc tại năm đã chọn</p>
                 </div>
                 <label className="compact-filter">
-                  <span>Den nam</span>
+                  <span>Đến năm</span>
                   <input min="2000" onChange={(event) => setYearEnd(event.target.value)} type="number" value={yearEnd} />
                 </label>
               </div>
-              <BarChart data={yearlyData} emptyText="Chưa có doanh thu trong giai doan nay." />
+              <BarChart data={yearlyData} emptyText="Chưa có doanh thu trong giai đoạn này." />
             </article>
           </section>
 
           <section className="dashboard-grid summary-grid">
             <DonutChart
-              title="Tinh trang phòng"
+              title="Tình trạng phòng"
               total={Number(overview.totalRooms || 0)}
               segments={roomSegments}
               note="Phòng trống và phòng đang hoạt động/đã có khách theo trạng thái hiện tại."
@@ -291,10 +288,10 @@ function DashboardHomePage() {
               note="Tổng hợp tài khoản khách hàng đang hoạt động và đang khóa."
             />
             <DonutChart
-              title="Booking thang hien tai"
+              title="Booking tháng hiện tại"
               total={Number(overview.currentMonthBookings || 0)}
               segments={bookingSegments}
-              note="Thong ke booking tao trong thang hien tai theo trang thai."
+              note="Thống kê booking tạo trong tháng hiện tại theo trạng thái."
             />
           </section>
         </>
@@ -309,3 +306,5 @@ function DashboardHomePage() {
 }
 
 export default DashboardHomePage
+
+

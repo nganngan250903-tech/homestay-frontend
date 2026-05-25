@@ -1,4 +1,4 @@
-import AppIcon from '../../../components/AppIcon'
+﻿import AppIcon from '../../../components/AppIcon'
 import DetailItem from '../customers/DetailItem'
 import EmployeeAvatar from './EmployeeAvatar'
 import { getEmployeeRoleLabel, getRoleName } from './employeeUtils'
@@ -9,7 +9,6 @@ function EmployeeDetailModal({ employee, onClose, onEdit }) {
       <section className="modal-card room-detail-card" role="dialog" aria-modal="true" aria-labelledby="employee-detail-title">
         <div className="modal-head detail-modal-head">
           <div>
-            <p className="eyebrow">Nhân viên</p>
             <h2 id="employee-detail-title">Thông tin chi tiết nhân viên</h2>
           </div>
           <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng modal">

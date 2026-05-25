@@ -1,4 +1,4 @@
-import AppIcon from '../../../components/AppIcon'
+﻿import AppIcon from '../../../components/AppIcon'
 import EmptyState from '../../../components/EmptyState'
 import LoadingSpinner from '../../../components/LoadingSpinner'
 import { formatMoney } from './customerUtils'
@@ -9,7 +9,6 @@ function CustomerHistoryModal({ bookings, customer, loading, onClose }) {
       <section className="modal-card room-detail-card" role="dialog" aria-modal="true" aria-labelledby="history-title">
         <div className="modal-head detail-modal-head">
           <div>
-            <p className="eyebrow">Lịch sử đặt phòng</p>
             <h2 id="history-title">{customer.name}</h2>
           </div>
           <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng modal">
@@ -26,7 +25,6 @@ function CustomerHistoryModal({ bookings, customer, loading, onClose }) {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Booking</th>
                   <th>Phòng</th>
                   <th>Thoi gian</th>
                   <th>Trạng thái</th>
@@ -36,8 +34,7 @@ function CustomerHistoryModal({ bookings, customer, loading, onClose }) {
               <tbody>
                 {bookings.map((booking) => (
                   <tr key={booking.id}>
-                    <td>#{booking.id}</td>
-                    <td>Room {booking.roomId} - {booking.roomTypeName}</td>
+                    <td>{booking.roomName || `Phòng ${booking.roomId}`} - {booking.roomTypeName}</td>
                     <td>
                       <span className="cell-subtext">{booking.checkIn}</span>
                       <span className="cell-subtext">{booking.checkOut}</span>
@@ -56,3 +53,4 @@ function CustomerHistoryModal({ bookings, customer, loading, onClose }) {
 }
 
 export default CustomerHistoryModal
+

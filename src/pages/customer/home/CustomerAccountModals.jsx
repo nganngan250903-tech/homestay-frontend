@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import AppIcon from '../../../components/AppIcon'
 import EmptyState from '../../../components/EmptyState'
 import LoadingSpinner from '../../../components/LoadingSpinner'
@@ -40,7 +40,6 @@ export function CustomerProfileModal({ customer, onClose, onSaved }) {
       <section className="customer-account-modal" role="dialog" aria-modal="true" aria-labelledby="customer-profile-title">
         <div className="customer-auth-head">
           <div>
-            <p className="eyebrow">Tài khoản</p>
             <h2 id="customer-profile-title">Chỉnh sửa thông tin</h2>
           </div>
           <button className="icon-btn" disabled={saving} onClick={onClose} type="button" aria-label="Đóng">
@@ -109,7 +108,6 @@ export function CustomerPasswordModal({ customer, onClose }) {
       <section className="customer-account-modal small" role="dialog" aria-modal="true" aria-labelledby="customer-password-title">
         <div className="customer-auth-head">
           <div>
-            <p className="eyebrow">Bảo mật</p>
             <h2 id="customer-password-title">Đổi mật khẩu</h2>
           </div>
           <button className="icon-btn" disabled={saving} onClick={onClose} type="button" aria-label="Đóng">
@@ -163,7 +161,7 @@ export function CustomerBookingHistoryModal({ bookings, loading, onBookingCancel
     setToast(null)
     try {
       await onBookingCancelled(booking.id)
-      setToast({ type: 'success', message: `Đã hủy booking #${booking.id}` })
+      setToast({ type: 'success', message: 'Đã hủy booking' })
     } catch (error) {
       setToast({ type: 'error', message: error.message || 'Không hủy được booking' })
     } finally {
@@ -176,7 +174,6 @@ export function CustomerBookingHistoryModal({ bookings, loading, onBookingCancel
       <section className="customer-account-modal wide" role="dialog" aria-modal="true" aria-labelledby="customer-history-title">
         <div className="customer-auth-head">
           <div>
-            <p className="eyebrow">Booking</p>
             <h2 id="customer-history-title">Lịch sử đặt phòng</h2>
           </div>
           <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng">
@@ -193,7 +190,6 @@ export function CustomerBookingHistoryModal({ bookings, loading, onBookingCancel
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Booking</th>
                   <th>Phòng</th>
                   <th>Thời gian</th>
                   <th>Trạng thái</th>
@@ -204,7 +200,6 @@ export function CustomerBookingHistoryModal({ bookings, loading, onBookingCancel
               <tbody>
                 {bookings.map((booking) => (
                   <tr key={booking.id}>
-                    <td>#{booking.id}</td>
                     <td>{booking.roomName || `Phòng ${booking.roomId}`} - {booking.roomTypeName}</td>
                     <td>
                       <span className="cell-subtext">{booking.checkIn}</span>

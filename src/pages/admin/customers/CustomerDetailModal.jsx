@@ -1,4 +1,4 @@
-import AppIcon from '../../../components/AppIcon'
+﻿import AppIcon from '../../../components/AppIcon'
 import CustomerAvatar from './CustomerAvatar'
 import DetailItem from './DetailItem'
 
@@ -8,8 +8,7 @@ function CustomerDetailModal({ customer, onClose, onEdit }) {
       <section className="modal-card room-detail-card" role="dialog" aria-modal="true" aria-labelledby="customer-detail-title">
         <div className="modal-head detail-modal-head">
           <div>
-            <p className="eyebrow">Khách hàng</p>
-            <h2 id="customer-detail-title">Thông tin chi tiet khách hàng</h2>
+            <h2 id="customer-detail-title">Thông tin chi tiết khách hàng</h2>
           </div>
           <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng modal">
             <AppIcon name="close" />
@@ -48,3 +47,4 @@ function CustomerDetailModal({ customer, onClose, onEdit }) {
 }
 
 export default CustomerDetailModal
+

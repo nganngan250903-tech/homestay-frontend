@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import AppIcon from '../../../components/AppIcon'
 import LoadingSpinner from '../../../components/LoadingSpinner'
@@ -59,8 +59,7 @@ function PaymentPage() {
       <div className="payment-panel">
         <div className="payment-head">
           <div>
-            <p className="eyebrow">Thanh toán</p>
-            <h1>Booking #{bookingId}</h1>
+            <h1>Thanh toán booking</h1>
           </div>
           <Link className="cancel-btn compact-btn" to="/home/bookingRoom">
             <AppIcon name="chevronLeft" />

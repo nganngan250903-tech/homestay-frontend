@@ -1,11 +1,12 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import AdminLayout from '../layouts/AdminLayout'
-import PlaceholderPage from '../pages/admin/PlaceholderPage'
 import AmenityPage from '../pages/admin/amenities/AmenityPage'
+import AdminBookingPage from '../pages/admin/bookings/BookingPage'
 import CustomerPage from '../pages/admin/customers/CustomerPage'
 import DashboardHomePage from '../pages/admin/dashboard/DashboardHomePage'
 import EmployeePage from '../pages/admin/employees/EmployeePage'
 import ManagementPage from '../pages/admin/management/ManagementPage'
+import AdminPaymentPage from '../pages/admin/payments/PaymentPage'
 import ProfilePage from '../pages/admin/profile/ProfilePage'
 import RoomTypePage from '../pages/admin/roomTypes/RoomTypePage'
 import RoomPage from '../pages/admin/rooms/RoomPage'
@@ -142,8 +143,8 @@ function AppRoutes({ auth, onLogin, onLogout }) {
         }
       >
         <Route index element={auth?.role === 'ADMIN' ? <DashboardHomePage /> : <Navigate to="/admin/bookings" replace />} />
-        <Route path="bookings" element={<ManagementPage auth={auth} resourceKey="bookings" />} />
-        <Route path="payments" element={<PlaceholderPage title="Thanh toan" endpoint="/payments" />} />
+        <Route path="bookings" element={<AdminBookingPage auth={auth} />} />
+        <Route path="payments" element={<AdminPaymentPage />} />
         <Route path="rooms" element={<RoomPage auth={auth} />} />
         <Route path="room-types" element={<RequireRole auth={auth} roles={['ADMIN']}><RoomTypePage /></RequireRole>} />
         <Route path="room-pricings" element={<RequireRole auth={auth} roles={['ADMIN']}><ManagementPage auth={auth} resourceKey="roomPricings" /></RequireRole>} />

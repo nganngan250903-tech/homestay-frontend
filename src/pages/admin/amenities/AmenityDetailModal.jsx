@@ -1,4 +1,4 @@
-import AppIcon from '../../../components/AppIcon'
+﻿import AppIcon from '../../../components/AppIcon'
 import DetailItem from './DetailItem'
 
 function AmenityDetailModal({ amenity, onClose, onEdit }) {
@@ -7,16 +7,15 @@ function AmenityDetailModal({ amenity, onClose, onEdit }) {
       <section className="modal-card room-detail-card" role="dialog" aria-modal="true" aria-labelledby="amenity-detail-title">
         <div className="modal-head detail-modal-head">
           <div>
-            <p className="eyebrow">Tien nghi</p>
-            <h2 id="amenity-detail-title">Thông tin chi tiet tiện nghi</h2>
+            <h2 id="amenity-detail-title">Thông tin chi tiết tiện nghi</h2>
           </div>
           <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng modal">
             <AppIcon name="close" />
           </button>
         </div>
         <div className="detail-list">
-          <DetailItem label="Ten tiện nghi" value={amenity.name} />
-          <DetailItem label="Loai tiện nghi" value={amenity.category?.name} />
+          <DetailItem label="Tên tiện nghi" value={amenity.name} />
+          <DetailItem label="Loại tiện nghi" value={amenity.category?.name} />
         </div>
         <div className="modal-actions detail-actions">
           <button className="cancel-btn" onClick={onClose} type="button">

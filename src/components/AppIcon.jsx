@@ -207,6 +207,13 @@ const iconPaths = {
       <path d="M11 3v2" />
     </>
   ),
+  wallet: (
+    <>
+      <path d="M4 7h15a2 2 0 0 1 2 2v10H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h13" />
+      <path d="M17 12h4v4h-4a2 2 0 0 1 0-4z" />
+      <path d="M17 14h.1" />
+    </>
+  ),
 }
 
 function AppIcon({ name }) {

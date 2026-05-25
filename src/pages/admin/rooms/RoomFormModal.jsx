@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+﻿import { useMemo, useRef, useState } from 'react'
 import AppIcon from '../../../components/AppIcon'
 import { deleteCloudImage, getCloudinaryPublicId, uploadImage } from '../../../services/uploadService'
 
@@ -72,9 +72,12 @@ async function deleteUploadedImage(publicId) {
 
 function formatRoomStatus(status) {
   const labels = {
-    AVAILABLE: 'Đang trống',
-    OCCUPIED: 'Đang thuê',
-    NO_STATUS: 'Chưa có trang thai',
+    AVAILABLE: 'Trống',
+    WAITING_CHECKIN: 'Chờ nhận phòng',
+    OCCUPIED: 'Đang ở',
+    CLEANING: 'Cần dọn phòng',
+    MAINTENANCE: 'Bảo trì',
+    NO_STATUS: 'Chưa có trạng thái',
   }
 
   return labels[status] || status
@@ -350,7 +353,7 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, pricing, 
         ...current,
         roomPhotos: current.roomPhotos.filter((photo) => !pendingPhotos.some((item) => item.id === photo.id)),
       }))
-      setUploadError(error.message || 'Không thể upload ảnh. Vui long thu lai.')
+      setUploadError(error.message || 'Không thể upload ảnh. Vui lòng thử lại.')
     } finally {
       setUploading(false)
     }
@@ -402,7 +405,6 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, pricing, 
       <section className="modal-card room-detail-card" role="dialog" aria-modal="true" aria-labelledby="room-form-title">
         <div className="modal-head detail-modal-head">
           <div>
-            <p className="eyebrow">Room</p>
             <h2 id="room-form-title">{title}</h2>
           </div>
           <StatusBadge status={form.status || 'NO_STATUS'} />
@@ -414,7 +416,7 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, pricing, 
         <form className="form-grid room-edit-form" onSubmit={submit}>
           {mode === 'edit' && (
             <div className="form-section-title form-wide">
-              <strong>Thông tin chi tiet phòng {room?.name}</strong>
+              <strong>Thông tin chi tiết phòng {room?.name}</strong>
             </div>
           )}
 
@@ -433,7 +435,7 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, pricing, 
           <label className="field">
             <span>Loại phòng</span>
             <select onChange={(event) => updateField('roomTypeId', event.target.value)} required value={form.roomTypeId}>
-              <option value="">Chon loai phòng</option>
+              <option value="">Chọn loại phòng</option>
               {roomTypes.map((roomType) => (
                 <option key={roomType.id} value={roomType.id}>
                   {roomType.name}
@@ -467,8 +469,11 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, pricing, 
           <label className="field">
             <span>Trạng thái phòng</span>
             <select onChange={(event) => updateField('status', event.target.value)} value={form.status}>
-              <option value="AVAILABLE">Con trong</option>
-              <option value="OCCUPIED">Đang thuê</option>
+              <option value="AVAILABLE">Trống</option>
+              <option value="WAITING_CHECKIN">Chờ nhận phòng</option>
+              <option value="OCCUPIED">Đang ở</option>
+              <option value="CLEANING">Cần dọn phòng</option>
+              <option value="MAINTENANCE">Bảo trì</option>
             </select>
           </label>
 
@@ -495,7 +500,7 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, pricing, 
           </label>
 
           <label className="field">
-            <span>Giá cơ bản / qua dem</span>
+            <span>Giá cơ bản / qua đêm</span>
             <input
               disabled={!form.pricing.enabled}
               min="0"
@@ -528,7 +533,7 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, pricing, 
           </label>
 
           <label className="field">
-            <span>Bắt đầu ap dung</span>
+            <span>Bắt đầu áp dụng</span>
             <input
               disabled={!form.pricing.enabled}
               onChange={(event) => updatePricingField('startDate', event.target.value)}
@@ -606,13 +611,13 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, pricing, 
 
           {mode === 'edit' && existingRoomPhotos.length > 0 && (
             <div className="field form-wide">
-              <span>Ảnh phòng hien co</span>
+              <span>Ảnh phòng hiện có</span>
               <div className="room-photo-preview-grid">
                 {existingRoomPhotos
                   .filter((photo) => !deletedExistingPhotoIds.includes(photo.id))
                   .map((photo) => (
                     <div className="room-photo-preview" key={photo.id || photo.url}>
-                      <ImagePreview src={photo.url} alt="Ảnh phòng hien co" />
+                      <ImagePreview src={photo.url} alt="Ảnh phòng hiện có" />
                       <button className="danger-btn compact-btn" onClick={() => removeExistingRoomPhoto(photo.id)} type="button">
                         <AppIcon name="trash" />
                         Xóa
@@ -626,7 +631,6 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, pricing, 
           <section className="amenity-detail-section form-wide">
             <div className="section-head compact-section-head">
               <div>
-                <p className="eyebrow">Tien nghi</p>
                 <h2>Thêm hoac bo tiện nghi phòng</h2>
               </div>
             </div>
@@ -650,3 +654,5 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, pricing, 
 }
 
 export default RoomFormModal
+
+

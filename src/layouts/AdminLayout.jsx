@@ -8,12 +8,12 @@ import { getEmployee } from '../services/employeeService'
 const menuItems = [
   { label: 'Dashboard', path: '/admin', icon: 'dashboard', end: true, roles: ['ADMIN'] },
   { label: 'Đặt phòng', path: '/admin/bookings', icon: 'calendar', roles: ['ADMIN', 'EMPLOYEE'] },
-  { label: 'Thanh toan', path: '/admin/payments', icon: 'wallet', roles: ['ADMIN', 'EMPLOYEE'] },
+  { label: 'Thanh toán', path: '/admin/payments', icon: 'wallet', roles: ['ADMIN', 'EMPLOYEE'] },
   { label: 'Phòng', path: '/admin/rooms', icon: 'bed', roles: ['ADMIN', 'EMPLOYEE'] },
-  { label: 'Tien nghi', path: '/admin/amenities', icon: 'sparkles', roles: ['ADMIN'] },
+  { label: 'Tiện nghi', path: '/admin/amenities', icon: 'sparkles', roles: ['ADMIN'] },
   { label: 'Khách hàng', path: '/admin/customers', icon: 'users', roles: ['ADMIN', 'EMPLOYEE'] },
   { label: 'Nhân viên', path: '/admin/employees', icon: 'badge', roles: ['ADMIN'] },
-  { label: 'Ho so', path: '/admin/profile', icon: 'profile', roles: ['ADMIN', 'EMPLOYEE'] },
+  { label: 'Hồ sơ', path: '/admin/profile', icon: 'profile', roles: ['ADMIN', 'EMPLOYEE'] },
 ]
 
 const iconPaths = {
@@ -172,7 +172,7 @@ function AdminLayout({ auth, onLogout }) {
             className="icon-btn mobile-only"
             onClick={() => setSidebarOpen(true)}
             type="button"
-            aria-label="Mo menu"
+            aria-label="Mở menu"
           >
             <AppIcon name="menu" />
           </button>

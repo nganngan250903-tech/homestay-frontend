@@ -248,8 +248,8 @@ function AmenityPage() {
       <Toast message={toast?.message} type={toast?.type} />
 
       <div className="stats-grid">
-        <StatCard label="So tiện nghi" value={amenities.length} />
-        <StatCard label="Loai tiện nghi" value={categories.length} tone="mint" />
+        <StatCard label="Số tiện nghi" value={amenities.length} />
+        <StatCard label="Loại tiện nghi" value={categories.length} tone="mint" />
         <StatCard
           label="Chưa phân loại"
           value={amenities.filter((amenity) => !amenity.category?.id).length}
@@ -332,7 +332,7 @@ function AmenityPage() {
 
       {confirmDelete.open && confirmDelete.item && (
         <ConfirmDeleteModal
-          message={`Bạn chắc chắn muốn xóa ${confirmDelete.type === 'amenity' ? 'tiện nghi' : 'loai tiện nghi'} nay`}
+          message={`Bạn chắc chắn muốn xóa ${confirmDelete.type === 'amenity' ? 'tiện nghi' : 'loại tiện nghi'} này`}
           onCancel={closeConfirmDelete}
           onConfirm={confirmDeleteItem}
           saving={saving}

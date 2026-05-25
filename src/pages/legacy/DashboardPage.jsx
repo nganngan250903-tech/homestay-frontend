@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+﻿import { useMemo, useState } from 'react'
 import AppIcon from '../../components/AppIcon'
 import Brand from '../../components/Brand'
 import Toast from '../../components/Toast'
@@ -77,11 +77,11 @@ function DashboardPage({ auth, onLogout }) {
   const fetchById = async () => {
     const id = lookupIds[activeKey]
     if (!id) {
-      setToast({ type: 'error', message: 'Nhap ID can tra cuu' })
+      setToast({ type: 'error', message: 'Nhập thông tin cần tra cứu' })
       return
     }
 
-    const response = await runAction('Da tai du lieu', () =>
+    const response = await runAction('Đã tải dữ liệu', () =>
       request(`${activeResource.endpoint}/${id}`),
     )
 
@@ -93,7 +93,7 @@ function DashboardPage({ auth, onLogout }) {
   const deleteById = async () => {
     const id = lookupIds[activeKey]
     if (!id) {
-      setToast({ type: 'error', message: 'Nhập ID cần xóa' })
+      setToast({ type: 'error', message: 'Nhập thông tin cần xóa' })
       return
     }
 
@@ -117,11 +117,11 @@ function DashboardPage({ auth, onLogout }) {
   const updateBookingStatus = async (event) => {
     event.preventDefault()
     if (!statusForm.bookingId) {
-      setToast({ type: 'error', message: 'Nhap ID booking' })
+      setToast({ type: 'error', message: 'Nhập booking cần thao tác' })
       return
     }
 
-    const response = await runAction('Da cap nhat trang thai booking', () =>
+    const response = await runAction('Đã cập nhật trạng thái booking', () =>
       request(`/bookings/${statusForm.bookingId}/status`, {
         method: 'PATCH',
         body: JSON.stringify({ status: statusForm.status }),
@@ -135,11 +135,11 @@ function DashboardPage({ auth, onLogout }) {
 
   const cancelBooking = async () => {
     if (!statusForm.bookingId) {
-      setToast({ type: 'error', message: 'Nhap ID booking' })
+      setToast({ type: 'error', message: 'Nhập booking cần thao tác' })
       return
     }
 
-    const response = await runAction('Da huy booking', () =>
+    const response = await runAction('Đã hủy booking', () =>
       request(`/bookings/${statusForm.bookingId}/cancel`, { method: 'POST' }),
     )
 
@@ -154,10 +154,10 @@ function DashboardPage({ auth, onLogout }) {
         <div className="sidebar-header">
           <Brand />
           <button
-            aria-label={sidebarOpen ? 'Thu gon sidebar' : 'Mo sidebar'}
+            aria-label={sidebarOpen ? 'Thu gọn sidebar' : 'Mở sidebar'}
             className="sidebar-toggle"
             onClick={() => setSidebarOpen((current) => !current)}
-            title={sidebarOpen ? 'Thu gon sidebar' : 'Mo sidebar'}
+            title={sidebarOpen ? 'Thu gọn sidebar' : 'Mở sidebar'}
             type="button"
           >
             <AppIcon name={sidebarOpen ? 'chevronLeft' : 'chevronRight'} />
@@ -186,12 +186,11 @@ function DashboardPage({ auth, onLogout }) {
           type="button"
         >
           <AppIcon name={sidebarOpen ? 'close' : 'menu'} />
-          {sidebarOpen ? 'Đóng menu' : 'Mo menu'}
+          {sidebarOpen ? 'Đóng menu' : 'Mở menu'}
         </button>
 
         <header className="topbar">
           <div>
-            <p className="eyebrow">Spring Boot API</p>
             <h1>{activeResource.label}</h1>
             <p className="subtitle">{activeResource.description}</p>
           </div>
@@ -214,7 +213,7 @@ function DashboardPage({ auth, onLogout }) {
 
         <Toast message={toast?.message} type={toast?.type} />
 
-        <section className="stats-grid" aria-label="Tong quan">
+        <section className="stats-grid" aria-label="Tổng quan">
           <div className="metric">
             <span>Endpoint đang chọn</span>
             <strong>{activeResource.endpoint}</strong>
@@ -233,7 +232,6 @@ function DashboardPage({ auth, onLogout }) {
           <section className="panel">
             <div className="panel-heading">
               <div>
-                <p className="eyebrow">Tao moi</p>
                 <h2>{activeResource.label}</h2>
               </div>
               {loading && <span className="loading">Đang xử lý</span>}
@@ -281,3 +279,4 @@ function DashboardPage({ auth, onLogout }) {
 }
 
 export default DashboardPage
+

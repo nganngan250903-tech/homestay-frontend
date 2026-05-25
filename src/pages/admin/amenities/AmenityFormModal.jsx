@@ -1,4 +1,4 @@
-import AppIcon from '../../../components/AppIcon'
+﻿import AppIcon from '../../../components/AppIcon'
 
 function AmenityFormModal({ categories, form, mode, onClose, onSubmit, onUpdateField, saving }) {
   const title = mode === 'edit' ? 'Chỉnh sửa tiện nghi' : 'Thêm tiện nghi'
@@ -8,7 +8,6 @@ function AmenityFormModal({ categories, form, mode, onClose, onSubmit, onUpdateF
       <section className="modal-card room-detail-card" role="dialog" aria-modal="true" aria-labelledby="amenity-form-title">
         <div className="modal-head detail-modal-head">
           <div>
-            <p className="eyebrow">Tien nghi</p>
             <h2 id="amenity-form-title">{title}</h2>
           </div>
           <button className="icon-btn" onClick={onClose} type="button" aria-label="Đóng modal">
@@ -21,11 +20,11 @@ function AmenityFormModal({ categories, form, mode, onClose, onSubmit, onUpdateF
             <strong>Thông tin tiện nghi</strong>
           </div>
           <label className="field">
-            <span>Ten tiện nghi</span>
+            <span>Tên tiện nghi</span>
             <input onChange={(event) => onUpdateField('name', event.target.value)} required value={form.name} />
           </label>
           <label className="field">
-            <span>Loai tiện nghi</span>
+            <span>Loại tiện nghi</span>
             <select onChange={(event) => onUpdateField('categoryId', event.target.value)} value={form.categoryId}>
               <option value="">Chưa phân loại</option>
               {categories.map((category) => (

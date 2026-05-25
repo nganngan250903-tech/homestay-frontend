@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import AppIcon from '../../../components/AppIcon'
 import Toast from '../../../components/Toast'
 import { request } from '../../../services/api'
@@ -77,7 +77,6 @@ function CustomerAuthModal({ initialMode = 'login', onClose, onLogin }) {
       <section className="customer-auth-modal" role="dialog" aria-modal="true" aria-labelledby="customer-auth-title">
         <div className="customer-auth-head">
           <div>
-            <p className="eyebrow">Lim Dim Homestay</p>
             <h2 id="customer-auth-title">{mode === 'login' ? 'Đăng nhập khách hàng' : 'Đăng ký khách hàng'}</h2>
           </div>
           <button className="icon-btn" onClick={closeModal} type="button" aria-label="Đóng">
@@ -178,3 +177,4 @@ function CustomerAuthModal({ initialMode = 'login', onClose, onLogin }) {
 }
 
 export default CustomerAuthModal
+

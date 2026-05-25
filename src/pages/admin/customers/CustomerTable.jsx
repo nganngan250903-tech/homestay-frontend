@@ -1,4 +1,4 @@
-import AppIcon from '../../../components/AppIcon'
+﻿import AppIcon from '../../../components/AppIcon'
 import EmptyState from '../../../components/EmptyState'
 import LoadingSpinner from '../../../components/LoadingSpinner'
 import CustomerAvatar from './CustomerAvatar'
@@ -25,7 +25,6 @@ function CustomerTable({
     <section className="panel">
       <div className="section-head">
         <div>
-          <p className="eyebrow">DANH SÁCH KHÁCH HÀNG</p>
           <h2>Danh sách khách hàng</h2>
         </div>
         <button className="blue-btn" onClick={onCreate} type="button">
@@ -143,3 +142,4 @@ function CustomerTable({
 }
 
 export default CustomerTable
+

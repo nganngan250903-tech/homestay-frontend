@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+﻿import { useRef, useState } from 'react'
 import AppIcon from '../../../components/AppIcon'
 import { deleteCloudImage, uploadImage } from '../../../services/uploadService'
 import CustomerAvatar from './CustomerAvatar'
@@ -46,7 +46,6 @@ function CustomerFormModal({ form, mode, onClose, onSubmit, onUpdateField, savin
       <section className="modal-card room-detail-card" role="dialog" aria-modal="true" aria-labelledby="customer-form-title">
         <div className="modal-head detail-modal-head">
           <div>
-            <p className="eyebrow">Khách hàng</p>
             <h2 id="customer-form-title">{title}</h2>
           </div>
           <button className="icon-btn" onClick={closeWithoutSaving} type="button" aria-label="Đóng modal">
@@ -99,3 +98,4 @@ function CustomerFormModal({ form, mode, onClose, onSubmit, onUpdateField, savin
 }
 
 export default CustomerFormModal
+

@@ -18,7 +18,7 @@ function HomeHeader({
       <nav aria-label="Dieu huong trang chu">
         <NavLink end to="/home">Thông tin</NavLink>
         <NavLink to="/home/bookingRoom">Đặt phòng</NavLink>
-        <NavLink to="/home/amenities">Tien nghi</NavLink>
+        <NavLink to="/home/amenities">Tiện nghi</NavLink>
         <NavLink to="/home/services">Dich vu</NavLink>
         <NavLink to="/home/offers">Uu dai</NavLink>
         <NavLink to="/home/rulesFaq">Quy tac & FAQ</NavLink>

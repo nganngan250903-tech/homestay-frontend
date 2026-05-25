@@ -1,4 +1,4 @@
-import AppIcon from '../../../components/AppIcon'
+﻿import AppIcon from '../../../components/AppIcon'
 import EmptyState from '../../../components/EmptyState'
 import LoadingSpinner from '../../../components/LoadingSpinner'
 
@@ -21,8 +21,7 @@ function RoleTable({
     <section className="panel">
       <div className="section-head">
         <div>
-          <p className="eyebrow">QUAN LY VAI TRO</p>
-          <h2>Danh sach vai trò</h2>
+          <h2>Danh sách vai trò</h2>
         </div>
         <button className="blue-btn" onClick={onCreate} type="button">
           <AppIcon name="plus" />
@@ -35,7 +34,7 @@ function RoleTable({
           <span>Tìm kiếm vai trò</span>
           <input
             onChange={(event) => onSearchInputChange(event.target.value)}
-            placeholder="Ten hoac mô tả vai trò"
+            placeholder="Tên hoặc mô tả vai trò"
             value={searchInput}
           />
         </label>

@@ -1,4 +1,4 @@
-import AppIcon from '../../../components/AppIcon'
+﻿import AppIcon from '../../../components/AppIcon'
 import EmptyState from '../../../components/EmptyState'
 import LoadingSpinner from '../../../components/LoadingSpinner'
 import EmployeeAvatar from './EmployeeAvatar'
@@ -24,7 +24,6 @@ function EmployeeTable({
     <section className="panel">
       <div className="section-head">
         <div>
-          <p className="eyebrow">DANH SÁCH NHÂN VIÊN</p>
           <h2>Danh sách nhân viên</h2>
         </div>
         <button className="blue-btn" onClick={onCreate} type="button">
