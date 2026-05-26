@@ -19,6 +19,17 @@ export async function createBooking(payload) {
   return response.data
 }
 
+export async function getRoomBookingCalendar(roomId, params = {}) {
+  const query = new URLSearchParams()
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      query.set(key, value)
+    }
+  })
+  const response = await request(`/rooms/${encodeURIComponent(roomId)}/booking-calendar${query.toString() ? `?${query.toString()}` : ''}`)
+  return response.data || []
+}
+
 export async function getBooking(id) {
   const response = await request(`/bookings/${id}`)
   return response.data

@@ -1,8 +1,10 @@
 ﻿import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useCallback } from 'react'
 import AppIcon from '../../../components/AppIcon'
 import Toast from '../../../components/Toast'
 import { createBooking } from '../../../services/bookingService'
+import BookingDateRangeCalendar from './BookingDateRangeCalendar'
 import { formatRoomPrice } from './homeUtils'
 
 const aboutFeatures = [
@@ -74,6 +76,9 @@ function RoomDetailModal({
   const [bookingForm, setBookingForm] = useState(createDefaultBookingForm)
   const [saving, setSaving] = useState(false)
   const [toast, setToast] = useState(null)
+  const showCalendarError = useCallback((message) => {
+    setToast({ type: 'error', message })
+  }, [])
 
   const photos = useMemo(() => {
     if (!room) return []
@@ -93,12 +98,20 @@ function RoomDetailModal({
     setBookingForm((current) => ({ ...current, [field]: value }))
   }
 
+  const updateBookingDates = (dates) => {
+    setBookingForm((current) => ({ ...current, ...dates }))
+  }
+
   const submitBooking = async (event) => {
     event.preventDefault()
 
     if (!isCustomer || !bookingCustomer?.id) {
       setToast({ type: 'error', message: 'Bạn cần đăng nhập tài khoản khách hàng trước khi đặt phòng.' })
       onRequireCustomerAuth?.()
+      return
+    }
+    if (!bookingForm.checkIn || !bookingForm.checkOut) {
+      setToast({ type: 'error', message: 'Vui lòng chọn ngày nhận phòng và ngày trả phòng.' })
       return
     }
 
@@ -181,26 +194,14 @@ function RoomDetailModal({
               <h3>Thông tin đặt phòng</h3>
             </div>
           </div>
-          <label className="field">
-            <span>Check-in</span>
-            <input
-              min={toDateTimeInput(new Date())}
-              onChange={(event) => updateBookingField('checkIn', event.target.value)}
-              required
-              type="datetime-local"
-              value={bookingForm.checkIn}
-            />
-          </label>
-          <label className="field">
-            <span>Check-out</span>
-            <input
-              min={bookingForm.checkIn}
-              onChange={(event) => updateBookingField('checkOut', event.target.value)}
-              required
-              type="datetime-local"
-              value={bookingForm.checkOut}
-            />
-          </label>
+          <BookingDateRangeCalendar
+            checkIn={bookingForm.checkIn}
+            checkOut={bookingForm.checkOut}
+            disabled={saving}
+            onChange={updateBookingDates}
+            onError={showCalendarError}
+            roomId={room.id}
+          />
           <label className="field">
             <span>Số khách</span>
             <input
