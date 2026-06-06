@@ -136,7 +136,7 @@ function CustomerPage({ auth }) {
       customer,
       nextStatus: '',
       label: 'Xóa',
-      message: 'Bạn chắc chắn muốn xóa khách hàng này',
+      message: 'Bạn chắc chắn muốn xóa khách hàng này? Tài khoản sẽ được khóa và lịch sử vẫn được giữ lại.',
     })
   }
 
@@ -158,9 +158,6 @@ function CustomerPage({ auth }) {
 
       if (confirm.action === 'delete') {
         await deleteCustomer(confirm.customer.id)
-        if (confirm.customer.image) {
-          await Promise.allSettled([deleteCloudImageByUrl(confirm.customer.image)])
-        }
         await loadCustomers(false)
         setToast({ type: 'delete', message: 'Đã xóa thành công' })
       }

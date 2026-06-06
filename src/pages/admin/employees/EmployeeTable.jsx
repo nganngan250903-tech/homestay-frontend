@@ -79,15 +79,9 @@ function EmployeeTable({
                   <td>{employee.email}</td>
                   <td>{getEmployeeRoleLabel(employee)}</td>
                   <td>
-                    <button
-                      className={`status-action-pill ${employee.active === false ? 'locked' : 'active'}`}
-                      disabled={saving}
-                      onClick={() => onStatusChange(employee)}
-                      type="button"
-                    >
-                      <AppIcon name={employee.active === false ? 'unlock' : 'lock'} />
+                    <span className={`status-pill ${employee.active === false ? 'occupied' : 'available'}`}>
                       {employee.active === false ? 'Đã vô hiệu hóa' : 'Hoạt động'}
-                    </button>
+                    </span>
                   </td>
                   <td>
                     <div className="table-actions">
@@ -98,6 +92,15 @@ function EmployeeTable({
                       <button className="edit-btn compact-btn" onClick={() => onEdit(employee)} type="button">
                         <AppIcon name="edit" />
                         Sửa
+                      </button>
+                      <button
+                        className={`status-action-pill ${employee.active === false ? 'active' : 'locked'}`}
+                        disabled={saving}
+                        onClick={() => onStatusChange(employee)}
+                        type="button"
+                      >
+                        <AppIcon name={employee.active === false ? 'unlock' : 'lock'} />
+                        {employee.active === false ? 'Mở khóa' : 'Khóa'}
                       </button>
                     </div>
                   </td>
