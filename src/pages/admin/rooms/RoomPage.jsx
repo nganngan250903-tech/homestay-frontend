@@ -21,6 +21,7 @@ import {
   getRoomTypes,
   updateRoom,
   updateRoomPricing,
+  updateRoomStatus,
   updateRoomType,
 } from '../../../services/roomService'
 import { deleteCloudImage, getCloudinaryPublicId, uploadImage } from '../../../services/uploadService'
@@ -169,11 +170,11 @@ function RoomImages({ room }) {
     <>
       {room.thumbnail ? (
         <div className="detail-image form-wide">
-          <span className="detail-section-label">Anh thumbnail</span>
+          <span className="detail-section-label">Ảnh thumbnail</span>
           <DetailImage src={room.thumbnail} alt={`Phòng ${room.name}`} />
         </div>
       ) : (
-        <DetailItem label="Anh thumbnail" value="Chưa có" />
+        <DetailItem label="Ảnh thumbnail" value="Chưa có" />
       )}
       {latestPhotos.length > 0 ? (
         <div className="form-wide">
@@ -326,7 +327,7 @@ function RoomDetailModal({
                 <DetailItem label="Check-in" value={formatDateTime(booking.checkIn)} />
                 <DetailItem label="Check-out" value={formatDateTime(booking.checkOut)} />
                 <DetailItem label="Số khách" value={booking.guestCount} />
-                <DetailItem label="Tong tien" value={formatMoney(booking.totalAmount)} />
+                <DetailItem label="Tổng tiền" value={formatMoney(booking.totalAmount)} />
                 <DetailItem label="Đã thanh toán" value={formatMoney(booking.paidAmount)} />
                 <DetailItem label="Nhân viên" value={booking.employeeName || 'Chưa gắn'} />
               </div>
@@ -639,7 +640,13 @@ function RoomPage({ auth }) {
     try {
       let roomId = modal.room?.id
       if (modal.mode === 'edit') {
-        await updateRoom(modal.room.id, roomPayload)
+        const updatedRoom = await updateRoom(modal.room.id, roomPayload)
+        if (
+          Object.prototype.hasOwnProperty.call(roomPayload, 'thumbnail') &&
+          (updatedRoom?.thumbnail || '') !== (roomPayload.thumbnail || '')
+        ) {
+          throw new Error('Backend chưa lưu URL thumbnail mới. Vui lòng thử lại.')
+        }
         setToast({ type: 'success', message: 'Đã cập nhật phòng' })
       } else {
         roomId = await createRoom(roomPayload)
@@ -702,15 +709,10 @@ function RoomPage({ auth }) {
 
     try {
       await deleteRoom(room.id)
-      const roomImageUrls = [
-        room.thumbnail,
-        ...(room.roomPhotos || []).map(getRoomPhotoUrl),
-      ].filter(Boolean)
-      await Promise.allSettled(roomImageUrls.map(deleteCloudImageByUrl))
-      setToast({ type: 'success', message: 'Đã xóa phòng' })
+      setToast({ type: 'success', message: 'Đã ẩn phòng' })
       await loadData()
     } catch (error) {
-      setToast({ type: 'error', message: error.message || 'Không xóa được phòng' })
+      setToast({ type: 'error', message: error.message || 'Không ẩn được phòng' })
     } finally {
       setSaving(false)
     }
@@ -721,7 +723,7 @@ function RoomPage({ auth }) {
     setToast(null)
     const nextStatus = nextRoomStatus || 'AVAILABLE'
     try {
-      await updateRoom(room.id, { status: nextStatus })
+      await updateRoomStatus(room.id, nextStatus)
       setToast({ type: 'success', message: 'Cập nhật dữ liệu thành công' })
       await loadData()
     } catch (error) {
@@ -886,7 +888,7 @@ function RoomPage({ auth }) {
           <label className="field">
             <span>Trạng thái</span>
             <select onChange={(event) => setStatusInput(event.target.value)} value={statusInput}>
-              <option value="ALL">Tat ca</option>
+              <option value="ALL">Tất cả</option>
               <option value="AVAILABLE">Trống</option>
               <option value="WAITING_CHECKIN">Chờ nhận phòng</option>
               <option value="OCCUPIED">Đang ở</option>
@@ -927,7 +929,7 @@ function RoomPage({ auth }) {
               type="button"
             >
               <AppIcon name="chevronLeft" />
-              Truoc
+              Trước
             </button>
             <strong>
               {page} / {totalPages}

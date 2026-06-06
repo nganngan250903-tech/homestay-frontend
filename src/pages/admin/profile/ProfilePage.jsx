@@ -208,8 +208,7 @@ function ProfilePage({ auth }) {
 
       <div className="page-heading">
         <div>
-          <h1>Hồ sơ cua toi</h1>
-          <p className="muted-text">Quản lý thông tin cá nhân và thông tin vai trò đang đăng nhập.</p>
+          <h1>Hồ sơ của tôi</h1>
         </div>
       </div>
 
@@ -251,7 +250,7 @@ function ProfilePage({ auth }) {
                     type="button"
                   >
                     <AppIcon name="lock" />
-                    Doi mat khau
+                    Đổi mật khẩu
                   </button>
                 </div>
               </>
@@ -312,7 +311,7 @@ function ProfilePage({ auth }) {
           <section className="confirm-modal password-modal" role="dialog" aria-modal="true" aria-labelledby="password-modal-title">
             <div className="modal-head detail-modal-head">
               <div>
-                <h2 id="password-modal-title">Doi mat khau</h2>
+                <h2 id="password-modal-title">Đổi mật khẩu</h2>
               </div>
               <button className="icon-btn" disabled={saving} onClick={closePasswordModal} type="button" aria-label="Đóng modal">
                 <AppIcon name="close" />
@@ -321,7 +320,7 @@ function ProfilePage({ auth }) {
 
             <form className="profile-form password-form" onSubmit={submitPassword}>
               <label className="field">
-                <span>Mật khẩu hien tai</span>
+                <span>Mật khẩu hiện tại</span>
                 <input
                   autoComplete="current-password"
                   onChange={(event) => updatePasswordField('currentPassword', event.target.value)}
@@ -331,7 +330,7 @@ function ProfilePage({ auth }) {
                 />
               </label>
               <label className="field">
-                <span>Mật khẩu moi</span>
+                <span>Mật khẩu mới</span>
                 <input
                   autoComplete="new-password"
                   onChange={(event) => updatePasswordField('newPassword', event.target.value)}
@@ -341,7 +340,7 @@ function ProfilePage({ auth }) {
                 />
               </label>
               <label className="field">
-                <span>Xác nhận mat khau</span>
+                <span>Xác nhận mật khẩu</span>
                 <input
                   autoComplete="new-password"
                   onChange={(event) => updatePasswordField('confirmPassword', event.target.value)}

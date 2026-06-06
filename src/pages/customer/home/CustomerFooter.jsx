@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import AppIcon from '../../../components/AppIcon'
 
+const mapUrl = 'https://maps.app.goo.gl/ykFvjUHEnyu5a1B19'
+
 function CustomerFooter() {
   const scrollTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -8,39 +10,33 @@ function CustomerFooter() {
 
   return (
     <footer className="customer-footer">
-      <div className="customer-footer-band" />
       <div className="customer-footer-inner">
         <div className="customer-footer-brand">
           <Link className="customer-logo" to="/home">Lim Dim Homestay</Link>
         </div>
         <div className="customer-footer-grid">
           <section>
-            <h3>Ve chung toi</h3>
-            <p>Thanh lap nam 2024.</p>
-            <p>Mo hinh kinh doanh du lich nghi duong.</p>
-            <p>Mang lai cam giac gan gui, than thien nhu o nha</p>
+            <h3>Về chúng tôi</h3>
+            <p>Thành lập năm 2024.</p>
+            <p>Mô hình kinh doanh du lịch nghỉ dưỡng.</p>
+            <p>Mang lại cảm giác gần gũi, thân thiện như ở nhà</p>
           </section>
           <section>
-            <h3>Homestay</h3>
-            <Link to="/home/bookingRoom">Danh sách các phòng</Link>
-            <Link to="/home/offers">Khuyen mai</Link>
-          </section>
-          <section>
-            <h3>Tai khóan</h3>
-            <Link to="/home">Tai khóan cua toi</Link>
+            <h3>Tài khoản</h3>
+            <Link to="/home">Tài khoản của tôi</Link>
             <Link to="/home/bookingRoom">Lịch sử đặt phòng</Link>
           </section>
           <section>
-            <h3>Lien he</h3>
+            <h3>Liên hệ</h3>
             <span>Email: LimDim@gmail.com.vn</span>
-            <span>Địa chỉ:16/52 Ba Trieu, Hue City, Vietnam</span>
+            <a href={mapUrl} target="_blank" rel="noreferrer">Địa chỉ: 16/52 Ba Triệu, Huế</a>
             <span>Phone: +84 328 54 7686</span>
             <span>Website: LimDimhomestay.vn</span>
             <span className="footer-social">f</span>
           </section>
         </div>
       </div>
-      <button className="footer-top-btn" onClick={scrollTop} type="button" aria-label="Ve dau trang">
+      <button className="footer-top-btn" onClick={scrollTop} type="button" aria-label="Về đầu trang">
         <AppIcon name="chevronUp" />
       </button>
     </footer>

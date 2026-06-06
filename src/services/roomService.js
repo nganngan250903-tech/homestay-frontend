@@ -5,6 +5,11 @@ export async function getRooms() {
   return response.data || []
 }
 
+export async function getRoom(id) {
+  const response = await request(`/rooms/${id}`)
+  return response.data
+}
+
 export async function createRoom(payload) {
   const response = await request('/rooms', {
     method: 'POST',
@@ -17,6 +22,14 @@ export async function updateRoom(id, payload) {
   const response = await request(`/rooms/${id}`, {
     method: 'PATCH',
     data: payload,
+  })
+  return response.data
+}
+
+export async function updateRoomStatus(id, status) {
+  const response = await request(`/rooms/${id}/status`, {
+    method: 'PATCH',
+    data: { status },
   })
   return response.data
 }
@@ -35,7 +48,7 @@ export async function createRoomPhoto(roomId, photo) {
   const response = await request('/roomPhotos', {
     method: 'POST',
     data: {
-      roomId,
+      room: { id: roomId },
       photo,
     },
   })

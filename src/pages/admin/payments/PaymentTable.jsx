@@ -12,7 +12,6 @@ function PaymentTable({
   loading,
   onApplyFilters,
   onFilterChange,
-  onResetFilters,
   page,
   payments,
   setPage,
@@ -23,7 +22,7 @@ function PaymentTable({
     <section className="panel">
       <div className="section-head">
         <div>
-          <h2>Giao dịch VNPay trả về</h2>
+          <h2>Danh sách các giao dịch VNPAY</h2>
         </div>
       </div>
 
@@ -43,10 +42,6 @@ function PaymentTable({
           <button className="blue-btn compact-btn" type="submit">
             <AppIcon name="search" />
             Lọc
-          </button>
-          <button className="cancel-btn compact-btn" onClick={onResetFilters} type="button">
-            <AppIcon name="reset" />
-            Xóa lọc
           </button>
         </div>
       </form>
@@ -73,7 +68,6 @@ function PaymentTable({
                 <tr key={payment.id}>
                   <td>
                     <strong>{payment.bookingId || payment.txnRef || '-'}</strong>
-                    <span className="cell-subtext">{payment.bookingStatus || '-'}</span>
                   </td>
                   <td>
                     <strong>{payment.customerName || '-'}</strong>

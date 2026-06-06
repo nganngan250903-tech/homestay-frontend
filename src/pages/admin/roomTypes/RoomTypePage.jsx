@@ -372,7 +372,7 @@ function RoomTypePage() {
           tone="mint"
         />
         <StatCard
-          label="Co anh dai dien"
+          label="Có ảnh đại diện"
           value={roomTypes.filter((item) => item.image).length}
           tone="cream"
         />
@@ -476,7 +476,7 @@ function RoomTypePage() {
               type="button"
             >
               <AppIcon name="chevronLeft" />
-              Truoc
+              Trước
             </button>
             <strong>
               {page} / {totalPages}

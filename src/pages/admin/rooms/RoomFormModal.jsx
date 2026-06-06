@@ -19,6 +19,7 @@ const emptyForm = {
   branchId: '',
   roomTypeId: '',
   name: '',
+  number: '',
   area: '',
   thumbnail: '',
   status: 'AVAILABLE',
@@ -141,7 +142,7 @@ function AmenityPicker({ amenities, formAmenities, onToggle }) {
     return (
       <div className="empty-state compact-empty-state">
         <strong>Chưa có tiện nghi</strong>
-        <span>Hay tao tiện nghi truoc khi gan cho phòng.</span>
+        <span>Hãy tạo tiện nghi trước khi gắn cho phòng.</span>
       </div>
     )
   }
@@ -178,6 +179,7 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, pricing, 
       branchId: room.branch?.id ? String(room.branch.id) : '',
       roomTypeId: room.roomType?.id ? String(room.roomType.id) : '',
       name: room.name || '',
+      number: room.number ? String(room.number) : '',
       area: room.area ? String(room.area) : '',
       thumbnail: room.thumbnail || '',
       status: room.status || 'AVAILABLE',
@@ -205,20 +207,26 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, pricing, 
   const newRoomPhotosRef = useRef([])
 
   const title = mode === 'edit' ? `Chỉnh sửa phòng ${room?.name || ''}` : 'Thêm phòng'
-  const canSubmit = useMemo(
-    () =>
-      form.branchId &&
-      form.roomTypeId &&
-      form.name.trim() &&
-      form.area &&
-      (!form.pricing.enabled ||
-        (form.pricing.baseDuration &&
-          form.pricing.basePrice &&
-          form.pricing.weekendPrice &&
-          form.pricing.holidayPrice &&
-          form.pricing.startDate)),
-    [form],
-  )
+  const validationMessages = useMemo(() => {
+    const messages = []
+    if (!form.branchId) messages.push('Vui lòng chọn chi nhánh')
+    if (!form.roomTypeId) messages.push('Vui lòng chọn loại phòng')
+    if (!form.name.trim()) messages.push('Vui lòng nhập tên phòng')
+    if (!form.number || Number(form.number) <= 0) messages.push('Vui lòng nhập số phòng lớn hơn 0')
+    if (!form.area || Number(form.area) <= 0) messages.push('Vui lòng nhập diện tích lớn hơn 0')
+
+    if (form.pricing.enabled) {
+      if (!form.pricing.baseDuration) messages.push('Vui lòng nhập đơn vị tính bảng giá')
+      if (!form.pricing.basePrice || Number(form.pricing.basePrice) <= 0) messages.push('Vui lòng nhập giá cơ bản lớn hơn 0')
+      if (!form.pricing.weekendPrice || Number(form.pricing.weekendPrice) <= 0) messages.push('Vui lòng nhập giá cuối tuần lớn hơn 0')
+      if (!form.pricing.holidayPrice || Number(form.pricing.holidayPrice) <= 0) messages.push('Vui lòng nhập giá ngày lễ lớn hơn 0')
+      if (!form.pricing.startDate) messages.push('Vui lòng chọn thời điểm bắt đầu áp dụng bảng giá')
+    }
+
+    if (uploadError) messages.push(uploadError)
+    return messages
+  }, [form, uploadError])
+  const canSubmit = validationMessages.length === 0
 
   const updateField = (field, value) => {
     setForm((current) => ({ ...current, [field]: value }))
@@ -239,12 +247,14 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, pricing, 
 
   const submit = (event) => {
     event.preventDefault()
+    const thumbnail = (form.thumbnail || thumbnailUrlRef.current || '').trim()
     const normalized = {
       branchId: Number(form.branchId),
       roomTypeId: Number(form.roomTypeId),
       name: form.name.trim(),
+      number: Number(form.number),
       area: Number(form.area),
-      thumbnail: thumbnailUrlRef.current.trim(),
+      thumbnail,
       status: form.status,
       amenities: Object.entries(form.amenities).map(([amenityId, quantity]) => ({
         amenityId: Number(amenityId),
@@ -253,7 +263,7 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, pricing, 
       roomPhotos: newRoomPhotosRef.current.map((photo) => photo.url).filter(Boolean),
       deleteRoomPhotoIds: deletedExistingPhotoIds,
       deleteCloudPublicIds: [
-        ...(room?.thumbnail && room.thumbnail !== thumbnailUrlRef.current
+        ...(room?.thumbnail && room.thumbnail !== thumbnail
           ? [getCloudinaryPublicId(room.thumbnail)]
           : []),
         ...deletedExistingPhotoIds
@@ -281,6 +291,9 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, pricing, 
 
     try {
       const uploaded = await uploadImage(file, 'rooms')
+      if (!uploaded?.url) {
+        throw new Error('Backend không trả về URL ảnh sau khi upload.')
+      }
       await deleteUploadedImage(thumbnailUploadRef.current?.publicId)
       thumbnailUploadRef.current = uploaded.publicId ? { publicId: uploaded.publicId, url: uploaded.url } : null
       thumbnailUrlRef.current = uploaded.url
@@ -296,6 +309,7 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, pricing, 
       })
       setUploadError(error.message || 'Không thể upload thumbnail. Vui lòng thử lại.')
     } finally {
+      event.target.value = ''
       setUploading(false)
     }
   }
@@ -455,6 +469,18 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, pricing, 
           </label>
 
           <label className="field">
+            <span>Số phòng</span>
+            <input
+              min="1"
+              onChange={(event) => updateField('number', event.target.value)}
+              required
+              type="number"
+              value={form.number}
+            />
+            {!form.number && <small className="error-text">Vui lòng nhập số phòng</small>}
+          </label>
+
+          <label className="field">
             <span>Diện tích</span>
             <input
               min="1"
@@ -572,13 +598,13 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, pricing, 
           </label>
 
           <label className="field form-wide">
-            <span>Upload thumbnail</span>
+            <span>Upload ảnh thumbnail</span>
             <input accept="image/*" disabled={uploading} onChange={changeThumbnail} type="file" />
           </label>
 
           {thumbnailPreview && (
             <div className="image-preview form-wide">
-              <ImagePreview src={thumbnailPreview} alt="Anh thumbnail phòng" />
+              <ImagePreview src={thumbnailPreview} alt="Ảnh thumbnail phòng" />
               <button className="danger-btn compact-btn" onClick={removeThumbnail} type="button">
                 <AppIcon name="trash" />
                 Xóa thumbnail
@@ -587,7 +613,7 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, pricing, 
           )}
 
           <label className="field form-wide">
-            <span>Upload anh phòng</span>
+            <span>Upload ảnh phòng</span>
             <input accept="image/*" disabled={uploading} multiple onChange={changeImage} type="file" />
             {uploading && <small className="helper-text">Đang upload ảnh lên Cloudinary...</small>}
             {uploadError && <small className="error-text">{uploadError}</small>}
@@ -631,11 +657,18 @@ function RoomFormModal({ amenities, branches, mode, onClose, onSubmit, pricing, 
           <section className="amenity-detail-section form-wide">
             <div className="section-head compact-section-head">
               <div>
-                <h2>Thêm hoac bo tiện nghi phòng</h2>
+              <h2>Thêm hoặc bỏ tiện nghi phòng</h2>
               </div>
             </div>
             <AmenityPicker amenities={amenities} formAmenities={form.amenities} onToggle={toggleAmenity} />
           </section>
+
+          {validationMessages.length > 0 && (
+            <div className="form-validation-message form-wide">
+              <AppIcon name="alert" />
+              <span>{validationMessages[0]}</span>
+            </div>
+          )}
 
           <div className="modal-actions form-wide">
             <button className="cancel-btn" onClick={closeWithoutSaving} type="button">

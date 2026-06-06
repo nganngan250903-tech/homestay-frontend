@@ -1,5 +1,5 @@
 export function formatRoomPrice(value) {
-  if (!value) return 'Lien he'
+  if (!value) return 'Liên hệ'
   return new Intl.NumberFormat('vi-VN').format(Number(value))
 }
 

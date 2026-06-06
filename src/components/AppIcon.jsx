@@ -88,6 +88,13 @@ const iconPaths = {
       <path d="M20 6L9 17l-5-5" />
     </>
   ),
+  alert: (
+    <>
+      <path d="M12 4l9 16H3z" />
+      <path d="M12 9v5" />
+      <path d="M12 17h.1" />
+    </>
+  ),
   calendar: (
     <>
       <path d="M7 3v4" />
@@ -212,6 +219,44 @@ const iconPaths = {
       <path d="M4 7h15a2 2 0 0 1 2 2v10H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h13" />
       <path d="M17 12h4v4h-4a2 2 0 0 1 0-4z" />
       <path d="M17 14h.1" />
+    </>
+  ),
+  walk: (
+    <>
+      <path d="M13 4.5a1.7 1.7 0 1 0 0-3.4 1.7 1.7 0 0 0 0 3.4z" />
+      <path d="M10 8l2-2 3 2 2.5 1" />
+      <path d="M12 6l-1 5 3 2" />
+      <path d="M10.5 11L8 15l-2 5" />
+      <path d="M14 13l2 3 3 4" />
+    </>
+  ),
+  mountain: (
+    <>
+      <path d="M3 19h18" />
+      <path d="M5 17l5-10 4 7 2-3 4 6" />
+      <path d="M10 7l1.5 3H8.5" />
+    </>
+  ),
+  train: (
+    <>
+      <path d="M6 4h12a2 2 0 0 1 2 2v8a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V6a2 2 0 0 1 2-2z" />
+      <path d="M7 8h10" />
+      <path d="M8 14h.1" />
+      <path d="M16 14h.1" />
+      <path d="M9 18l-2 3" />
+      <path d="M15 18l2 3" />
+    </>
+  ),
+  plane: (
+    <>
+      <path d="M2 16l20-8-8 20-3-8-9-4z" />
+      <path d="M11 20l4-7" />
+    </>
+  ),
+  mapPin: (
+    <>
+      <path d="M12 21s7-5.2 7-11a7 7 0 1 0-14 0c0 5.8 7 11 7 11z" />
+      <path d="M12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />
     </>
   ),
 }

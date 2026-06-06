@@ -27,10 +27,12 @@ function CustomerTable({
         <div>
           <h2>Danh sách khách hàng</h2>
         </div>
-        <button className="blue-btn" onClick={onCreate} type="button">
-          <AppIcon name="plus" />
-          Thêm khách hàng
-        </button>
+        {onCreate && (
+          <button className="blue-btn" onClick={onCreate} type="button">
+            <AppIcon name="plus" />
+            Thêm khách hàng
+          </button>
+        )}
       </div>
 
       <form className="room-toolbar" onSubmit={onApplySearch}>

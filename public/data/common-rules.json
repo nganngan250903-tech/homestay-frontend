@@ -1,0 +1,93 @@
+[
+  {
+    "icon": "login",
+    "title": "Nhận phòng",
+    "content": [
+      { "strong": "Từ 14:00 - 22:00" },
+      { "text": "Vui lòng thông báo trước cho LimDim Homestay về thời gian đến dự kiến của quý khách." },
+      { "text": "Nếu đến sớm hơn 14:00, quý khách có thể liên hệ với chúng tôi để được hỗ trợ phòng chờ." }
+    ]
+  },
+  {
+    "icon": "logout",
+    "title": "Trả phòng",
+    "content": [
+      { "strong": "Từ 07:00 - 12:00" },
+      { "text": "Nếu muốn trả phòng muộn hơn, quý khách có thể báo nhân viên để được hỗ trợ." }
+    ]
+  },
+  {
+    "icon": "history",
+    "title": "Hủy đặt phòng / Trả trước",
+    "content": [
+      { "text": "Áp dụng chính sách hủy phòng và hoàn tiền theo quy tắc đặt phòng đã lưu trên hệ thống." },
+      { "text": "Quý khách cần thanh toán toàn bộ số tiền khi đặt phòng. Homestay không áp dụng chính sách trả trước hoặc đặt cọc riêng." }
+    ]
+  },
+  {
+    "icon": "lock",
+    "title": "Giờ giới nghiêm",
+    "content": [
+      { "strong": "Từ 23:30 - 06:00" },
+      { "text": "Sau 23:30, cổng homestay sẽ đóng cửa. Nhân viên trực cổng vẫn hỗ trợ mở cổng khi quý khách cần ra vào." }
+    ]
+  },
+  {
+    "icon": "users",
+    "title": "Trẻ em và giường",
+    "content": [
+      { "heading": "Chính sách trẻ em" },
+      { "text": "Phù hợp cho trẻ em trên 3 tuổi." },
+      { "text": "Trẻ em từ 13 tuổi trở lên sẽ được tính giá như người lớn tại chỗ nghỉ này." },
+      { "heading": "Chính sách nôi/cũi và giường phụ" },
+      { "text": "Chỗ nghỉ này không có nôi/cũi và giường phụ." }
+    ]
+  },
+  {
+    "icon": "users",
+    "title": "Không giới hạn độ tuổi",
+    "content": [
+      { "text": "Không có yêu cầu về độ tuổi khi nhận phòng." }
+    ]
+  },
+  {
+    "icon": "close",
+    "title": "Vật nuôi",
+    "content": [
+      { "text": "Vật nuôi không được phép." }
+    ]
+  },
+  {
+    "icon": "users",
+    "title": "Nhóm",
+    "content": [
+      { "text": "Khi đặt nhiều hơn 2 phòng hoặc đi theo hộ gia đình, nhóm bạn bè sẽ được hỗ trợ các dịch vụ sân vườn như BBQ hay hồ bơi." }
+    ]
+  },
+  {
+    "icon": "wallet",
+    "title": "Các phương thức thanh toán được chấp nhận",
+    "paymentMethods": ["VNPAY"]
+  },
+  {
+    "icon": "close",
+    "title": "Hút thuốc",
+    "content": [
+      { "text": "Không cho phép hút thuốc." }
+    ]
+  },
+  {
+    "icon": "calendar",
+    "title": "Tiệc tùng",
+    "content": [
+      { "text": "Không cho phép tiệc tùng/sự kiện." }
+    ]
+  },
+  {
+    "icon": "lock",
+    "title": "Thời gian yên lặng",
+    "content": [
+      { "text": "Quý khách cần giữ không gian yên tĩnh từ 23:30 đến 06:00 để tránh ảnh hưởng đến khách hàng khác." }
+    ]
+  }
+]

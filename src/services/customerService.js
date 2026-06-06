@@ -25,6 +25,14 @@ export async function createCustomer(payload) {
   return response.data
 }
 
+export async function createQuickCustomer(payload) {
+  const response = await request('/customers/quick', {
+    method: 'POST',
+    data: payload,
+  })
+  return response.data
+}
+
 export async function updateCustomer(id, payload) {
   const response = await request(`/customers/${id}`, {
     method: 'PATCH',

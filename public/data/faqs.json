@@ -1,0 +1,72 @@
+[
+  {
+    "id": "breakfast",
+    "category": "dich_vu",
+    "question": "LimDim Homestay có phục vụ bữa sáng không?",
+    "aliases": ["Homestay có ăn sáng không?", "Có bữa sáng tại LimDim không?"],
+    "keywords": ["bữa sáng", "ăn sáng", "dịch vụ ăn uống"],
+    "answerBlocks": [
+      {
+        "type": "paragraph",
+        "text": "LimDim Homestay chưa áp dụng bữa sáng cố định cho tất cả booking. Quý khách có thể liên hệ nhân viên để được tư vấn các lựa chọn ăn uống gần homestay."
+      }
+    ]
+  },
+  {
+    "id": "checkin-checkout",
+    "category": "quy_tac",
+    "question": "LimDim Homestay có giờ nhận và trả phòng như thế nào?",
+    "aliases": ["Mấy giờ được nhận phòng?", "Mấy giờ phải trả phòng?"],
+    "keywords": ["nhận phòng", "trả phòng", "check-in", "check-out"],
+    "answerBlocks": [
+      { "type": "paragraph", "text": "Giờ nhận phòng từ 14:00 - 22:00. Giờ trả phòng từ 07:00 - 12:00." },
+      { "type": "paragraph", "text": "Nếu quý khách muốn nhận phòng sớm hoặc trả phòng muộn, vui lòng liên hệ nhân viên để được hỗ trợ theo tình trạng phòng thực tế." }
+    ]
+  },
+  {
+    "id": "payment",
+    "category": "thanh_toan",
+    "question": "Tôi cần thanh toán khi nào?",
+    "aliases": ["Có cần đặt cọc không?", "Thanh toán trước hay sau?"],
+    "keywords": ["thanh toán", "đặt cọc", "VNPAY", "trả trước"],
+    "answerBlocks": [
+      { "type": "paragraph", "text": "Quý khách cần thanh toán toàn bộ số tiền khi đặt phòng. LimDim Homestay hiện không áp dụng chính sách đặt cọc riêng." },
+      { "type": "paragraph", "text": "Phương thức thanh toán đang được hỗ trợ là VNPAY." }
+    ]
+  },
+  {
+    "id": "activities",
+    "category": "dich_vu",
+    "question": "Tôi có thể làm gì ở LimDim Homestay?",
+    "aliases": ["Homestay có dịch vụ gì?", "Ở LimDim có hoạt động gì?"],
+    "keywords": ["dịch vụ", "BBQ", "hồ bơi", "sân vườn", "nhóm"],
+    "answerBlocks": [
+      { "type": "paragraph", "text": "Khi đặt nhiều hơn 2 phòng hoặc đi theo hộ gia đình, nhóm bạn bè sẽ được hỗ trợ các dịch vụ sân vườn." },
+      { "type": "list", "items": ["BBQ", "Hồ bơi", "Không gian sân vườn"] }
+    ]
+  },
+  {
+    "id": "nearby",
+    "category": "vi_tri",
+    "question": "Xung quanh LimDim Homestay có những địa điểm nào?",
+    "aliases": ["Gần homestay có gì chơi?", "LimDim gần địa điểm nào?"],
+    "keywords": ["xung quanh", "địa điểm gần", "Cầu Tràng Tiền", "Cung An Định"],
+    "answerBlocks": [
+      { "type": "paragraph", "text": "Một số địa điểm gần LimDim Homestay gồm Cầu Tràng Tiền, Cung An Định, Cầu gỗ Lim, Bia Quốc Học và Công Viên 3/2." },
+      { "type": "paragraph", "text": "Bạn có thể xem chi tiết khoảng cách ở trang Tiện Nghi, phần Xung quanh LimDimHomestay có gì." }
+    ]
+  },
+  {
+    "id": "pets-smoking-party",
+    "category": "quy_tac",
+    "question": "LimDim Homestay có cho mang vật nuôi, hút thuốc hoặc tổ chức tiệc không?",
+    "aliases": ["Có được mang thú cưng không?", "Có được hút thuốc không?", "Có được tổ chức tiệc không?"],
+    "keywords": ["vật nuôi", "thú cưng", "hút thuốc", "tiệc tùng", "sự kiện"],
+    "answerBlocks": [
+      {
+        "type": "list",
+        "items": ["Vật nuôi không được phép.", "Không cho phép hút thuốc.", "Không cho phép tiệc tùng hoặc sự kiện."]
+      }
+    ]
+  }
+]

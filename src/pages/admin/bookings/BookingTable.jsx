@@ -1,7 +1,7 @@
 ﻿import AppIcon from '../../../components/AppIcon'
 import EmptyState from '../../../components/EmptyState'
 import LoadingSpinner from '../../../components/LoadingSpinner'
-import { bookingStatuses, getBookingStatusLabel, roomLabel } from './bookingUtils'
+import { bookingStatuses, formatMoney, getBookingStatusLabel, roomLabel } from './bookingUtils'
 
 function getStatusOptions(status) {
   if (status === 'PENDING') return bookingStatuses
@@ -87,6 +87,8 @@ function BookingTable({
                 <th>Khách hàng</th>
                 <th>Nhân viên</th>
                 <th>Phòng</th>
+                <th>Tổng tiền</th>
+                <th>Thanh toán</th>
                 <th>Trạng thái</th>
               </tr>
             </thead>
@@ -102,6 +104,13 @@ function BookingTable({
                   <td>
                     <strong>{booking.roomName || `Phòng ${booking.roomId}`}</strong>
                     <span className="cell-subtext">{booking.roomTypeName || '-'}</span>
+                  </td>
+                  <td>
+                    <strong>{formatMoney(booking.totalAmount)}</strong>
+                  </td>
+                  <td>
+                    <strong>{booking.currentStatus === 'CONFIRMED' ? 'Đã thanh toán' : 'Chưa thanh toán'}</strong>
+                    <span className="cell-subtext">{formatMoney(booking.paidAmount)}</span>
                   </td>
                   <td>
                     <select

@@ -43,7 +43,7 @@ export function formatMoney(value) {
 
 export function roomLabel(room) {
   if (!room) return '-'
-  const name = room.name || `Phòng ${room.number || room.id}`
+  const name = room.name || 'Phòng'
   const roomType = room.roomType?.name ? ` - ${room.roomType.name}` : ''
   return `${name}${roomType}`
 }

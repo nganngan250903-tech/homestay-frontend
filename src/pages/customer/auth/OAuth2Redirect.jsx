@@ -76,7 +76,7 @@ function OAuth2Redirect({ onLogin }) {
   return (
     <main className="login-page">
       <section className="login-card oauth-redirect-card">
-        <h1>Dang dang nhap...</h1>
+        <h1>Đang đăng nhập...</h1>
       </section>
     </main>
   )

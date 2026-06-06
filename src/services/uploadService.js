@@ -1,6 +1,18 @@
 import { request } from './api'
 
+function validateImageFile(file) {
+  if (!file) {
+    throw new Error('Vui lòng chọn ảnh cần upload.')
+  }
+
+  if (!file.type?.startsWith('image/')) {
+    throw new Error('Chỉ cho phép upload file ảnh.')
+  }
+}
+
 export async function uploadImage(file, folder) {
+  validateImageFile(file)
+
   const formData = new FormData()
   formData.append('file', file)
   formData.append('folder', folder)

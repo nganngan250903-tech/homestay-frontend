@@ -103,11 +103,11 @@ function ResourceForm({ commitToken, form, loading, onReset, onSubmit, onUpdateF
       <div className="form-actions">
         <button className="save-btn" disabled={loading || Boolean(uploadingField)} type="submit">
           <AppIcon name="save" />
-          Tao du lieu
+          Tạo dữ liệu
         </button>
         <button className="cancel-btn" type="button" onClick={resetForm}>
           <AppIcon name="reset" />
-          Lam moi form
+          Làm mới form
         </button>
       </div>
     </form>

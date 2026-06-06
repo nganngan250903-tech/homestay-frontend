@@ -36,10 +36,12 @@ function CustomerDetailModal({ customer, onClose, onEdit }) {
             <AppIcon name="close" />
             Đóng
           </button>
-          <button className="blue-btn" onClick={() => onEdit(customer)} type="button">
-            <AppIcon name="edit" />
-            Chỉnh sửa
-          </button>
+          {onEdit && (
+            <button className="blue-btn" onClick={() => onEdit(customer)} type="button">
+              <AppIcon name="edit" />
+              Chỉnh sửa
+            </button>
+          )}
         </div>
       </section>
     </div>

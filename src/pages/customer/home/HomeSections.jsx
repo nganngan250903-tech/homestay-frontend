@@ -4,8 +4,11 @@ import { useCallback } from 'react'
 import AppIcon from '../../../components/AppIcon'
 import Toast from '../../../components/Toast'
 import { createBooking } from '../../../services/bookingService'
+import { getStoredToken } from '../../../services/authStorage'
 import BookingDateRangeCalendar from './BookingDateRangeCalendar'
 import { formatRoomPrice } from './homeUtils'
+
+const mapUrl = 'https://maps.app.goo.gl/ykFvjUHEnyu5a1B19'
 
 const aboutFeatures = [
   {
@@ -110,6 +113,11 @@ function RoomDetailModal({
       onRequireCustomerAuth?.()
       return
     }
+    if (!getStoredToken()) {
+      setToast({ type: 'error', message: 'Phiên đăng nhập không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại.' })
+      onRequireCustomerAuth?.()
+      return
+    }
     if (!bookingForm.checkIn || !bookingForm.checkOut) {
       setToast({ type: 'error', message: 'Vui lòng chọn ngày nhận phòng và ngày trả phòng.' })
       return
@@ -131,6 +139,9 @@ function RoomDetailModal({
       setBookingForm(createDefaultBookingForm())
       window.setTimeout(() => navigate(`/home/payment/${booking.id}`), 500)
     } catch (error) {
+      if (error.cause?.response?.status === 401) {
+        onRequireCustomerAuth?.()
+      }
       setToast({ type: 'error', message: error.message || 'Không tạo được booking.' })
     } finally {
       setSaving(false)
@@ -225,25 +236,30 @@ function RoomDetailModal({
 
 export function CustomerRoomSection({
   bookingCustomer,
+  emptyDescription = 'Danh sách phòng sẽ được cập nhật từ hệ thống quản trị.',
+  emptyTitle = 'Chưa có phòng để hiển thị',
   id = 'phong',
   isCustomer,
   onBookingCreated,
   onRequireCustomerAuth,
   rooms,
+  showHeading = true,
 }) {
   const [selectedRoom, setSelectedRoom] = useState(null)
 
   return (
     <>
       <section className="home-room-section" id={id}>
-        <div className="home-section-title">
-          <h2>Đặt phòng tại Lim Dim</h2>
-          <p>Chọn phòng phù hợp và xem chi tiết trước khi gửi yêu cầu đặt phòng.</p>
-        </div>
+        {showHeading && (
+          <div className="home-section-title">
+            <h2>Đặt phòng tại Lim Dim</h2>
+            <p>Chọn phòng phù hợp và xem chi tiết trước khi gửi yêu cầu đặt phòng.</p>
+          </div>
+        )}
         {rooms.length === 0 ? (
           <div className="home-room-empty">
-            <strong>Chưa có phòng để hiển thị</strong>
-            <span>Danh sách phòng sẽ được cập nhật từ hệ thống quản trị.</span>
+            <strong>{emptyTitle}</strong>
+            <span>{emptyDescription}</span>
           </div>
         ) : (
           <div className="home-room-grid">
@@ -286,16 +302,30 @@ function HomeSections({ bookingCustomer, isCustomer, onBookingCreated, onRequire
 
       <section className="home-about" id="thong-tin">
         <div className="home-about-grid">
-          <div className="home-about-intro">
-            <h2>ĐẾN VỚI LIM DIM HOMESTAY</h2>
-            <p>
-              Đến với Lim Dim Homestay, bạn sẽ tìm thấy một khoảng nghỉ thật chậm giữa lòng Huế yên bình.
-              Với mô hình nhà vườn gần gũi thiên nhiên, Lim Dim mang đến không gian trong lành,
-              thoáng đãng cùng khu sân vườn xanh mát và hồ bơi thư giãn giữa những ngày nắng dịu.
-              Homestay gồm 5 phòng được thiết kế ấm cúng, phù hợp cho khách đi một mình, cặp đôi hoặc gia đình nhỏ.
-              Tại đây, du khách có thể tận hưởng những buổi tối quây quần bên bếp nướng, thong thả trò chuyện,
-              nghỉ ngơi và cảm nhận nhịp sống nhẹ nhàng rất riêng của Huế.
-            </p>
+          <div className="home-about-summary">
+            <div className="home-about-intro">
+              <h2>ĐẾN VỚI LIM DIM HOMESTAY</h2>
+              <p>
+                Đến với Lim Dim Homestay, bạn sẽ tìm thấy một khoảng nghỉ thật chậm giữa lòng Huế yên bình.
+                Với mô hình nhà vườn gần gũi thiên nhiên, Lim Dim mang đến không gian trong lành,
+                thoáng đãng cùng khu sân vườn xanh mát và hồ bơi thư giãn giữa những ngày nắng dịu.
+                Homestay gồm 5 phòng được thiết kế ấm cúng, phù hợp cho khách đi một mình, cặp đôi hoặc gia đình nhỏ.
+                Tại đây, du khách có thể tận hưởng những buổi tối quây quần bên bếp nướng, thong thả trò chuyện,
+                nghỉ ngơi và cảm nhận nhịp sống nhẹ nhàng rất riêng của Huế.
+              </p>
+            </div>
+            <aside className="home-about-contact" aria-label="Liên hệ với Lim Dim Homestay">
+              <h3>LIÊN HỆ VỚI CHÚNG TÔI</h3>
+              <div className="home-about-contact-list">
+                <p><span>Email:</span> LimDim@gmail.com.vn</p>
+                <p>
+                  <span>Địa chỉ:</span>
+                  <a href={mapUrl} target="_blank" rel="noreferrer">16/52 Ba Triệu, Huế</a>
+                </p>
+                <p><span>Phone:</span> +84 328 54 7686</p>
+                <p><span>Website:</span> LimDimhomestay.vn</p>
+              </div>
+            </aside>
           </div>
           <div className="home-about-features">
             {aboutFeatures.map((feature) => (

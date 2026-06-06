@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import StatCard from '../../../components/StatCard'
 import Toast from '../../../components/Toast'
 import { createBooking, getBookings, updateBookingStatus } from '../../../services/bookingService'
-import { lookupCustomers } from '../../../services/customerService'
+import { createQuickCustomer, lookupCustomers } from '../../../services/customerService'
 import { getRooms } from '../../../services/roomService'
 import BookingFormModal from './BookingFormModal'
 import BookingTable from './BookingTable'
@@ -13,6 +13,13 @@ const emptyFilters = {
   roomId: '',
   dateFrom: '',
   dateTo: '',
+}
+
+const emptyQuickCustomer = {
+  name: '',
+  phone: '',
+  email: '',
+  address: '',
 }
 
 function buildPayload(form, auth) {
@@ -38,8 +45,10 @@ function BookingPage({ auth }) {
   const [saving, setSaving] = useState(false)
   const [toast, setToast] = useState(null)
   const [formModal, setFormModal] = useState({ open: false, form: emptyBookingForm })
+  const [newCustomer, setNewCustomer] = useState(emptyQuickCustomer)
   const [customerSuggestions, setCustomerSuggestions] = useState([])
   const [customerSuggestionLoading, setCustomerSuggestionLoading] = useState(false)
+  const [quickCustomerSaving, setQuickCustomerSaving] = useState(false)
 
   const totalPages = Math.max(1, Math.ceil(total / BOOKING_PAGE_SIZE))
 
@@ -125,6 +134,7 @@ function BookingPage({ auth }) {
         ...current.form,
         [field]: value,
         ...(field === 'customerKeyword' ? { customerId: '' } : {}),
+        ...(field === 'roomId' ? { checkIn: '', checkOut: '' } : {}),
       },
     }))
   }
@@ -132,13 +142,15 @@ function BookingPage({ auth }) {
   const openCreateModal = () => {
     setCustomerSuggestions([])
     setCustomerSuggestionLoading(false)
+    setNewCustomer(emptyQuickCustomer)
     setFormModal({ open: true, form: emptyBookingForm })
   }
 
-  const closeCreateModal = () => {
-    if (saving) return
+  const closeCreateModal = (force = false) => {
+    if (saving && !force) return
     setCustomerSuggestions([])
     setCustomerSuggestionLoading(false)
+    setNewCustomer(emptyQuickCustomer)
     setFormModal({ open: false, form: emptyBookingForm })
   }
 
@@ -154,6 +166,30 @@ function BookingPage({ auth }) {
     setCustomerSuggestions([])
   }
 
+  const updateQuickCustomerField = (field, value) => {
+    setNewCustomer((current) => ({ ...current, [field]: value }))
+  }
+
+  const createCustomerForBooking = async () => {
+    setQuickCustomerSaving(true)
+    setToast(null)
+    try {
+      const customer = await createQuickCustomer({
+        name: newCustomer.name.trim(),
+        phone: newCustomer.phone.trim(),
+        email: newCustomer.email.trim(),
+        address: newCustomer.address.trim(),
+      })
+      selectCustomer(customer)
+      setNewCustomer(emptyQuickCustomer)
+      setToast({ type: 'success', message: 'Đã thêm khách hàng' })
+    } catch (error) {
+      setToast({ type: 'error', message: error.message || 'Không tạo được khách hàng' })
+    } finally {
+      setQuickCustomerSaving(false)
+    }
+  }
+
   const submitBooking = async (event) => {
     event.preventDefault()
     setSaving(true)
@@ -162,7 +198,7 @@ function BookingPage({ auth }) {
       await createBooking(buildPayload(formModal.form, auth))
       await loadBookings(false)
       setToast({ type: 'success', message: 'Đã thêm thành công' })
-      closeCreateModal()
+      closeCreateModal(true)
     } catch (error) {
       setToast({ type: 'error', message: error.message || 'Không tạo được booking' })
     } finally {
@@ -217,10 +253,15 @@ function BookingPage({ auth }) {
           customerSuggestionLoading={customerSuggestionLoading}
           customerSuggestions={customerSuggestions}
           form={formModal.form}
+          newCustomer={newCustomer}
+          onCalendarError={(message) => setToast({ type: 'error', message })}
           onClose={closeCreateModal}
+          onCreateCustomer={createCustomerForBooking}
+          onQuickCustomerFieldChange={updateQuickCustomerField}
           onSelectCustomer={selectCustomer}
           onSubmit={submitBooking}
           onUpdateField={updateFormField}
+          quickCustomerSaving={quickCustomerSaving}
           rooms={rooms}
           saving={saving}
         />

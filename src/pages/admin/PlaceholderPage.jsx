@@ -4,7 +4,7 @@
       <div className="page-heading">
         <div>
           <h1>{title}</h1>
-          <p className="muted-text">Module này se duoc noi chi tiết sau khi hoan thien giao diện phòng.</p>
+          <p className="muted-text">Module này sẽ được bổ sung chi tiết sau khi hoàn thiện giao diện phòng.</p>
         </div>
       </div>
       <div className="panel note-panel">

@@ -40,7 +40,7 @@ function useCustomerRooms() {
   }, [])
 
   return useMemo(() => {
-    return rooms.slice(0, 6).map((room, index) => ({
+    return rooms.map((room, index) => ({
       ...room,
       id: room.id,
       name: room.name || room.roomType?.name || `Phòng ${room.id}`,

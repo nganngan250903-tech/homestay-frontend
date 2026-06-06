@@ -125,7 +125,7 @@ function CustomerPage({ auth }) {
       customer,
       nextStatus,
       label: nextStatus === 'LOCKED' ? 'Khóa' : 'Mở khóa',
-      message: `Bạn chắc chắn muốn ${nextStatus === 'LOCKED' ? 'khóa' : 'mo khóa'} khách hàng này`,
+      message: `Bạn chắc chắn muốn ${nextStatus === 'LOCKED' ? 'khóa' : 'mở khóa'} khách hàng này`,
     })
   }
 
@@ -199,7 +199,7 @@ function CustomerPage({ auth }) {
         customers={pagedCustomers}
         loading={loading}
         onApplySearch={submitSearch}
-        onCreate={openCreateModal}
+        onCreate={isAdmin ? openCreateModal : null}
         onDelete={isAdmin ? requestDelete : null}
         onEdit={isAdmin ? openEditModal : null}
         onHistory={isAdmin ? viewHistory : null}
@@ -218,7 +218,7 @@ function CustomerPage({ auth }) {
         <CustomerDetailModal
           customer={detailModal.customer}
           onClose={() => setDetailModal({ open: false, customer: null })}
-          onEdit={openEditModal}
+          onEdit={isAdmin ? openEditModal : null}
         />
       )}
 

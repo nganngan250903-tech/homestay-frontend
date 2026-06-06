@@ -4,6 +4,8 @@ import EmptyState from '../../../components/EmptyState'
 import LoadingSpinner from '../../../components/LoadingSpinner'
 import Toast from '../../../components/Toast'
 import { updateCustomer } from '../../../services/customerService'
+import { uploadImage } from '../../../services/uploadService'
+import CustomerAvatar from '../../admin/customers/CustomerAvatar'
 import { formatMoney } from '../../admin/customers/customerUtils'
 import { customerFormFrom } from './homeUtils'
 
@@ -14,6 +16,8 @@ function canCancelBooking(booking) {
 export function CustomerProfileModal({ customer, onClose, onSaved }) {
   const [form, setForm] = useState(() => customerFormFrom(customer))
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState('')
   const [toast, setToast] = useState(null)
 
   const updateField = (field, value) => {
@@ -35,6 +39,25 @@ export function CustomerProfileModal({ customer, onClose, onSaved }) {
     }
   }
 
+  const changeImage = async (event) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    setUploading(true)
+    setUploadError('')
+    try {
+      const uploaded = await uploadImage(file, 'customers')
+      updateField('image', uploaded.url)
+    } catch (error) {
+      setUploadError(error.message || 'Không thể upload ảnh đại diện.')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const statusLabel = customer?.status === 'LOCKED' ? 'Đang khóa' : 'Đang hoạt động'
+  const statusClass = customer?.status === 'LOCKED' ? 'locked' : 'active'
+
   return (
     <div className="modal-backdrop" role="presentation">
       <section className="customer-account-modal" role="dialog" aria-modal="true" aria-labelledby="customer-profile-title">
@@ -47,15 +70,23 @@ export function CustomerProfileModal({ customer, onClose, onSaved }) {
           </button>
         </div>
         <Toast message={toast?.message} type={toast?.type} />
-        <form className="home-account-form" onSubmit={submit}>
+        <form className="home-account-form customer-profile-form" onSubmit={submit}>
+          <div className="customer-profile-editor form-wide">
+            <CustomerAvatar customer={{ ...customer, ...form }} size="large" />
+            <div>
+              <strong>{form.name || customer?.email}</strong>
+              <span>{form.email}</span>
+              <em className={`status-action-pill ${statusClass}`}>{statusLabel}</em>
+            </div>
+          </div>
           <label className="field">
             <span>Họ tên</span>
             <input onChange={(event) => updateField('name', event.target.value)} required value={form.name} />
           </label>
-          <label className="field">
+          <div className="profile-readonly-field">
             <span>Email</span>
-            <input onChange={(event) => updateField('email', event.target.value)} required type="email" value={form.email} />
-          </label>
+            <strong>{form.email || 'Chưa có'}</strong>
+          </div>
           <label className="field">
             <span>Số điện thoại</span>
             <input onChange={(event) => updateField('phone', event.target.value)} required value={form.phone} />
@@ -64,12 +95,18 @@ export function CustomerProfileModal({ customer, onClose, onSaved }) {
             <span>Địa chỉ</span>
             <input onChange={(event) => updateField('address', event.target.value)} value={form.address} />
           </label>
+          <label className="field form-wide">
+            <span>Ảnh đại diện</span>
+            <input accept="image/*" disabled={uploading} onChange={changeImage} type="file" />
+            {uploading && <small className="helper-text">Đang upload ảnh...</small>}
+            {uploadError && <small className="error-text">{uploadError}</small>}
+          </label>
           <div className="modal-actions form-wide">
             <button className="cancel-btn" disabled={saving} onClick={onClose} type="button">
               <AppIcon name="close" />
               Hủy
             </button>
-            <button className="save-btn" disabled={saving} type="submit">
+            <button className="save-btn" disabled={saving || uploading} type="submit">
               <AppIcon name="save" />
               {saving ? 'Đang lưu...' : 'Lưu thay đổi'}
             </button>

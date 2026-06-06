@@ -3,7 +3,7 @@
     <section className="panel result-panel">
       <div className="panel-heading">
         <div>
-          <h2>Response gan nhat</h2>
+          <h2>Phản hồi gần nhất</h2>
         </div>
       </div>
       {result ? (

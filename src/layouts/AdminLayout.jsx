@@ -105,6 +105,7 @@ function AdminLayout({ auth, onLogout }) {
   const userType = auth?.userType
   const role = auth?.role || 'EMPLOYEE'
   const adminName = profile?.name || auth?.user?.name || auth?.user?.email || 'ADMIN'
+  const brandSubtitle = role === 'ADMIN' ? 'Quản lý' : 'Nhân viên'
   const visibleMenuItems = menuItems.filter((item) => item.roles.includes(role))
 
   const loadProfile = useCallback(async () => {
@@ -129,7 +130,7 @@ function AdminLayout({ auth, onLogout }) {
     <div className={sidebarOpen ? 'admin-shell sidebar-open' : 'admin-shell'}>
       <aside className="admin-sidebar">
         <div className="sidebar-head">
-          <Brand />
+          <Brand subtitle={brandSubtitle} />
           <button
             className="icon-btn mobile-only"
             onClick={() => setSidebarOpen(false)}
@@ -176,7 +177,7 @@ function AdminLayout({ auth, onLogout }) {
           >
             <AppIcon name="menu" />
           </button>
-          <Brand subtitle="Admin dashboard" />
+          <Brand subtitle="Trang quản trị" />
           <button className="admin-profile profile-trigger" onClick={() => navigate('/admin/profile')} type="button">
             <EmployeeAvatar employee={profile || auth?.user} />
             <div>

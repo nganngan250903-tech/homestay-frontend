@@ -209,8 +209,8 @@ function BookingDateRangeCalendar({ checkIn, checkOut, disabled, onChange, onErr
                 const past = dateKey < todayKey
                 const classNames = [
                   'booking-calendar-day',
-                  bookingState.hasBooking ? 'booked' : '',
-                  bookingState.fullyBlocked ? 'blocked' : '',
+                  !past && bookingState.hasBooking ? 'booked' : '',
+                  !past && bookingState.fullyBlocked ? 'blocked' : '',
                   selected ? 'selected' : '',
                   past ? 'past' : '',
                 ].filter(Boolean).join(' ')

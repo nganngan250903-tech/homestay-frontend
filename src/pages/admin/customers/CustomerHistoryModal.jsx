@@ -26,9 +26,9 @@ function CustomerHistoryModal({ bookings, customer, loading, onClose }) {
               <thead>
                 <tr>
                   <th>Phòng</th>
-                  <th>Thoi gian</th>
+                  <th>Thời gian</th>
                   <th>Trạng thái</th>
-                  <th>Tong tien</th>
+                  <th>Tổng tiền</th>
                 </tr>
               </thead>
               <tbody>

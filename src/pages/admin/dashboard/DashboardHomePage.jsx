@@ -2,6 +2,7 @@
 import LoadingSpinner from '../../../components/LoadingSpinner'
 import StatCard from '../../../components/StatCard'
 import Toast from '../../../components/Toast'
+import { getRooms } from '../../../services/roomService'
 import { getStatisticsOverview } from '../../../services/statisticsService'
 
 const moneyFormatter = new Intl.NumberFormat('vi-VN', {
@@ -11,14 +12,6 @@ const moneyFormatter = new Intl.NumberFormat('vi-VN', {
 })
 
 const numberFormatter = new Intl.NumberFormat('vi-VN')
-
-const bookingLabels = {
-  PENDING: 'Chờ thanh toán',
-  CONFIRMED: 'Đã xác nhận',
-  CANCELLED: 'Đã hủy',
-  NO_SHOW: 'Không đến',
-  UNKNOWN: 'Không rõ',
-}
 
 function toDateInput(date) {
   return date.toISOString().slice(0, 10)
@@ -59,14 +52,14 @@ function BarChart({ data, emptyText }) {
   }
 
   return (
-    <div className="bar-chart">
+    <div className="bar-chart" style={{ gridTemplateColumns: `repeat(${data.length}, minmax(0, 1fr))` }}>
       {data.map((item) => (
-        <div className="bar-row" key={item.label}>
-          <span>{item.label}</span>
-          <div className="bar-track">
-            <div className="bar-fill" style={{ width: `${Math.max(6, (item.value / max) * 100)}%` }}></div>
-          </div>
+        <div className="bar-column" key={item.label}>
           <strong>{formatCurrency(item.value)}</strong>
+          <div className="bar-track">
+            <div className="bar-fill" style={{ height: `${Math.max(6, (item.value / max) * 100)}%` }}></div>
+          </div>
+          <span>{item.label}</span>
         </div>
       ))}
     </div>
@@ -108,9 +101,77 @@ function DonutChart({ title, total, segments, note }) {
   )
 }
 
+function RoomOccupancyChart({ month, onMonthChange, onYearChange, rooms, year }) {
+  const [activeRoom, setActiveRoom] = useState(null)
+  const max = Math.max(...rooms.map((room) => Number(room.occupancyRate || 0)), 100)
+  const displayedRoom = activeRoom || rooms[0]
+
+  return (
+    <article className="dashboard-card room-occupancy-card">
+      <div className="dashboard-card-head">
+        <div>
+          <h2>Doanh thu theo phòng</h2>
+          <p>Tỷ lệ lấp đầy của từng phòng theo tháng đã chọn</p>
+        </div>
+        <div className="dashboard-filters room-occupancy-filters">
+          <label>
+            <span>Tháng</span>
+            <select onChange={(event) => onMonthChange(event.target.value)} value={month}>
+              {Array.from({ length: 12 }, (_, index) => (
+                <option key={index + 1} value={index + 1}>Tháng {index + 1}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            <span>Năm</span>
+            <input min="2000" onChange={(event) => onYearChange(event.target.value)} type="number" value={year} />
+          </label>
+        </div>
+      </div>
+      {rooms.length ? (
+        <>
+          <div className="room-occupancy-chart" style={{ gridTemplateColumns: `repeat(${rooms.length}, minmax(0, 1fr))` }}>
+            {rooms.map((room) => {
+              const occupancyRate = Number(room.occupancyRate || 0)
+              const isActive = displayedRoom === room
+              return (
+                <button
+                  className={isActive ? 'room-occupancy-column active' : 'room-occupancy-column'}
+                  key={room.roomId || room.roomName}
+                  onBlur={() => setActiveRoom(null)}
+                  onFocus={() => setActiveRoom(room)}
+                  onMouseEnter={() => setActiveRoom(room)}
+                  type="button"
+                >
+                  <strong>{occupancyRate.toFixed(0)}%</strong>
+                  <div className="room-occupancy-track">
+                    <div
+                      className="room-occupancy-fill"
+                      style={{ height: `${Math.min(100, Math.max(4, (occupancyRate / max) * 100))}%` }}
+                    ></div>
+                  </div>
+                  <span>{room.roomName}</span>
+                </button>
+              )
+            })}
+          </div>
+          <div className="room-occupancy-summary" aria-live="polite">
+            <strong>{displayedRoom.roomName}</strong>
+            <span>{formatCurrency(displayedRoom.revenue)} trong tháng</span>
+            <span>{displayedRoom.occupiedNights}/{displayedRoom.totalNights} đêm được đặt phòng</span>
+          </div>
+        </>
+      ) : (
+        <div className="empty-chart">Chưa có dữ liệu lấp đầy theo phòng trong tháng này.</div>
+      )}
+    </article>
+  )
+}
+
 function DashboardHomePage() {
   const today = useMemo(() => new Date(), [])
   const [overview, setOverview] = useState(null)
+  const [roomFallbacks, setRoomFallbacks] = useState([])
   const [loading, setLoading] = useState(true)
   const [toast, setToast] = useState(null)
   const [dailyRange, setDailyRange] = useState({
@@ -119,18 +180,28 @@ function DashboardHomePage() {
   })
   const [monthYear, setMonthYear] = useState(String(today.getFullYear()))
   const [yearEnd, setYearEnd] = useState(String(today.getFullYear()))
+  const [occupancyMonth, setOccupancyMonth] = useState(String(today.getMonth() + 1))
+  const [occupancyYear, setOccupancyYear] = useState(String(today.getFullYear()))
 
   const loadOverview = useCallback(async () => {
     setLoading(true)
     setToast(null)
     try {
-      setOverview(await getStatisticsOverview())
+      const [overviewData, roomData] = await Promise.all([
+        getStatisticsOverview({
+          occupancyMonth,
+          occupancyYear,
+        }),
+        getRooms().catch(() => []),
+      ])
+      setOverview(overviewData)
+      setRoomFallbacks(roomData)
     } catch (error) {
       setToast({ type: 'error', message: error.message || 'Không tải được dữ liệu dashboard' })
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [occupancyMonth, occupancyYear])
 
   useEffect(() => {
     Promise.resolve().then(loadOverview)
@@ -182,20 +253,26 @@ function DashboardHomePage() {
 
   const totalRevenue = overview ? sumValues(overview.yearlyRevenue) : 0
   const roomSegments = overview ? [
-    { label: 'Phòng trong', value: Number(overview.availableRooms || 0), color: '#22c55e' },
-    { label: 'Đang hoạt động', value: Number(overview.occupiedRooms || 0), color: '#38bdf8' },
+    { label: 'Trống', value: Number(overview.availableRooms || 0), color: '#22c55e' },
+    { label: 'Chờ nhận phòng', value: Number(overview.waitingCheckInRooms || 0), color: '#38bdf8' },
+    { label: 'Đang ở', value: Number(overview.occupiedRooms || 0), color: '#2563eb' },
+    { label: 'Cần dọn phòng', value: Number(overview.cleaningRooms || 0), color: '#f59e0b' },
+    { label: 'Bảo trì', value: Number(overview.maintenanceRooms || 0), color: '#ef4444' },
   ] : []
   const customerSegments = overview ? [
     { label: 'Đang hoạt động', value: Number(overview.activeCustomers || 0), color: '#22c55e' },
     { label: 'Đang khóa', value: Number(overview.lockedCustomers || 0), color: '#f59e0b' },
   ] : []
-  const bookingSegments = overview
-    ? Object.entries(overview.currentMonthBookingsByStatus || {}).map(([status, value], index) => ({
-        label: bookingLabels[status] || status,
-        value: Number(value || 0),
-        color: ['#38bdf8', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#64748b'][index % 6],
+  const roomOccupancyThisMonth = overview?.roomOccupancyThisMonth?.length
+    ? overview.roomOccupancyThisMonth
+    : roomFallbacks.map((room) => ({
+        roomId: room.id,
+        roomName: room.name || 'Phòng',
+        occupancyRate: 0,
+        occupiedNights: 0,
+        totalNights: new Date(Number(occupancyYear), Number(occupancyMonth), 0).getDate(),
+        revenue: 0,
       }))
-    : []
 
   return (
     <section className="page-stack">
@@ -203,7 +280,6 @@ function DashboardHomePage() {
       <div className="page-heading">
         <div>
           <h1>Dashboard</h1>
-          <p className="muted-text">Tổng quan doanh thu, phòng, khách hàng và booking của LimDimHomestay.</p>
         </div>
       </div>
 
@@ -218,68 +294,12 @@ function DashboardHomePage() {
             <StatCard label="Năm này" value={formatCurrency(overview.revenueThisYear)} />
           </div>
 
-          <section className="dashboard-grid">
-            <article className="dashboard-card wide-card">
-              <div className="dashboard-card-head">
-                <div>
-                  <h2>Doanh thu theo ngày</h2>
-                  <p>Khoảng lọc tối đa 7 ngày</p>
-                </div>
-                <div className="dashboard-filters">
-                  <label>
-                    <span>Từ ngày</span>
-                    <input onChange={(event) => changeDailyStart(event.target.value)} type="date" value={dailyRange.start} />
-                  </label>
-                  <label>
-                    <span>Đến ngày</span>
-                    <input
-                      max={addDays(dailyRange.start, 6)}
-                      min={dailyRange.start}
-                      onChange={(event) => changeDailyEnd(event.target.value)}
-                      type="date"
-                      value={dailyRange.end}
-                    />
-                  </label>
-                </div>
-              </div>
-              <BarChart data={dailyData} emptyText="Chưa có doanh thu trong khoảng ngày này." />
-            </article>
-
-            <article className="dashboard-card wide-card">
-              <div className="dashboard-card-head">
-                <div>
-                  <h2>Doanh thu theo tháng</h2>
-                  <p>Lọc theo năm</p>
-                </div>
-                <label className="compact-filter">
-                  <span>Nam</span>
-                  <input min="2000" onChange={(event) => setMonthYear(event.target.value)} type="number" value={monthYear} />
-                </label>
-              </div>
-              <BarChart data={monthlyData} emptyText="Chưa có doanh thu trong năm đã chọn." />
-            </article>
-
-            <article className="dashboard-card wide-card">
-              <div className="dashboard-card-head">
-                <div>
-                  <h2>Doanh thu theo năm</h2>
-                  <p>Hiển thị 5 năm kết thúc tại năm đã chọn</p>
-                </div>
-                <label className="compact-filter">
-                  <span>Đến năm</span>
-                  <input min="2000" onChange={(event) => setYearEnd(event.target.value)} type="number" value={yearEnd} />
-                </label>
-              </div>
-              <BarChart data={yearlyData} emptyText="Chưa có doanh thu trong giai đoạn này." />
-            </article>
-          </section>
-
           <section className="dashboard-grid summary-grid">
             <DonutChart
               title="Tình trạng phòng"
               total={Number(overview.totalRooms || 0)}
               segments={roomSegments}
-              note="Phòng trống và phòng đang hoạt động/đã có khách theo trạng thái hiện tại."
+              note="Tổng hợp 5 trạng thái phòng hiện tại."
             />
             <DonutChart
               title="Khách hàng"
@@ -287,12 +307,74 @@ function DashboardHomePage() {
               segments={customerSegments}
               note="Tổng hợp tài khoản khách hàng đang hoạt động và đang khóa."
             />
-            <DonutChart
-              title="Booking tháng hiện tại"
-              total={Number(overview.currentMonthBookings || 0)}
-              segments={bookingSegments}
-              note="Thống kê booking tạo trong tháng hiện tại theo trạng thái."
-            />
+          </section>
+
+          <section className="dashboard-revenue-grid">
+            <div className="dashboard-revenue-row dashboard-revenue-row-primary">
+              <article className="dashboard-card revenue-card daily-revenue-card">
+                <div className="dashboard-card-head">
+                  <div>
+                    <h2>Doanh thu theo ngày</h2>
+                    <p>Khoảng lọc tối đa 7 ngày</p>
+                  </div>
+                  <div className="dashboard-filters">
+                    <label>
+                      <span>Từ ngày</span>
+                      <input onChange={(event) => changeDailyStart(event.target.value)} type="date" value={dailyRange.start} />
+                    </label>
+                    <label>
+                      <span>Đến ngày</span>
+                      <input
+                        max={addDays(dailyRange.start, 6)}
+                        min={dailyRange.start}
+                        onChange={(event) => changeDailyEnd(event.target.value)}
+                        type="date"
+                        value={dailyRange.end}
+                      />
+                    </label>
+                  </div>
+                </div>
+                <BarChart data={dailyData} emptyText="Chưa có doanh thu trong khoảng ngày này." />
+              </article>
+
+              <RoomOccupancyChart
+                month={occupancyMonth}
+                onMonthChange={setOccupancyMonth}
+                onYearChange={setOccupancyYear}
+                rooms={roomOccupancyThisMonth}
+                year={occupancyYear}
+              />
+            </div>
+
+            <div className="dashboard-revenue-row">
+              <article className="dashboard-card revenue-card">
+                <div className="dashboard-card-head">
+                  <div>
+                    <h2>Doanh thu theo tháng</h2>
+                    <p>Lọc theo năm</p>
+                  </div>
+                  <label className="compact-filter">
+                    <span>Năm</span>
+                    <input min="2000" onChange={(event) => setMonthYear(event.target.value)} type="number" value={monthYear} />
+                  </label>
+                </div>
+                <BarChart data={monthlyData} emptyText="Chưa có doanh thu trong năm đã chọn." />
+              </article>
+
+              <article className="dashboard-card revenue-card">
+                <div className="dashboard-card-head">
+                  <div>
+                    <h2>Doanh thu theo năm</h2>
+                    <p>Hiển thị 5 năm kết thúc tại năm đã chọn</p>
+                  </div>
+                  <label className="compact-filter">
+                    <span>Đến năm</span>
+                    <input min="2000" onChange={(event) => setYearEnd(event.target.value)} type="number" value={yearEnd} />
+                  </label>
+                </div>
+                <BarChart data={yearlyData} emptyText="Chưa có doanh thu trong giai đoạn này." />
+              </article>
+            </div>
           </section>
         </>
       ) : (

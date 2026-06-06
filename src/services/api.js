@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { readStoredAuth } from './authStorage'
+import { getStoredToken } from './authStorage'
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api'
 
@@ -8,8 +8,7 @@ const apiClient = axios.create({
 })
 
 apiClient.interceptors.request.use((config) => {
-  const auth = readStoredAuth()
-  const token = auth?.token
+  const token = getStoredToken()
   const isAuthRequest = String(config.url || '').startsWith('/auth/')
 
   if (token && !isAuthRequest) {
@@ -41,7 +40,10 @@ export async function request(path, options = {}) {
     return body
   } catch (error) {
     const body = error.response?.data
-    throw new Error(body?.message || error.message || 'Không thể kết nối backend', {
+    const fallbackMessage = error.response?.status === 401
+      ? 'Phiên đăng nhập không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại.'
+      : 'Không thể kết nối backend'
+    throw new Error(body?.message || (error.response?.status === 401 ? fallbackMessage : error.message || fallbackMessage), {
       cause: error,
     })
   }

@@ -13,6 +13,11 @@ export function saveStoredAuth(auth) {
   localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(auth))
 }
 
+export function getStoredToken() {
+  const auth = readStoredAuth()
+  return auth?.token || auth?.accessToken || auth?.data?.token || ''
+}
+
 export function clearStoredAuth() {
   localStorage.removeItem(AUTH_STORAGE_KEY)
 }

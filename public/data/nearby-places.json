@@ -1,0 +1,53 @@
+[
+  {
+    "title": "Xung quanh có gì?",
+    "icon": "walk",
+    "places": [
+      { "name": "Cầu Tràng Tiền", "distance": "2 km" },
+      { "name": "Cung An Định", "distance": "3 km" },
+      { "name": "Cầu gỗ Lim", "distance": "2,5 km" },
+      { "name": "Bia Quốc Học", "distance": "2,5 km" },
+      { "name": "Công Viên 3/2", "distance": "800 m" }
+    ]
+  },
+  {
+    "title": "Nhà hàng & quán cà phê",
+    "icon": "utensils",
+    "places": [
+      { "name": "Hẻm Huế", "distance": "300 m" },
+      { "name": "Trốn cafe", "distance": "200 m" },
+      { "name": "Donald Trung", "distance": "100 m" },
+      { "name": "Bánh canh Bà Đợi", "distance": "1,2 km" },
+      { "name": "Bánh ép Gia Di", "distance": "500 m" },
+      { "name": "Cơm Niêu Gia Đình", "distance": "500 m" }
+    ]
+  },
+  {
+    "title": "Địa điểm tham quan hàng đầu",
+    "icon": "sparkles",
+    "places": [
+      { "name": "Lăng Tự Đức", "distance": "6 km" },
+      { "name": "Lăng Minh Mạng", "distance": "3 km" },
+      { "name": "Chùa Từ Hiếu", "distance": "3 km" },
+      { "name": "Đại Nội Huế", "distance": "2,5 km" },
+      { "name": "Chùa Thiên Mụ", "distance": "8 km" },
+      { "name": "Biển Thuận An", "distance": "10 km" }
+    ]
+  },
+  {
+    "title": "Phương tiện công cộng",
+    "icon": "train",
+    "places": [
+      { "name": "Tàu lửa Hue Railway Station", "distance": "2,8 km" },
+      { "name": "Bến xe Phía Nam", "distance": "2 km" }
+    ]
+  },
+  {
+    "title": "Các sân bay gần nhất",
+    "icon": "plane",
+    "places": [
+      { "name": "Sân bay quốc tế Phú Bài", "distance": "13 km" },
+      { "name": "Sân bay Quốc tế Đà Nẵng", "distance": "91 km" }
+    ]
+  }
+]
