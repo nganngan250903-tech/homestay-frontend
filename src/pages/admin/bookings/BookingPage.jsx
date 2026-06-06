@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import StatCard from '../../../components/StatCard'
 import Toast from '../../../components/Toast'
+import { shouldSuppressError } from '../../../services/api'
 import { createBooking, getBookings, updateBookingStatus } from '../../../services/bookingService'
 import { createQuickCustomer, lookupCustomers } from '../../../services/customerService'
 import { getRooms } from '../../../services/roomService'
@@ -49,6 +50,7 @@ function BookingPage({ auth }) {
   const [customerSuggestions, setCustomerSuggestions] = useState([])
   const [customerSuggestionLoading, setCustomerSuggestionLoading] = useState(false)
   const [quickCustomerSaving, setQuickCustomerSaving] = useState(false)
+  const bookingSubmitRef = useRef(false)
 
   const totalPages = Math.max(1, Math.ceil(total / BOOKING_PAGE_SIZE))
 
@@ -64,6 +66,7 @@ function BookingPage({ auth }) {
       setBookings(data?.content || [])
       setTotal(data?.totalElements || 0)
     } catch (error) {
+      if (shouldSuppressError(error)) return
       setToast({ type: 'error', message: error.message || 'Không tải được danh sách booking' })
     } finally {
       setLoading(false)
@@ -74,6 +77,7 @@ function BookingPage({ auth }) {
     try {
       setRooms(await getRooms())
     } catch (error) {
+      if (shouldSuppressError(error)) return
       setToast({ type: 'error', message: error.message || 'Không tải được danh sách phòng' })
     }
   }, [])
@@ -184,6 +188,7 @@ function BookingPage({ auth }) {
       setNewCustomer(emptyQuickCustomer)
       setToast({ type: 'success', message: 'Đã thêm khách hàng' })
     } catch (error) {
+      if (shouldSuppressError(error)) return
       setToast({ type: 'error', message: error.message || 'Không tạo được khách hàng' })
     } finally {
       setQuickCustomerSaving(false)
@@ -192,6 +197,8 @@ function BookingPage({ auth }) {
 
   const submitBooking = async (event) => {
     event.preventDefault()
+    if (bookingSubmitRef.current) return
+    bookingSubmitRef.current = true
     setSaving(true)
     setToast(null)
     try {
@@ -200,8 +207,10 @@ function BookingPage({ auth }) {
       setToast({ type: 'success', message: 'Đã thêm thành công' })
       closeCreateModal(true)
     } catch (error) {
+      if (shouldSuppressError(error)) return
       setToast({ type: 'error', message: error.message || 'Không tạo được booking' })
     } finally {
+      bookingSubmitRef.current = false
       setSaving(false)
     }
   }
@@ -215,6 +224,7 @@ function BookingPage({ auth }) {
       await loadBookings(false)
       setToast({ type: 'success', message: 'Cập nhật dữ liệu thành công' })
     } catch (error) {
+      if (shouldSuppressError(error)) return
       setToast({ type: 'error', message: error.message || 'Không cập nhật được trạng thái booking' })
     } finally {
       setSaving(false)

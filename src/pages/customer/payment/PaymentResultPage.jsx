@@ -1,7 +1,8 @@
 import { Link, useSearchParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import AppIcon from '../../../components/AppIcon'
 import Toast from '../../../components/Toast'
+import { shouldSuppressError } from '../../../services/api'
 import { confirmVnPayReturnPayment } from '../../../services/bookingService'
 
 function PaymentResultPage() {
@@ -10,9 +11,12 @@ function PaymentResultPage() {
   const bookingId = params.get('vnp_TxnRef')
   const isSuccess = responseCode === '00'
   const [toast, setToast] = useState(null)
+  const confirmStartedRef = useRef(false)
 
   useEffect(() => {
     if (!bookingId) return
+    if (confirmStartedRef.current) return
+    confirmStartedRef.current = true
 
     confirmVnPayReturnPayment(Object.fromEntries(params.entries()))
       .then(() => {
@@ -20,7 +24,10 @@ function PaymentResultPage() {
           setToast({ type: 'success', message: 'Đã cập nhật thanh toán cho booking.' })
         }
       })
-      .catch((error) => setToast({ type: 'error', message: error.message || 'Không cập nhật được thanh toán.' }))
+      .catch((error) => {
+        if (shouldSuppressError(error)) return
+        setToast({ type: 'error', message: error.message || 'Không cập nhật được thanh toán.' })
+      })
   }, [bookingId, isSuccess, params])
 
   return (

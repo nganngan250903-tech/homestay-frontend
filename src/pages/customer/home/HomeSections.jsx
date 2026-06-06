@@ -1,8 +1,10 @@
 ﻿import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCallback } from 'react'
+import { useRef } from 'react'
 import AppIcon from '../../../components/AppIcon'
 import Toast from '../../../components/Toast'
+import { shouldSuppressError } from '../../../services/api'
 import { createBooking } from '../../../services/bookingService'
 import { getStoredToken } from '../../../services/authStorage'
 import BookingDateRangeCalendar from './BookingDateRangeCalendar'
@@ -79,6 +81,7 @@ function RoomDetailModal({
   const [bookingForm, setBookingForm] = useState(createDefaultBookingForm)
   const [saving, setSaving] = useState(false)
   const [toast, setToast] = useState(null)
+  const bookingSubmitRef = useRef(false)
   const showCalendarError = useCallback((message) => {
     setToast({ type: 'error', message })
   }, [])
@@ -107,6 +110,7 @@ function RoomDetailModal({
 
   const submitBooking = async (event) => {
     event.preventDefault()
+    if (bookingSubmitRef.current) return
 
     if (!isCustomer || !bookingCustomer?.id) {
       setToast({ type: 'error', message: 'Bạn cần đăng nhập tài khoản khách hàng trước khi đặt phòng.' })
@@ -123,6 +127,7 @@ function RoomDetailModal({
       return
     }
 
+    bookingSubmitRef.current = true
     setSaving(true)
     setToast(null)
     try {
@@ -139,11 +144,13 @@ function RoomDetailModal({
       setBookingForm(createDefaultBookingForm())
       window.setTimeout(() => navigate(`/home/payment/${booking.id}`), 500)
     } catch (error) {
+      if (shouldSuppressError(error)) return
       if (error.cause?.response?.status === 401) {
         onRequireCustomerAuth?.()
       }
       setToast({ type: 'error', message: error.message || 'Không tạo được booking.' })
     } finally {
+      bookingSubmitRef.current = false
       setSaving(false)
     }
   }
