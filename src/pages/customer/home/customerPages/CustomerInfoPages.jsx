@@ -180,17 +180,10 @@ function toDateKey(date) {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
 }
 
-function addDays(date, amount) {
-  const next = new Date(date)
-  next.setDate(next.getDate() + amount)
-  return next
-}
-
 function defaultBookingSearch() {
-  const tomorrow = addDays(new Date(), 1)
   return {
-    checkInDate: toDateKey(tomorrow),
-    checkOutDate: toDateKey(addDays(tomorrow, 1)),
+    checkInDate: '',
+    checkOutDate: '',
     roomTypeId: 'ALL',
   }
 }
@@ -283,6 +276,11 @@ export function BookingPage(props) {
     setSearch((current) => ({ ...current, [field]: value }))
   }
 
+  const initialBookingDates = useMemo(() => ({
+    checkInDate: search.checkInDate,
+    checkOutDate: search.checkOutDate,
+  }), [search.checkInDate, search.checkOutDate])
+
   return (
     <>
       <section className="booking-search-section">
@@ -326,6 +324,7 @@ export function BookingPage(props) {
         emptyDescription="Thử chọn ngày khác hoặc loại phòng khác để xem thêm lựa chọn."
         emptyTitle="Không có phòng trống trong khoảng thời gian này"
         id="dat-phong"
+        initialBookingDates={initialBookingDates}
         rooms={filteredRooms}
         showHeading={false}
         {...props}

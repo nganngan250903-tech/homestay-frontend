@@ -69,7 +69,19 @@ function createDefaultBookingForm() {
   }
 }
 
+function createBookingFormFromDates(initialBookingDates) {
+  const { checkInDate, checkOutDate } = initialBookingDates || {}
+  if (!checkInDate || !checkOutDate || checkOutDate <= checkInDate) return createDefaultBookingForm()
+
+  return {
+    checkIn: `${checkInDate}T14:00`,
+    checkOut: `${checkOutDate}T12:00`,
+    guestCount: 1,
+  }
+}
+
 function RoomDetailModal({
+  initialBookingDates,
   isCustomer,
   onBookingCreated,
   onClose,
@@ -78,7 +90,7 @@ function RoomDetailModal({
   bookingCustomer,
 }) {
   const navigate = useNavigate()
-  const [bookingForm, setBookingForm] = useState(createDefaultBookingForm)
+  const [bookingForm, setBookingForm] = useState(() => createBookingFormFromDates(initialBookingDates))
   const [saving, setSaving] = useState(false)
   const [toast, setToast] = useState(null)
   const bookingSubmitRef = useRef(false)
@@ -246,6 +258,7 @@ export function CustomerRoomSection({
   emptyDescription = 'Danh sách phòng sẽ được cập nhật từ hệ thống quản trị.',
   emptyTitle = 'Chưa có phòng để hiển thị',
   id = 'phong',
+  initialBookingDates,
   isCustomer,
   onBookingCreated,
   onRequireCustomerAuth,
@@ -253,6 +266,13 @@ export function CustomerRoomSection({
   showHeading = true,
 }) {
   const [selectedRoom, setSelectedRoom] = useState(null)
+  const modalKey = selectedRoom
+    ? [
+      selectedRoom.id,
+      initialBookingDates?.checkInDate || 'default',
+      initialBookingDates?.checkOutDate || 'default',
+    ].join('-')
+    : ''
 
   return (
     <>
@@ -288,14 +308,18 @@ export function CustomerRoomSection({
         )}
       </section>
 
-      <RoomDetailModal
-        bookingCustomer={bookingCustomer}
-        isCustomer={isCustomer}
-        onBookingCreated={onBookingCreated}
-        onClose={() => setSelectedRoom(null)}
-        onRequireCustomerAuth={onRequireCustomerAuth}
-        room={selectedRoom}
-      />
+      {selectedRoom && (
+        <RoomDetailModal
+          bookingCustomer={bookingCustomer}
+          initialBookingDates={initialBookingDates}
+          isCustomer={isCustomer}
+          key={modalKey}
+          onBookingCreated={onBookingCreated}
+          onClose={() => setSelectedRoom(null)}
+          onRequireCustomerAuth={onRequireCustomerAuth}
+          room={selectedRoom}
+        />
+      )}
     </>
   )
 }
