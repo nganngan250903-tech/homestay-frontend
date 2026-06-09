@@ -1509,7 +1509,6 @@ button:disabled {
   color: #ffffff;
 }
 
-.booking-calendar-day.blocked,
 .booking-calendar-day.past {
   opacity: 0.45;
 }

@@ -125,6 +125,25 @@ function PaymentPage({ bookingCustomer }) {
     }
   }, [bookingId])
 
+  useEffect(() => {
+    if (booking?.currentStatus !== 'PENDING') return undefined
+
+    const intervalId = window.setInterval(async () => {
+      try {
+        const latestBooking = await getBooking(bookingId)
+        setBooking(latestBooking)
+        if (latestBooking.currentStatus === 'CANCELLED') {
+          setPayment(null)
+          setToast({ type: 'error', message: 'Đã hết thời gian chờ. Đơn đặt phòng đã hủy.', duration: 6000 })
+        }
+      } catch (error) {
+        setToast({ type: 'error', message: error.message || 'Không kiểm tra được trạng thái booking' })
+      }
+    }, 6000)
+
+    return () => window.clearInterval(intervalId)
+  }, [booking?.currentStatus, bookingId])
+
   const updateCustomerField = (field, value) => {
     setCustomerForm((current) => ({ ...current, [field]: value }))
   }
@@ -186,7 +205,7 @@ function PaymentPage({ bookingCustomer }) {
 
   return (
     <section className="payment-page">
-      <Toast message={toast?.message} type={toast?.type} />
+      <Toast duration={toast?.duration} message={toast?.message} type={toast?.type} />
       <div className="payment-panel">
         <div className="payment-head">
           <div>

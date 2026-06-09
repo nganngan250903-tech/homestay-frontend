@@ -233,8 +233,8 @@ function BookingDateRangeCalendar({ checkIn, checkOut, disabled, onChange, onErr
       </div>
 
       <div className="booking-calendar-summary">
-        <span>Check-in: <strong>{startKey || 'Chưa chọn'}</strong> 14:00</span>
-        <span>Check-out: <strong>{endKey || 'Chưa chọn'}</strong> 12:00</span>
+        <span>Check-in: <strong>{startKey ? `${startKey} 14:00` : 'Chưa chọn'}</strong></span>
+        <span>Check-out: <strong>{endKey ? `${endKey} 12:00` : 'Chưa chọn'}</strong></span>
       </div>
 
       <div className="booking-calendar-legend">

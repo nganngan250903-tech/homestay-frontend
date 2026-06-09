@@ -48,30 +48,17 @@ const homestayGalleryImages = [
   '/page/images (6).jpg',
 ]
 
-function toDateTimeInput(date) {
-  const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
-  return offsetDate.toISOString().slice(0, 16)
-}
-
-function createDefaultBookingForm() {
-  const checkIn = new Date()
-  checkIn.setDate(checkIn.getDate() + 1)
-  checkIn.setHours(14, 0, 0, 0)
-
-  const checkOut = new Date(checkIn)
-  checkOut.setDate(checkOut.getDate() + 1)
-  checkOut.setHours(12, 0, 0, 0)
-
+function createEmptyBookingForm() {
   return {
-    checkIn: toDateTimeInput(checkIn),
-    checkOut: toDateTimeInput(checkOut),
+    checkIn: '',
+    checkOut: '',
     guestCount: 1,
   }
 }
 
 function createBookingFormFromDates(initialBookingDates) {
   const { checkInDate, checkOutDate } = initialBookingDates || {}
-  if (!checkInDate || !checkOutDate || checkOutDate <= checkInDate) return createDefaultBookingForm()
+  if (!checkInDate || !checkOutDate || checkOutDate <= checkInDate) return createEmptyBookingForm()
 
   return {
     checkIn: `${checkInDate}T14:00`,
@@ -153,7 +140,7 @@ function RoomDetailModal({
       })
       onBookingCreated?.(booking)
       setToast({ type: 'success', message: 'Đặt phòng thành công. Đang chuyển sang thanh toán.' })
-      setBookingForm(createDefaultBookingForm())
+      setBookingForm(createEmptyBookingForm())
       window.setTimeout(() => navigate(`/home/payment/${booking.id}`), 500)
     } catch (error) {
       if (shouldSuppressError(error)) return
