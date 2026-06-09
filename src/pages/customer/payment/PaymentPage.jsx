@@ -28,6 +28,21 @@ function countNights(checkIn, checkOut) {
   return Math.max(1, Math.ceil((end - start) / 86400000))
 }
 
+function getPendingRemainingMs(pendingExpiresAt, now) {
+  if (!pendingExpiresAt) return null
+  const expiresAt = new Date(pendingExpiresAt).getTime()
+  if (Number.isNaN(expiresAt)) return null
+  return Math.max(0, expiresAt - now)
+}
+
+function formatCountdown(milliseconds) {
+  if (milliseconds === null) return '--:--'
+  const totalSeconds = Math.ceil(milliseconds / 1000)
+  const minutes = Math.floor(totalSeconds / 60)
+  const seconds = totalSeconds % 60
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+}
+
 function PaymentInfoRow({ label, value }) {
   return (
     <div className="payment-info-row">
@@ -80,6 +95,7 @@ function PaymentPage({ bookingCustomer }) {
   const [cancelling, setCancelling] = useState(false)
   const [toast, setToast] = useState(null)
   const [customerForm, setCustomerForm] = useState({ email: '', name: '', phone: '', address: '' })
+  const [now, setNow] = useState(0)
 
   useEffect(() => {
     let ignore = false
@@ -95,6 +111,7 @@ function PaymentPage({ bookingCustomer }) {
         if (!ignore) {
           setBooking(bookingData)
           setPayment(paymentData)
+          setNow(new Date().getTime())
           if (bookingData.currentStatus === 'CONFIRMED') {
             setToast({ type: 'success', message: 'Booking đã được thanh toán' })
           }
@@ -132,6 +149,7 @@ function PaymentPage({ bookingCustomer }) {
       try {
         const latestBooking = await getBooking(bookingId)
         setBooking(latestBooking)
+        setNow(new Date().getTime())
         if (latestBooking.currentStatus === 'CANCELLED') {
           setPayment(null)
           setToast({ type: 'error', message: 'Đã hết thời gian chờ. Đơn đặt phòng đã hủy.', duration: 6000 })
@@ -143,6 +161,16 @@ function PaymentPage({ bookingCustomer }) {
 
     return () => window.clearInterval(intervalId)
   }, [booking?.currentStatus, bookingId])
+
+  useEffect(() => {
+    if (booking?.currentStatus !== 'PENDING' || !booking?.pendingExpiresAt) return undefined
+
+    const intervalId = window.setInterval(() => {
+      setNow(new Date().getTime())
+    }, 1000)
+
+    return () => window.clearInterval(intervalId)
+  }, [booking?.currentStatus, booking?.pendingExpiresAt])
 
   const updateCustomerField = (field, value) => {
     setCustomerForm((current) => ({ ...current, [field]: value }))
@@ -199,6 +227,11 @@ function PaymentPage({ bookingCustomer }) {
   }
 
   const canCancel = ['PENDING', 'CONFIRMED'].includes(booking?.currentStatus)
+  const pendingRemainingMs = booking?.currentStatus === 'PENDING'
+    ? getPendingRemainingMs(booking.pendingExpiresAt, now)
+    : null
+  const isPendingExpired = pendingRemainingMs === 0
+  const canPay = Boolean(payment?.paymentUrl) && !isPendingExpired
   const nights = booking ? countNights(booking.checkIn, booking.checkOut) : 0
   const customer = bookingCustomer || {}
   const roomImage = room?.thumbnail || room?.roomType?.image || '/Lim Dim.png'
@@ -211,10 +244,19 @@ function PaymentPage({ bookingCustomer }) {
           <div>
             <h1>Thanh toán booking</h1>
           </div>
-          <Link className="cancel-btn compact-btn" to="/home/bookingRoom">
-            <AppIcon name="chevronLeft" />
-            Quay lại
-          </Link>
+          <div className="payment-head-actions">
+            {booking?.currentStatus === 'PENDING' && (
+              <div className={`payment-countdown ${isPendingExpired ? 'expired' : ''}`}>
+                <AppIcon name="clock" />
+                <span>Thời gian giữ phòng</span>
+                <strong>{formatCountdown(pendingRemainingMs)}</strong>
+              </div>
+            )}
+            <Link className="cancel-btn compact-btn" to="/home/bookingRoom">
+              <AppIcon name="chevronLeft" />
+              Quay lại
+            </Link>
+          </div>
         </div>
 
         {loading ? (
@@ -302,9 +344,9 @@ function PaymentPage({ bookingCustomer }) {
               )}
 
               <div className="payment-action-row">
-                <button className="save-btn payment-submit" disabled={creating || !payment?.paymentUrl} onClick={pay} type="button">
+                <button className="save-btn payment-submit" disabled={creating || !canPay} onClick={pay} type="button">
                   <AppIcon name="wallet" />
-                  {creating ? 'Đang chuyển hướng...' : payment?.demoMode ? 'Thanh toán demo' : 'Thanh toán'}
+                  {creating ? 'Đang chuyển hướng...' : isPendingExpired ? 'Hết thời gian giữ phòng' : payment?.demoMode ? 'Thanh toán demo' : 'Thanh toán'}
                 </button>
                 <button
                   className="cancel-btn payment-cancel-btn"

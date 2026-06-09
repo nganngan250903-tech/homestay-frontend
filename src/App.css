@@ -1597,6 +1597,42 @@ button:disabled {
   font-size: 26px;
 }
 
+.payment-head-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.payment-countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.payment-countdown strong {
+  min-width: 52px;
+  color: #172033;
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.payment-countdown.expired {
+  border-color: #fecaca;
+  background: #fff1f2;
+  color: #b91c1c;
+}
+
 .payment-checkout-grid {
   display: grid;
   grid-template-columns: minmax(300px, 0.9fr) minmax(0, 1.1fr);
@@ -1778,6 +1814,13 @@ button:disabled {
 
 .payment-cancel-btn {
   min-width: 118px;
+}
+
+.booking-history-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .payment-panel.result {
@@ -4565,6 +4608,10 @@ td strong,
 
   .payment-head {
     display: grid;
+  }
+
+  .payment-head-actions {
+    justify-content: flex-start;
   }
 
   .payment-summary > div,

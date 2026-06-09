@@ -13,6 +13,12 @@ function canCancelBooking(booking) {
   return ['PENDING', 'CONFIRMED'].includes(booking.currentStatus)
 }
 
+function canPayBooking(booking) {
+  if (booking.currentStatus !== 'PENDING' || !booking.pendingExpiresAt) return false
+  const expiresAt = new Date(booking.pendingExpiresAt).getTime()
+  return !Number.isNaN(expiresAt) && expiresAt > new Date().getTime()
+}
+
 export function CustomerProfileModal({ customer, onClose, onSaved }) {
   const [form, setForm] = useState(() => customerFormFrom(customer))
   const [saving, setSaving] = useState(false)
@@ -206,6 +212,11 @@ export function CustomerBookingHistoryModal({ bookings, loading, onBookingCancel
     }
   }
 
+  const pay = (booking) => {
+    onClose()
+    window.location.assign(`/home/payment/${booking.id}`)
+  }
+
   return (
     <div className="modal-backdrop" role="presentation">
       <section className="customer-account-modal wide" role="dialog" aria-modal="true" aria-labelledby="customer-history-title">
@@ -245,19 +256,27 @@ export function CustomerBookingHistoryModal({ bookings, loading, onBookingCancel
                     <td>{booking.currentStatus}</td>
                     <td>{formatMoney(booking.totalAmount)}</td>
                     <td>
-                      {canCancelBooking(booking) ? (
-                        <button
-                          className="danger-btn compact-btn"
-                          disabled={savingId === booking.id}
-                          onClick={() => cancel(booking)}
-                          type="button"
-                        >
-                          <AppIcon name="close" />
-                          {savingId === booking.id ? 'Đang hủy...' : 'Hủy'}
-                        </button>
-                      ) : (
-                        <span className="cell-subtext">Không khả dụng</span>
-                      )}
+                      <div className="booking-history-actions">
+                        {canPayBooking(booking) && (
+                          <button className="save-btn compact-btn" onClick={() => pay(booking)} type="button">
+                            <AppIcon name="wallet" />
+                            Thanh toán
+                          </button>
+                        )}
+                        {canCancelBooking(booking) ? (
+                          <button
+                            className="danger-btn compact-btn"
+                            disabled={savingId === booking.id}
+                            onClick={() => cancel(booking)}
+                            type="button"
+                          >
+                            <AppIcon name="close" />
+                            {savingId === booking.id ? 'Đang hủy...' : 'Hủy'}
+                          </button>
+                        ) : !canPayBooking(booking) ? (
+                          <span className="cell-subtext">Không khả dụng</span>
+                        ) : null}
+                      </div>
                     </td>
                   </tr>
                 ))}

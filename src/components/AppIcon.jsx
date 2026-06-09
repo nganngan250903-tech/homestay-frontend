@@ -103,6 +103,12 @@ const iconPaths = {
       <path d="M5 5h14v15H5z" />
     </>
   ),
+  clock: (
+    <>
+      <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z" />
+      <path d="M12 7v5l3 2" />
+    </>
+  ),
   menu: (
     <>
       <path d="M4 7h16" />
